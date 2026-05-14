@@ -168,6 +168,29 @@
         ::-webkit-scrollbar-track { background: rgba(16, 185, 129, 0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 2px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
+
+        .welcome-socials {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .7rem;
+            margin-top: 2.2rem;
+            opacity: .55;
+            transition: opacity .3s;
+        }
+        .welcome-socials:hover { opacity: .85; }
+        .soc-link {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            color: var(--em2);
+            text-decoration: none;
+            font-size: .68rem;
+            letter-spacing: .1em;
+            transition: color .25s;
+        }
+        .soc-link:hover { color: var(--em3); }
+        .soc-sep { color: var(--mut); font-size: .7rem; }
     </style>
 
     <!-- ========== ESTILOS ARCHIVO 2 (Experiencia) - Encapsulados en #screen-experience ========== -->
@@ -485,6 +508,70 @@
 
         #screen-experience footer{font-size:.57rem;color:var(--mut);opacity:.35;text-align:center;margin-top:.5rem;}
 
+        /* Feedback */
+        #screen-experience .feedback-section{
+            width:100%;max-width:650px;
+            display:flex;flex-direction:column;
+            gap:.6rem;
+        }
+        #screen-experience .fb-question{
+            font-family:'Cormorant Garamond',serif;
+            font-size:.95rem;font-weight:300;
+            letter-spacing:.12em;color:var(--em3);
+            text-align:center;
+        }
+        #screen-experience .fb-pills{
+            display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;
+        }
+        #screen-experience .fb-pill{
+            background:transparent;
+            border:1px solid rgba(16,185,129,.18);
+            border-radius:50px;
+            padding:.32rem .85rem;
+            font-size:.68rem;color:var(--mut);
+            font-family:'Outfit',sans-serif;
+            cursor:pointer;transition:all .2s;white-space:nowrap;
+        }
+        #screen-experience .fb-pill:hover{
+            border-color:var(--em);color:var(--txt);
+            background:rgba(16,185,129,.07);
+        }
+        #screen-experience .fb-pill.on{
+            border-color:var(--em);color:var(--em2);
+            background:rgba(16,185,129,.14);
+            box-shadow:0 0 10px rgba(16,185,129,.12);
+        }
+        #screen-experience .fb-send-btn{
+            background:transparent;
+            border:1px solid var(--em2);
+            border-radius:50px;
+            padding:.38rem 1.4rem;
+            font-size:.68rem;color:var(--em2);
+            font-family:'Outfit',sans-serif;letter-spacing:.1em;
+            cursor:pointer;transition:all .3s;
+        }
+        #screen-experience .fb-send-btn:hover{
+            background:rgba(16,185,129,.1);color:var(--em3);
+            box-shadow:0 0 18px rgba(16,185,129,.2);
+        }
+        #screen-experience .fb-social{
+            display:flex;gap:.6rem;justify-content:center;
+            margin-top:.8rem;flex-wrap:wrap;
+        }
+        #screen-experience .fb-soc-btn{
+            display:flex;align-items:center;gap:.35rem;
+            background:transparent;
+            border:1px solid rgba(16,185,129,.15);
+            border-radius:50px;padding:.3rem .9rem;
+            font-size:.64rem;color:var(--mut);
+            font-family:'Outfit',sans-serif;letter-spacing:.08em;
+            text-decoration:none;transition:all .25s;
+        }
+        #screen-experience .fb-soc-btn:hover{
+            border-color:var(--em);color:var(--em2);
+            background:rgba(16,185,129,.07);
+        }
+
         /* Ambient Bar */
         #screen-experience .ambient-bar{
             width:100%;max-width:650px;
@@ -576,6 +663,23 @@
             <p class="welcome-subtitle">Ritual Sonoro · Antigravity</p>
             <p class="welcome-text">Estás a un susurro de la ingravidez total.<br>Cada frecuencia es un umbral. Cada sonido, una puerta.</p>
             <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
+
+            <div class="welcome-socials">
+                <a href="https://instagram.com/kalmaumbra" target="_blank" class="soc-link" title="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    <span>Instagram</span>
+                </a>
+                <span class="soc-sep">·</span>
+                <a href="https://www.linkedin.com/in/kalmaumbra-life-style-809bba409/" target="_blank" class="soc-link" title="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="11" x2="8" y2="17"/><line x1="8" y1="7" x2="8" y2="8"/><path d="M12 17v-6m4 6v-3.5a2.5 2.5 0 0 0-5 0"/></svg>
+                    <span>LinkedIn</span>
+                </a>
+                <span class="soc-sep">·</span>
+                <a href="mailto:kalmaumbra@gmail.com" class="soc-link" title="Email">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                    <span>Contacto</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -648,8 +752,8 @@
             <!-- Volume -->
             <div class="vr">
                 <label>Volumen</label>
-                <input type="range" id="exp-vs" min="0" max="100" value="45" oninput="Exp.setVol(this.value)" style="--v:45%"/>
-                <span class="vv" id="exp-vv">45%</span>
+                <input type="range" id="exp-vs" min="0" max="100" value="15" oninput="Exp.setVol(this.value)" style="--v:15%"/>
+                <span class="vv" id="exp-vv">15%</span>
             </div>
 
             <!-- Guide Toggle -->
@@ -753,45 +857,44 @@
                 🎧 Auriculares recomendados para tonos binaurales &nbsp;·&nbsp; 🔊 Volumen suave 30–55 % &nbsp;·&nbsp; 😮‍💨 Cerrá los ojos y respirá
             </div>
 
-            <!-- Productos -->
-            <div class="section-divider" style="margin-top:1.5rem;"><span>Tienda &amp; Productos</span></div>
-            <div class="products-section" id="exp-productos">
-                <div class="products-header">
-                    <h2>Selección Kalma</h2>
-                    <p>Productos curados para tu ritual · Bienestar consciente</p>
+            <!-- Feedback -->
+            <div class="section-divider" style="margin-top:1.5rem;"><span>Tu Voz Importa</span></div>
+            <div class="feedback-section" id="exp-feedback">
+                <p class="fb-question">¿Qué buscás en KalmaUmbra?</p>
+                <div class="fb-pills" id="fb-q1">
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">🌙 Relajación</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">💤 Sueño</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">🔥 Intimidad</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">⚡ Energía</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">🧘 Meditación</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q1')">✨ Curiosidad</button>
                 </div>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-icon">🌿</div>
-                        <div class="product-name">Rituales de Bienestar</div>
-                        <div class="product-desc">Aceites y esencias terapéuticas para complementar tu experiencia sonora.</div>
-                        <div class="product-badge">En Construcción</div>
-                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-icon">🎧</div>
-                        <div class="product-name">Audio Premium</div>
-                        <div class="product-desc">Audífonos y accesorios seleccionados para la mejor experiencia binaural.</div>
-                        <div class="product-badge">En Construcción</div>
-                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-icon">✨</div>
-                        <div class="product-name">Skincare Íntimo</div>
-                        <div class="product-desc">Fórmulas naturales para el cuidado y la reconexión con tu cuerpo.</div>
-                        <div class="product-badge">En Construcción</div>
-                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-icon">🛁</div>
-                        <div class="product-name">Ritual en Casa</div>
-                        <div class="product-desc">Kits de autocuidado para crear tu espacio sagrado de bienestar sensorial.</div>
-                        <div class="product-badge">En Construcción</div>
-                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
-                    </div>
+                <p class="fb-question" style="margin-top:1rem;">¿Qué te gustaría que existiera?</p>
+                <div class="fb-pills" id="fb-q2">
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">🎙️ Historias íntimas</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">🧘 Meditaciones guiadas</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">🕯️ Kit físico + aromas</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">🎁 Caja sorpresa</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">👥 Comunidad</button>
+                    <button class="fb-pill" onclick="fbSelect(this,'q2')">🎵 Audio personalizado</button>
                 </div>
-                <div style="text-align:center;margin-top:.5rem;">
-                    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--mut);letter-spacing:.1em;">Estamos curadurando los mejores productos para vos.</p>
+                <div id="fb-send" style="display:none;text-align:center;margin-top:1rem;">
+                    <button class="fb-send-btn" onclick="fbEnviar()">Enviar mi voz → kalmaumbra</button>
+                </div>
+                <div id="fb-thanks" style="display:none;text-align:center;margin-top:.8rem;">
+                    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--em2);letter-spacing:.1em;">Gracias · Tu voz construye KalmaUmbra 🌿</p>
+                </div>
+
+                <!-- Redes -->
+                <div class="fb-social">
+                    <a href="https://instagram.com/kalmaumbra" target="_blank" class="fb-soc-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                        @kalmaumbra
+                    </a>
+                    <a href="mailto:kalmaumbra@gmail.com" class="fb-soc-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                        Escribinos
+                    </a>
                 </div>
             </div>
 
@@ -870,7 +973,7 @@
 
             /* ─── ESTADO ─── */
             let ac = null, gn = null, lo = null, ro = null, mo = null;
-            let playing = false, si = 4, vol = 0.45, tsec = 0, ttick = null;
+            let playing = false, si = 4, vol = 0.15, tsec = 0, ttick = null;
             let ambientEls = {}, heartCurrent = null, mixVol = 0.30, ambActiveType = null;
             let expActive = false;
 
@@ -1014,7 +1117,9 @@
             function mkCtx(){
                 if(!ac){
                     ac = new(window.AudioContext||window.webkitAudioContext)();
-                    gn = ac.createGain(); gn.connect(ac.destination); gn.gain.setValueAtTime(vol, ac.currentTime);
+                    gn = ac.createGain(); gn.connect(ac.destination);
+                gn.gain.setValueAtTime(0, ac.currentTime);
+                gn.gain.linearRampToValueAtTime(vol, ac.currentTime + 1.2);
                 }
                 if(ac.state === 'suspended') ac.resume();
             }
@@ -1263,6 +1368,26 @@
                 document.getElementById('exp-ambDot').classList.remove('on');
                 ambActiveType = null;
             }
+
+            /* ─── FEEDBACK ─── */
+            window.fbSelect = function(btn, group) {
+                document.querySelectorAll(`#fb-${group} .fb-pill`).forEach(b => b.classList.remove('on'));
+                btn.classList.add('on');
+                const q1 = document.querySelector('#fb-q1 .fb-pill.on');
+                const q2 = document.querySelector('#fb-q2 .fb-pill.on');
+                document.getElementById('fb-send').style.display = (q1 || q2) ? 'block' : 'none';
+            };
+            window.fbEnviar = function() {
+                const q1 = document.querySelector('#fb-q1 .fb-pill.on');
+                const q2 = document.querySelector('#fb-q2 .fb-pill.on');
+                const r1 = q1 ? q1.textContent.trim() : 'Sin selección';
+                const r2 = q2 ? q2.textContent.trim() : 'Sin selección';
+                const subject = encodeURIComponent('Feedback KalmaUmbra');
+                const body = encodeURIComponent(`Hola KalmaUmbra!\n\n¿Qué busco?: ${r1}\n¿Qué me gustaría que existiera?: ${r2}\n\n(Enviado desde kalmaumbra.github.io)`);
+                window.open(`mailto:kalmaumbra@gmail.com?subject=${subject}&body=${body}`);
+                document.getElementById('fb-send').style.display = 'none';
+                document.getElementById('fb-thanks').style.display = 'block';
+            };
 
             // Exportar API pública
             window.Exp = {
