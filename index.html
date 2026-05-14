@@ -506,6 +506,40 @@
             color:var(--em2);letter-spacing:.12em;
         }
 
+        /* Combos */
+        #screen-experience .combos-grid{
+            width:100%;max-width:650px;
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem;
+        }
+        #screen-experience .combo-card{
+            background:rgba(12,20,16,0.92);border:1px solid var(--bdr);border-radius:14px;
+            padding:.9rem 1rem;cursor:pointer;transition:all .25s;
+            display:flex;flex-direction:column;gap:.3rem;
+            position:relative;overflow:hidden;backdrop-filter:blur(8px);
+        }
+        #screen-experience .combo-card:hover{
+            border-color:rgba(16,185,129,.35);transform:translateY(-2px);
+            box-shadow:0 8px 24px rgba(16,185,129,.1);
+        }
+        #screen-experience .combo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem}
+        #screen-experience .combo-emoji{font-size:1.4rem;line-height:1}
+        #screen-experience .combo-tags{display:flex;flex-direction:column;gap:.25rem;align-items:flex-end}
+        #screen-experience .combo-tag{
+            font-size:.55rem;letter-spacing:.08em;
+            border:1px solid transparent;border-radius:50px;padding:.12rem .45rem;
+        }
+        #screen-experience .combo-name{
+            font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:300;
+            letter-spacing:.06em;color:var(--em3);margin-top:.2rem;
+        }
+        #screen-experience .combo-desc{font-size:.6rem;color:var(--mut);line-height:1.5}
+        #screen-experience .combo-mix{font-size:.55rem;color:rgba(110,231,183,.4);letter-spacing:.08em;margin-top:.2rem}
+        #screen-experience .combo-play{
+            font-size:.62rem;color:var(--em2);letter-spacing:.1em;
+            margin-top:.3rem;opacity:0;transition:opacity .2s;
+        }
+        #screen-experience .combo-card:hover .combo-play{opacity:1}
+
         #screen-experience footer{font-size:.57rem;color:var(--mut);opacity:.35;text-align:center;margin-top:.5rem;}
 
         /* Botón CTA Sintetizador */
@@ -793,8 +827,8 @@
             <!-- Volume -->
             <div class="vr">
                 <label>Volumen</label>
-                <input type="range" id="exp-vs" min="0" max="100" value="15" oninput="Exp.setVol(this.value)" style="--v:15%"/>
-                <span class="vv" id="exp-vv">15%</span>
+                <input type="range" id="exp-vs" min="0" max="4" value="2" oninput="Exp.setVol(this.value)" style="--v:50%"/>
+                <span class="vv" id="exp-vv">2%</span>
             </div>
 
             <!-- Guide Toggle -->
@@ -892,6 +926,54 @@
 
             <!-- Freq Grid (se construye con JS) -->
             <div class="grid" id="exp-grid"></div>
+
+            <!-- Combos sugeridos -->
+            <div class="section-divider" style="margin-top:.5rem"><span>Pistas Sugeridas</span></div>
+            <div class="combos-grid">
+
+                <div class="combo-card" onclick="activateCombo(13,'rain',2,75)">
+                    <div class="combo-top">
+                        <span class="combo-emoji">🌧️</span>
+                        <div class="combo-tags">
+                            <span class="combo-tag" style="color:#fb923c;border-color:rgba(251,146,60,.3)">14 Hz · Binaural</span>
+                            <span class="combo-tag" style="color:#fb6060;border-color:rgba(251,96,96,.3)">🔥 Íntimo</span>
+                        </div>
+                    </div>
+                    <div class="combo-name">Lluvia Profunda</div>
+                    <div class="combo-desc">Groove íntimo · Vitalidad · Lluvia envolvente</div>
+                    <div class="combo-mix">Freq 2% · Amb 75%</div>
+                    <div class="combo-play">Activar →</div>
+                </div>
+
+                <div class="combo-card" onclick="activateCombo(11,'rain',2,50)">
+                    <div class="combo-top">
+                        <span class="combo-emoji">🧘</span>
+                        <div class="combo-tags">
+                            <span class="combo-tag" style="color:#7c5cfc;border-color:rgba(124,92,252,.3)">6 Hz · Theta</span>
+                            <span class="combo-tag" style="color:#10b981;border-color:rgba(16,185,129,.3)">🧘 Meditación</span>
+                        </div>
+                    </div>
+                    <div class="combo-name">Lluvia Theta</div>
+                    <div class="combo-desc">Meditación profunda · Calma total · Lluvia suave</div>
+                    <div class="combo-mix">Freq 2% · Amb 50%</div>
+                    <div class="combo-play">Activar →</div>
+                </div>
+
+                <div class="combo-card" onclick="activateCombo(10,'fire',2,50)">
+                    <div class="combo-top">
+                        <span class="combo-emoji">🔥</span>
+                        <div class="combo-tags">
+                            <span class="combo-tag" style="color:#6ee7b7;border-color:rgba(110,231,183,.3)">2 Hz · Delta</span>
+                            <span class="combo-tag" style="color:#7c5cfc;border-color:rgba(124,92,252,.3)">🌙 Sueño</span>
+                        </div>
+                    </div>
+                    <div class="combo-name">Fuego & Luna</div>
+                    <div class="combo-desc">Sueño profundo · Delta puro · Calor del fuego</div>
+                    <div class="combo-mix">Freq 2% · Amb 50%</div>
+                    <div class="combo-play">Activar →</div>
+                </div>
+
+            </div>
 
             <!-- Pill -->
             <div class="pill-main">
@@ -1487,7 +1569,7 @@
 
             /* ─── ESTADO ─── */
             let ac = null, gn = null, lo = null, ro = null, mo = null;
-            let playing = false, si = 4, vol = 0.15, tsec = 0, ttick = null;
+            let playing = false, si = 4, vol = 0.02, tsec = 0, ttick = null;
             let ambientEls = {}, heartCurrent = null, mixVol = 0.30, ambActiveType = null;
             let expActive = false;
 
@@ -1883,7 +1965,38 @@
                 ambActiveType = null;
             }
 
-            /* ─── FEEDBACK ─── */
+            /* ─── COMBOS SUGERIDOS ─── */
+        window.activateCombo = function(freqIdx, ambType, freqVol, ambVol) {
+            // Seleccionar frecuencia
+            if(window.Exp && window.Exp.selectFreq) window.Exp.selectFreq(freqIdx);
+
+            // Desactivar ambientes previos
+            ['rain','fire','ocean','bosque','heart'].forEach(t => {
+                const btn = document.getElementById('exp-amb-' + t);
+                if(btn && btn.classList.contains('on')) Exp.toggleAmb(t, btn);
+            });
+
+            // Activar ambiente del combo
+            const ambBtn = document.getElementById('exp-amb-' + ambType);
+            if(ambBtn) Exp.toggleAmb(ambType, ambBtn);
+
+            // Setear volumen frecuencia (máx 4%)
+            const safeFreqVol = Math.min(freqVol, 4);
+            Exp.setVol(safeFreqVol);
+            const vs = document.getElementById('exp-vs');
+            if(vs){ vs.value = safeFreqVol; vs.style.setProperty('--v', (safeFreqVol/4*100)+'%'); }
+            document.getElementById('exp-vv').textContent = safeFreqVol + '%';
+
+            // Setear volumen ambiente
+            Exp.setMixVol(ambVol);
+            const mr = document.getElementById('exp-mixRange');
+            if(mr){ mr.value = ambVol; mr.style.setProperty('--mv', ambVol+'%'); }
+
+            // Scroll suave al player
+            document.querySelector('#screen-experience .vw')?.scrollIntoView({behavior:'smooth', block:'center'});
+        };
+
+        /* ─── FEEDBACK ─── */
             window.fbSelect = function(btn, group) {
                 document.querySelectorAll(`#fb-${group} .fb-pill`).forEach(b => b.classList.remove('on'));
                 btn.classList.add('on');
@@ -1913,7 +2026,8 @@
                 toggleAmb,
                 setMixVol,
                 onActivate,
-                onDeactivate
+                onDeactivate,
+                selectFreq
             };
 
             // Inicialización
