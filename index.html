@@ -508,6 +508,47 @@
 
         #screen-experience footer{font-size:.57rem;color:var(--mut);opacity:.35;text-align:center;margin-top:.5rem;}
 
+        /* Botón CTA Sintetizador */
+        #screen-experience .synth-cta{
+            width:100%;max-width:650px;
+            background:rgba(12,20,16,0.92);
+            border:1px solid rgba(16,185,129,.2);
+            border-radius:14px;padding:1rem 1.2rem;
+            display:flex;align-items:center;justify-content:space-between;
+            cursor:pointer;transition:all .25s;
+            backdrop-filter:blur(10px);
+        }
+        #screen-experience .synth-cta:hover{
+            border-color:var(--em);
+            background:rgba(16,185,129,.08);
+            transform:translateY(-2px);
+            box-shadow:0 8px 28px rgba(16,185,129,.12);
+        }
+        #screen-experience .synth-cta-left{display:flex;align-items:center;gap:.9rem}
+        #screen-experience .synth-cta-icon{font-size:1.6rem;line-height:1}
+        #screen-experience .synth-cta-title{
+            font-family:'Cormorant Garamond',serif;
+            font-size:1.05rem;font-weight:300;letter-spacing:.06em;color:var(--em3);
+        }
+        #screen-experience .synth-cta-sub{
+            font-size:.62rem;color:var(--mut);letter-spacing:.08em;margin-top:.15rem;
+        }
+        #screen-experience .synth-cta-arrow{
+            font-size:1.1rem;color:var(--em2);opacity:.6;
+            transition:all .25s;
+        }
+        #screen-experience .synth-cta:hover .synth-cta-arrow{
+            opacity:1;transform:translateX(4px);
+        }
+        #screen-experience .synth-cta-modes{
+            display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem;
+        }
+        #screen-experience .synth-mode-pill{
+            font-size:.58rem;letter-spacing:.06em;
+            border:1px solid transparent;
+            border-radius:50px;padding:.18rem .55rem;
+        }
+
         /* Feedback */
         #screen-experience .feedback-section{
             width:100%;max-width:650px;
@@ -857,6 +898,24 @@
                 🎧 Auriculares recomendados para tonos binaurales &nbsp;·&nbsp; 🔊 Volumen suave 30–55 % &nbsp;·&nbsp; 😮‍💨 Cerrá los ojos y respirá
             </div>
 
+            <!-- Botón Sintetizador -->
+            <div class="synth-cta" onclick="toScreen('synth')">
+                <div class="synth-cta-left">
+                    <span class="synth-cta-icon">🎛️</span>
+                    <div>
+                        <div class="synth-cta-title">Modo Síntesis</div>
+                        <div class="synth-cta-sub">Techno chill · Drum & bass · Motor en tiempo real</div>
+                        <div class="synth-cta-modes">
+                            <span class="synth-mode-pill" style="border-color:rgba(124,92,252,.35);color:#7c5cfc;background:rgba(124,92,252,.08)">🌙 Sueño</span>
+                            <span class="synth-mode-pill" style="border-color:rgba(251,96,96,.35);color:#fb6060;background:rgba(251,96,96,.08)">🔥 Íntimo</span>
+                            <span class="synth-mode-pill" style="border-color:rgba(16,185,129,.35);color:#10b981;background:rgba(16,185,129,.08)">🧘 Meditación</span>
+                            <span class="synth-mode-pill" style="border-color:rgba(250,204,21,.35);color:#facc15;background:rgba(250,204,21,.08)">⚡ Energía</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="synth-cta-arrow">→</span>
+            </div>
+
             <!-- Feedback -->
             <div class="section-divider" style="margin-top:1.5rem;"><span>Tu Voz Importa</span></div>
             <div class="feedback-section" id="exp-feedback">
@@ -902,7 +961,462 @@
         </div><!-- /exp-w -->
     </div><!-- /screen-experience -->
 
-    <!-- ======================== SCRIPTS ======================== -->
+    <!-- ======================== PANTALLA SINTETIZADOR ======================== -->
+    <style>
+        #screen-synth{
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            z-index:10;opacity:0;pointer-events:none;
+            transition:opacity 1.2s ease;
+            display:block !important;
+            overflow-y:auto !important;overflow-x:hidden;
+            -webkit-overflow-scrolling:touch;
+        }
+        #screen-synth.active{opacity:1;pointer-events:all}
+        #screen-synth .sy-w{
+            position:relative;z-index:2;
+            display:flex;flex-direction:column;align-items:center;
+            padding:1.8rem 1rem 5rem;gap:1.4rem;
+        }
+        /* Header */
+        #screen-synth header{text-align:center}
+        #screen-synth .sy-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:.35rem}
+        #screen-synth h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,5vw,2.5rem);letter-spacing:.05em;
+            background:linear-gradient(130deg,var(--em3),var(--em2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        #screen-synth .sy-sub{font-size:.7rem;color:var(--mut);letter-spacing:.12em;margin-top:.3rem}
+        /* Vis */
+        #screen-synth .sy-vis{width:100%;max-width:650px;height:72px;background:rgba(14,22,18,0.7);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+        #screen-synth canvas{width:100%;height:100%}
+        /* Status */
+        #screen-synth .sy-status{
+            width:100%;max-width:650px;
+            display:flex;align-items:center;justify-content:space-between;
+            background:rgba(14,22,18,0.95);border:1px solid var(--bdr);border-radius:12px;
+            padding:.7rem 1.1rem;backdrop-filter:blur(10px);
+        }
+        #screen-synth .sy-dot{width:7px;height:7px;border-radius:50%;background:var(--mut);transition:all .4s}
+        #screen-synth .sy-dot.on{background:var(--em);box-shadow:0 0 7px var(--em);animation:dp2 1.8s ease-in-out infinite}
+        @keyframes dp2{0%,100%{opacity:.5}50%{opacity:1}}
+        #screen-synth .sy-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--em2)}
+        #screen-synth .sy-bpm{font-size:.62rem;color:var(--mut);letter-spacing:.1em}
+        #screen-synth .sy-time{font-size:.72rem;color:var(--mut)}
+        /* Prog */
+        #screen-synth .sy-prog{width:100%;max-width:650px;height:2px;background:rgba(16,185,129,.1);border-radius:2px}
+        #screen-synth .sy-bar{height:100%;width:0;background:linear-gradient(90deg,var(--em),var(--em3));border-radius:2px;transition:width .8s linear}
+        /* Steps */
+        #screen-synth .sy-steps{width:100%;max-width:650px;display:flex;gap:3px}
+        #screen-synth .sy-sd{flex:1;height:4px;border-radius:2px;background:rgba(16,185,129,.12);transition:background .08s}
+        #screen-synth .sy-sd.k{background:var(--em)}
+        #screen-synth .sy-sd.s{background:#fb923c}
+        #screen-synth .sy-sd.h{background:rgba(110,231,183,.45)}
+        #screen-synth .sy-sd.cur{background:var(--em3);box-shadow:0 0 6px var(--em3)}
+        /* Moods */
+        #screen-synth .sy-moods{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;width:100%;max-width:650px}
+        #screen-synth .sy-mc{
+            background:rgba(12,20,16,0.92);border:1px solid var(--bdr);border-radius:14px;
+            padding:1rem .95rem;cursor:pointer;transition:all .25s;
+            display:flex;flex-direction:column;gap:.3rem;
+            position:relative;overflow:hidden;backdrop-filter:blur(8px);
+        }
+        #screen-synth .sy-mc::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:14px}
+        #screen-synth .sy-mc:hover{transform:translateY(-2px)}
+        #screen-synth .sy-mc:hover::before,#screen-synth .sy-mc.on::before{opacity:1}
+        #screen-synth .sy-mc[data-m="sueno"]::before{background:linear-gradient(135deg,rgba(124,92,252,.1),transparent)}
+        #screen-synth .sy-mc[data-m="intimo"]::before{background:linear-gradient(135deg,rgba(251,100,100,.1),transparent)}
+        #screen-synth .sy-mc[data-m="meditacion"]::before{background:linear-gradient(135deg,rgba(16,185,129,.1),transparent)}
+        #screen-synth .sy-mc[data-m="energia"]::before{background:linear-gradient(135deg,rgba(250,204,21,.1),transparent)}
+        #screen-synth .sy-mc[data-m="sueno"].on{border-color:#7c5cfc}
+        #screen-synth .sy-mc[data-m="intimo"].on{border-color:#fb6060}
+        #screen-synth .sy-mc[data-m="meditacion"].on{border-color:var(--em)}
+        #screen-synth .sy-mc[data-m="energia"].on{border-color:#facc15}
+        #screen-synth .sy-mc-icon{font-size:1.4rem}
+        #screen-synth .sy-mc-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;letter-spacing:.06em}
+        #screen-synth .sy-mc-info{font-size:.6rem;color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+        #screen-synth .sy-mc-desc{font-size:.62rem;color:var(--mut);line-height:1.5;margin-top:.1rem}
+        /* Layers */
+        #screen-synth .sy-layers{
+            width:100%;max-width:650px;
+            background:rgba(12,20,16,0.9);border:1px solid var(--bdr);border-radius:14px;
+            padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.7rem;backdrop-filter:blur(8px);
+        }
+        #screen-synth .sy-ly-title{font-size:.6rem;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-bottom:.1rem}
+        #screen-synth .sy-ly-row{display:flex;align-items:center;gap:.8rem}
+        #screen-synth .sy-ly-label{font-size:.65rem;color:var(--mut);min-width:64px;letter-spacing:.06em}
+        #screen-synth .sy-mute{
+            background:transparent;border:1px solid var(--bdr);border-radius:50px;
+            padding:.18rem .55rem;font-size:.55rem;color:var(--mut);cursor:pointer;letter-spacing:.1em;transition:all .2s;font-family:'Outfit',sans-serif;
+        }
+        #screen-synth .sy-mute.off{border-color:rgba(251,146,60,.4);color:rgba(251,146,60,.6)}
+        /* Dur */
+        #screen-synth .sy-dur-row{display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;max-width:650px}
+        #screen-synth .sy-dur-btn{
+            background:transparent;border:1px solid var(--bdr);border-radius:50px;
+            padding:.28rem .8rem;font-size:.63rem;color:var(--mut);cursor:pointer;letter-spacing:.08em;
+            transition:all .2s;font-family:'Outfit',sans-serif;
+        }
+        #screen-synth .sy-dur-btn:hover{border-color:var(--em);color:var(--txt)}
+        #screen-synth .sy-dur-btn.on{border-color:var(--em);color:var(--em2);background:rgba(16,185,129,.09)}
+        /* Play */
+        #screen-synth .sy-play-row{display:flex;align-items:center;justify-content:center;gap:1rem}
+        #screen-synth .sy-btn-play{
+            width:64px;height:64px;border-radius:50%;cursor:pointer;font-size:1.2rem;
+            background:radial-gradient(circle at 33% 33%,rgba(110,231,183,.2),rgba(16,185,129,.1) 50%,rgba(9,28,21,.8));
+            border:1px solid rgba(16,185,129,.35);color:var(--em2);
+            display:flex;align-items:center;justify-content:center;
+            transition:all .25s;box-shadow:0 0 28px rgba(16,185,129,.15);
+        }
+        #screen-synth .sy-btn-play:hover{transform:scale(1.06);box-shadow:0 0 42px rgba(16,185,129,.25)}
+        #screen-synth .sy-btn-sm{
+            background:transparent;border:1px solid var(--bdr);border-radius:50%;
+            width:36px;height:36px;color:var(--mut);cursor:pointer;font-size:.75rem;
+            display:flex;align-items:center;justify-content:center;transition:all .2s;
+        }
+        #screen-synth .sy-btn-sm:hover{border-color:var(--em);color:var(--em2)}
+    </style>
+
+    <div id="screen-synth" class="screen">
+        <button onclick="toScreen('experience')" style="
+            position:fixed;top:14px;left:16px;z-index:200;
+            display:flex;align-items:center;gap:.4rem;
+            background:rgba(9,28,21,0.75);border:1px solid rgba(16,185,129,0.18);
+            border-radius:50px;padding:.3rem .85rem;
+            font-family:'Outfit',sans-serif;font-size:.58rem;
+            letter-spacing:.14em;text-transform:uppercase;
+            color:rgba(107,158,138,0.8);backdrop-filter:blur(10px);cursor:pointer;transition:all .25s;
+        " onmouseover="this.style.color='#34d399';this.style.borderColor='rgba(16,185,129,0.4)'"
+           onmouseout="this.style.color='rgba(107,158,138,0.8)';this.style.borderColor='rgba(16,185,129,0.18)'">
+            ← Frecuencias
+        </button>
+
+        <div class="sy-w">
+            <header>
+                <p class="sy-tag">KalmaUmbra · Síntesis</p>
+                <h1>Motor Sonoro</h1>
+                <p class="sy-sub">Techno chill · Drum & bass · 100% en browser</p>
+            </header>
+
+            <div class="sy-vis"><canvas id="sy-vis-canvas"></canvas></div>
+
+            <div class="sy-status">
+                <div style="display:flex;align-items:center;gap:.6rem">
+                    <div class="sy-dot" id="sy-dot"></div>
+                    <div class="sy-name" id="sy-name">Elige un mood →</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.2rem">
+                    <div class="sy-bpm" id="sy-bpm">— BPM</div>
+                    <div class="sy-time" id="sy-time">00:00</div>
+                </div>
+            </div>
+
+            <div class="sy-prog"><div class="sy-bar" id="sy-bar"></div></div>
+            <div class="sy-steps" id="sy-steps"></div>
+
+            <div class="sy-moods">
+                <div class="sy-mc" data-m="sueno" onclick="KS.selectMood('sueno',this)">
+                    <div class="sy-mc-icon">🌙</div>
+                    <div class="sy-mc-name">Sueño</div>
+                    <div class="sy-mc-info">80 BPM · 432 Hz</div>
+                    <div class="sy-mc-desc">Ambient · pad suave · kick mínimo</div>
+                </div>
+                <div class="sy-mc" data-m="intimo" onclick="KS.selectMood('intimo',this)">
+                    <div class="sy-mc-icon">🔥</div>
+                    <div class="sy-mc-name">Íntimo</div>
+                    <div class="sy-mc-info">100 BPM · 528 Hz</div>
+                    <div class="sy-mc-desc">Deep house chill · bajo cálido</div>
+                </div>
+                <div class="sy-mc" data-m="meditacion" onclick="KS.selectMood('meditacion',this)">
+                    <div class="sy-mc-icon">🧘</div>
+                    <div class="sy-mc-name">Meditación</div>
+                    <div class="sy-mc-info">70 BPM · 396 Hz</div>
+                    <div class="sy-mc-desc">Minimalista · espacio · drone</div>
+                </div>
+                <div class="sy-mc" data-m="energia" onclick="KS.selectMood('energia',this)">
+                    <div class="sy-mc-icon">⚡</div>
+                    <div class="sy-mc-name">Energía</div>
+                    <div class="sy-mc-info">128 BPM · 741 Hz</div>
+                    <div class="sy-mc-desc">Techno chill · 4/4 · hi-hats</div>
+                </div>
+            </div>
+
+            <div class="sy-layers">
+                <div class="sy-ly-title">Capas</div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">Kick</span>
+                    <button class="sy-mute" id="sm-kick" onclick="KS.toggleMute('kick',this)">ON</button>
+                    <input type="range" min="0" max="100" value="85" oninput="KS.setLayerVol('kick',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 85%,rgba(16,185,129,.14) 85%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-kick" style="min-width:28px;text-align:right">85%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">Snare</span>
+                    <button class="sy-mute" id="sm-snare" onclick="KS.toggleMute('snare',this)">ON</button>
+                    <input type="range" min="0" max="100" value="70" oninput="KS.setLayerVol('snare',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 70%,rgba(16,185,129,.14) 70%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-snare" style="min-width:28px;text-align:right">70%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">Hi-Hat</span>
+                    <button class="sy-mute" id="sm-hat" onclick="KS.toggleMute('hat',this)">ON</button>
+                    <input type="range" min="0" max="100" value="45" oninput="KS.setLayerVol('hat',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 45%,rgba(16,185,129,.14) 45%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-hat" style="min-width:28px;text-align:right">45%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">Bass</span>
+                    <button class="sy-mute" id="sm-bass" onclick="KS.toggleMute('bass',this)">ON</button>
+                    <input type="range" min="0" max="100" value="75" oninput="KS.setLayerVol('bass',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 75%,rgba(16,185,129,.14) 75%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-bass" style="min-width:28px;text-align:right">75%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">Pad / Freq</span>
+                    <button class="sy-mute" id="sm-pad" onclick="KS.toggleMute('pad',this)">ON</button>
+                    <input type="range" min="0" max="100" value="55" oninput="KS.setLayerVol('pad',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 55%,rgba(16,185,129,.14) 55%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-pad" style="min-width:28px;text-align:right">55%</span>
+                </div>
+            </div>
+
+            <div class="sy-dur-row">
+                <button class="sy-dur-btn" onclick="KS.setDur(15,this)">15 min</button>
+                <button class="sy-dur-btn" onclick="KS.setDur(30,this)">30 min</button>
+                <button class="sy-dur-btn on" onclick="KS.setDur(45,this)">45 min</button>
+            </div>
+
+            <div class="sy-play-row">
+                <button class="sy-btn-sm" onclick="KS.prevMood()">◀</button>
+                <button class="sy-btn-play" id="sy-btn-play" onclick="KS.toggle()">▶</button>
+                <button class="sy-btn-sm" onclick="KS.nextMood()">▶▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /* ════ MOTOR DE SÍNTESIS KALMAUMBRA ════ */
+    window.KS = (function(){
+        const MOODS = {
+            sueno:      {label:'Sueño',      icon:'🌙',bpm:80, baseHz:432,kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],bass:[55,0,0,0,0,0,0,0,55,0,0,0,0,0,41,0],pad:[108,144,216,288],kickDecay:.6,kickPunch:160,kickFloor:38,color:'#7c5cfc'},
+            intimo:     {label:'Íntimo',     icon:'🔥',bpm:100,baseHz:528,kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[65,0,0,65,0,0,0,0,73,0,0,65,0,0,0,0],pad:[132,165,220,264],kickDecay:.45,kickPunch:140,kickFloor:42,color:'#fb6060'},
+            meditacion: {label:'Meditación', icon:'🧘',bpm:70, baseHz:396,kick:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],snare:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],hat:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],bass:[44,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0],pad:[99,132,198,264],kickDecay:.9,kickPunch:120,kickFloor:36,color:'#10b981'},
+            energia:    {label:'Energía',    icon:'⚡',bpm:128,baseHz:741,kick:[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[82,0,82,0,0,0,110,0,82,0,0,82,0,110,0,0],pad:[185,220,277,370],kickDecay:.3,kickPunch:180,kickFloor:45,color:'#facc15'},
+        };
+        const KEYS = Object.keys(MOODS);
+        let ac=null,playing=false,currentMood=null;
+        let step=0,nextStepTime=0,schedTimer=null;
+        let totalSec=45*60,elapsedSec=0,clockTimer=null;
+        let analyser=null,dataArr=null;
+        const gains={kick:null,snare:null,hat:null,bass:null,pad:null};
+        const vols={kick:.85,snare:.70,hat:.45,bass:.75,pad:.55};
+        const muted={kick:false,snare:false,hat:false,bass:false,pad:false};
+        let padNodes=[];
+        let _noiseBuf=null;
+
+        function initAudio(){
+            if(ac) return;
+            ac=new (window.AudioContext||window.webkitAudioContext)();
+            const comp=ac.createDynamicsCompressor();
+            comp.threshold.value=-6;comp.ratio.value=4;comp.attack.value=.003;comp.release.value=.25;
+            comp.connect(ac.destination);
+            analyser=ac.createAnalyser();analyser.fftSize=256;
+            dataArr=new Uint8Array(analyser.frequencyBinCount);
+            analyser.connect(comp);
+            for(const k in gains){gains[k]=ac.createGain();gains[k].gain.value=vols[k];gains[k].connect(analyser);}
+        }
+
+        function noise(){
+            if(_noiseBuf) return _noiseBuf;
+            const b=ac.createBuffer(1,ac.sampleRate*.5,ac.sampleRate);
+            const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+            return (_noiseBuf=b);
+        }
+
+        function kick(t,p){
+            const o=ac.createOscillator(),g=ac.createGain();
+            o.type='sine';o.frequency.setValueAtTime(p.kickPunch,t);o.frequency.exponentialRampToValueAtTime(p.kickFloor,t+p.kickDecay*.7);
+            g.gain.setValueAtTime(1,t);g.gain.exponentialRampToValueAtTime(.001,t+p.kickDecay);
+            o.connect(g);g.connect(gains.kick);o.start(t);o.stop(t+p.kickDecay+.05);
+            const s=ac.createOscillator(),sg=ac.createGain();
+            s.type='sine';s.frequency.value=p.kickFloor*.5;sg.gain.setValueAtTime(.6,t);sg.gain.exponentialRampToValueAtTime(.001,t+p.kickDecay*.5);
+            s.connect(sg);sg.connect(gains.kick);s.start(t);s.stop(t+p.kickDecay);
+        }
+
+        function snare(t){
+            const src=ac.createBufferSource(),bpf=ac.createBiquadFilter(),ng=ac.createGain();
+            src.buffer=noise();bpf.type='bandpass';bpf.frequency.value=2200;bpf.Q.value=.8;
+            ng.gain.setValueAtTime(.9,t);ng.gain.exponentialRampToValueAtTime(.001,t+.18);
+            src.connect(bpf);bpf.connect(ng);ng.connect(gains.snare);src.start(t);src.stop(t+.22);
+            const o=ac.createOscillator(),og=ac.createGain();
+            o.type='triangle';o.frequency.value=185;og.gain.setValueAtTime(.6,t);og.gain.exponentialRampToValueAtTime(.001,t+.12);
+            o.connect(og);og.connect(gains.snare);o.start(t);o.stop(t+.15);
+        }
+
+        function hat(t){
+            const src=ac.createBufferSource(),hpf=ac.createBiquadFilter(),g=ac.createGain();
+            src.buffer=noise();hpf.type='highpass';hpf.frequency.value=7000;
+            g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+.055);
+            src.connect(hpf);hpf.connect(g);g.connect(gains.hat);src.start(t);src.stop(t+.07);
+        }
+
+        function bass(t,freq,dur){
+            if(!freq) return;
+            const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lpf=ac.createBiquadFilter();
+            lpf.type='lowpass';lpf.frequency.value=320;lpf.Q.value=1.4;
+            o.type='sawtooth';o.frequency.value=freq;o2.type='sine';o2.frequency.value=freq*.5;
+            const d=dur*.85;
+            g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.9,t+.012);g.gain.setValueAtTime(.9,t+d*.6);g.gain.exponentialRampToValueAtTime(.001,t+d);
+            o.connect(lpf);o2.connect(lpf);lpf.connect(g);g.connect(gains.bass);
+            o.start(t);o2.start(t);o.stop(t+d+.02);o2.stop(t+d+.02);
+        }
+
+        function startPad(p){
+            stopPad();
+            const t=ac.currentTime;
+            p.pad.forEach((freq,i)=>{
+                const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lpf=ac.createBiquadFilter();
+                lpf.type='lowpass';lpf.frequency.setValueAtTime(300,t);lpf.frequency.linearRampToValueAtTime(900+i*120,t+4);
+                o.type='sine';o.frequency.value=freq;o2.type='triangle';o2.frequency.value=freq*1.004;
+                g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18/(i+1),t+2.5+i*.4);
+                o.connect(lpf);o2.connect(lpf);lpf.connect(g);g.connect(gains.pad);o.start(t);o2.start(t);
+                padNodes.push(o,o2,g);
+            });
+            const sol=ac.createOscillator(),sg=ac.createGain();
+            sol.type='sine';sol.frequency.value=p.baseHz;sg.gain.setValueAtTime(0,t);sg.gain.linearRampToValueAtTime(.07,t+3);
+            sol.connect(sg);sg.connect(gains.pad);sol.start(t);padNodes.push(sol,sg);
+        }
+
+        function stopPad(fade){
+            const t=ac?ac.currentTime:0;
+            padNodes.forEach(n=>{
+                if(n instanceof GainNode){n.gain.cancelScheduledValues(t);if(fade){n.gain.setValueAtTime(n.gain.value,t);n.gain.linearRampToValueAtTime(0,t+1.5);}else{try{n.gain.setValueAtTime(0,t);}catch(e){}}}
+                else{try{setTimeout(()=>{try{n.stop()}catch(e){}},fade?1600:0);}catch(e){}}
+            });
+            padNodes=[];
+        }
+
+        function schedStep(t,p){
+            const dur=(60/p.bpm)/4;
+            if(!muted.kick  && p.kick [step]) kick(t,p);
+            if(!muted.snare && p.snare[step]) snare(t);
+            if(!muted.hat   && p.hat  [step]) hat(t);
+            if(!muted.bass)                   bass(t,p.bass[step],dur);
+            nextStepTime+=dur; step=(step+1)%16;
+        }
+
+        function scheduler(){
+            if(!playing||!currentMood) return;
+            const p=MOODS[currentMood];
+            while(nextStepTime<ac.currentTime+.08) schedStep(nextStepTime,p);
+        }
+
+        /* Visualizer */
+        const vc=document.getElementById('sy-vis-canvas');
+        const vx=vc?vc.getContext('2d'):null;
+        let wt=0;
+        function resizeVis(){if(!vc)return;vc.width=vc.offsetWidth*devicePixelRatio;vc.height=vc.offsetHeight*devicePixelRatio;}
+        window.addEventListener('resize',resizeVis);resizeVis();
+        function drawVis(){
+            requestAnimationFrame(drawVis);
+            if(!vx) return;
+            const W=vc.offsetWidth,H=vc.offsetHeight;
+            vx.clearRect(0,0,W,H);
+            if(!analyser||!playing){
+                vx.globalAlpha=.2;vx.beginPath();const t=Date.now()/1000;
+                for(let x=0;x<=W;x+=2){const y=H/2+Math.sin(x*.02+t)*6+Math.sin(x*.007+t*.5)*3;x===0?vx.moveTo(x,y):vx.lineTo(x,y);}
+                vx.strokeStyle='#34d399';vx.lineWidth=1.2;vx.stroke();vx.globalAlpha=1;return;
+            }
+            analyser.getByteFrequencyData(dataArr);
+            const color=currentMood?MOODS[currentMood].color:'#34d399';
+            const bw=W/dataArr.length;
+            vx.globalAlpha=.7;
+            for(let i=0;i<dataArr.length;i++){
+                const h=(dataArr[i]/255)*H,x=i*bw;
+                const gr=vx.createLinearGradient(0,H-h,0,H);gr.addColorStop(0,color);gr.addColorStop(1,'rgba(0,0,0,0)');
+                vx.fillStyle=gr;vx.fillRect(x,H-h,bw-1,h);
+            }
+            vx.globalAlpha=1;
+        }
+        drawVis();
+
+        /* Step dots */
+        function buildSteps(){
+            const w=document.getElementById('sy-steps');if(!w)return;w.innerHTML='';
+            for(let i=0;i<16;i++){const d=document.createElement('div');d.className='sy-sd';d.id=`sy-sd-${i}`;w.appendChild(d);}
+        }
+        buildSteps();
+        let lastStep=-1;
+        function updateSteps(){
+            if(!playing||!currentMood)return;
+            const s=(step-1+16)%16;if(s===lastStep)return;
+            const p=MOODS[currentMood];
+            for(let i=0;i<16;i++){
+                const el=document.getElementById(`sy-sd-${i}`);if(!el)continue;
+                el.className='sy-sd'+(i===s?' cur':'');
+                if(i!==s){if(p.kick[i])el.classList.add('k');else if(p.snare[i])el.classList.add('s');else if(p.hat[i])el.classList.add('h');}
+            }
+            lastStep=s;
+        }
+        setInterval(updateSteps,30);
+
+        function fmtTime(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+
+        function startClock(){
+            clearInterval(clockTimer);
+            clockTimer=setInterval(()=>{
+                if(!playing)return;
+                elapsedSec++;
+                document.getElementById('sy-time').textContent=fmtTime(elapsedSec);
+                document.getElementById('sy-bar').style.width=Math.min((elapsedSec/totalSec)*100,100)+'%';
+                if(elapsedSec>=totalSec) stop(true);
+            },1000);
+        }
+
+        function stop(fade){
+            playing=false;clearInterval(schedTimer);clearInterval(clockTimer);
+            stopPad(fade);
+            const btn=document.getElementById('sy-btn-play');if(btn)btn.textContent='▶';
+            const dot=document.getElementById('sy-dot');if(dot)dot.classList.remove('on');
+            for(let i=0;i<16;i++){const el=document.getElementById(`sy-sd-${i}`);if(el)el.className='sy-sd';}
+        }
+
+        return {
+            toggle(){
+                if(!currentMood){document.querySelectorAll('.sy-mc').forEach(c=>{c.style.opacity='.5';setTimeout(()=>c.style.opacity='',350)});return;}
+                initAudio();if(ac.state==='suspended')ac.resume();
+                if(playing){stop(false);return;}
+                playing=true;step=0;nextStepTime=ac.currentTime+.05;elapsedSec=0;
+                startPad(MOODS[currentMood]);
+                schedTimer=setInterval(scheduler,40);
+                startClock();
+                const btn=document.getElementById('sy-btn-play');if(btn)btn.textContent='⏸';
+                const dot=document.getElementById('sy-dot');if(dot)dot.classList.add('on');
+            },
+            selectMood(key,card){
+                document.querySelectorAll('.sy-mc').forEach(c=>c.classList.remove('on'));
+                card.classList.add('on');
+                const prev=currentMood; currentMood=key;
+                const m=MOODS[key];
+                const sn=document.getElementById('sy-name');if(sn)sn.textContent=`${m.icon} ${m.label}`;
+                const sb=document.getElementById('sy-bpm');if(sb)sb.textContent=`${m.bpm} BPM · ${m.baseHz} Hz`;
+                for(let i=0;i<16;i++){const el=document.getElementById(`sy-sd-${i}`);if(el){el.className='sy-sd';if(m.kick[i])el.classList.add('k');else if(m.snare[i])el.classList.add('s');else if(m.hat[i])el.classList.add('h');}}
+                if(playing&&prev!==key){stopPad(true);setTimeout(()=>startPad(MOODS[key]),1000);}
+            },
+            prevMood(){const i=KEYS.indexOf(currentMood);document.querySelector(`[data-m="${KEYS[(i<=0?KEYS.length:i)-1]}"]`).click();},
+            nextMood(){const i=KEYS.indexOf(currentMood??KEYS[KEYS.length-1]);document.querySelector(`[data-m="${KEYS[(i+1)%KEYS.length]}"]`).click();},
+            setLayerVol(layer,v){
+                vols[layer]=v/100;
+                const el=document.getElementById(`sv-${layer}`);if(el)el.textContent=v+'%';
+                if(gains[layer]&&!muted[layer])gains[layer].gain.value=vols[layer];
+            },
+            toggleMute(layer,btn){
+                muted[layer]=!muted[layer];
+                btn.textContent=muted[layer]?'OFF':'ON';
+                btn.classList.toggle('off',muted[layer]);
+                if(gains[layer])gains[layer].gain.value=muted[layer]?0:vols[layer];
+            },
+            setDur(min,btn){
+                totalSec=min*60;elapsedSec=0;
+                const b=document.getElementById('sy-bar');if(b)b.style.width='0';
+                const t=document.getElementById('sy-time');if(t)t.textContent='00:00';
+                document.querySelectorAll('.sy-dur-btn').forEach(b=>b.classList.remove('on'));
+                btn.classList.add('on');
+            }
+        };
+    })();
+    </script>
     <script>
         /* ========== ARCHIVO 1: Canvas de ondas + Navegación ========== */
         (function() {
