@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KalmaUmbra — Experiencia Sensorial</title>
+    <meta name="description" content="Frecuencias terapéuticas, tonos binaurales y solfeggio generados en tiempo real para bienestar integral."/>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+
+    <!-- ========== ESTILOS ARCHIVO 1 (Globales + Bienvenida) ========== -->
     <style>
         :root {
             --bg: #07090e;
@@ -30,7 +33,7 @@
             color: var(--txt);
             font-family: 'Outfit', sans-serif;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;  /* ← CORREGIDO */
         }
 
         canvas#silk-canvas {
@@ -161,449 +164,405 @@
             left: 0;
         }
 
-        #screen-player {
-            flex-direction: column;
-            padding: 0;
-            max-height: 100vh;
-        }
-
-        .player-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100vh;
-            position: relative;
-        }
-
-        .player-header-socalo {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background: rgba(7, 9, 14, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--bdr);
-            padding: 0.6rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-back-header {
-            background: transparent;
-            border: 1px solid var(--bdr);
-            color: var(--mut);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.55rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .btn-back-header:hover {
-            border-color: var(--em);
-            color: var(--em2);
-        }
-
-        .header-center {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .orb-mini {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            background: radial-gradient(circle at 35% 35%, rgba(110, 231, 183, 0.2), rgba(16, 185, 129, 0.08) 50%, rgba(7, 9, 14, 0.8));
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1px;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .orb-mini:hover { transform: scale(1.08); box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); }
-        .orb-mini.playing { border-color: var(--em2); box-shadow: 0 0 40px rgba(52, 211, 153, 0.35); }
-
-        .pi-mini { font-size: 1rem; line-height: 1; }
-        .ol-mini { font-size: 0.4rem; color: rgba(110, 231, 183, 0.5); letter-spacing: 0.1em; text-transform: uppercase; }
-
-        .vol-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.2rem;
-        }
-
-        .vol-label-header {
-            font-size: 0.5rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--mut);
-        }
-
-        .vol-slider-header {
-            width: 80px;
-            height: 3px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: rgba(16, 185, 129, 0.15);
-            outline: none;
-            border-radius: 1px;
-            cursor: pointer;
-        }
-
-        .vol-slider-header::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--em2);
-            cursor: pointer;
-            box-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
-        }
-
-        .vol-slider-header::-moz-range-thumb {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--em2);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
-        }
-
-        .vol-value-header {
-            font-size: 0.5rem;
-            color: var(--em2);
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .timer-selector {
-            width: 65px;
-            height: 18px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--bdr);
-            border-radius: 3px;
-            color: var(--txt);
-            font-size: 0.5rem;
-            padding: 1px 2px;
-            cursor: pointer;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .timer-selector:hover {
-            border-color: var(--em2);
-        }
-
-        .timer-selector option {
-            background: var(--bg);
-            color: var(--txt);
-        }
-
-        .timer-display {
-            font-size: 0.5rem;
-            color: var(--gold);
-            min-width: 30px;
-            text-align: center;
-            min-height: 14px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .waitlist-btn-header {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--em2);
-            color: var(--em2);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.55rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .waitlist-btn-header:hover {
-            box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
-        }
-
-        .player-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .content-inner {
-            width: 100%;
-            max-width: 680px;
-            padding: 0 0.5rem;
-        }
-
-        .freq-display-header {
-            text-align: center;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--bdr);
-        }
-
-        .freq-hz-header {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 300;
-            background: linear-gradient(90deg, var(--em3), var(--em));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .freq-name-header { font-size: 0.6rem; color: var(--mut); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
-        .freq-desc-header { font-size: 0.55rem; color: var(--em2); margin-top: 3px; font-style: italic; }
-
-        .poetic-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.75rem;
-            line-height: 1.5;
-            color: rgba(223, 240, 232, 0.5);
-            margin: 0.8rem 0;
-            padding: 0.8rem;
-            border-left: 2px solid var(--gold);
-            background: rgba(198, 154, 58, 0.03);
-            font-style: italic;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 0.8rem 0;
-        }
-
-        .tab {
-            background: transparent;
-            border: 1px solid var(--bdr);
-            color: var(--mut);
-            border-radius: 12px;
-            padding: 0.25rem 0.7rem;
-            font-size: 0.6rem;
-            cursor: pointer;
-            font-family: 'Outfit', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .tab:hover { border-color: var(--em); }
-        .tab.on { background: rgba(16, 185, 129, 0.1); border-color: var(--em); color: var(--em2); }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
-            gap: 0.6rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .fc {
-            background: var(--card);
-            border: 1px solid var(--bdr);
-            border-radius: 8px;
-            padding: 0.7rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fc:hover { border-color: rgba(16, 185, 129, 0.35); transform: translateY(-2px); }
-        .fc.sel { border-color: var(--em); background: rgba(16, 185, 129, 0.08); }
-        .fc.hid { display: none; }
-
-        .cc { font-size: 0.45rem; letter-spacing: 0.1em; color: var(--mut); text-transform: uppercase; margin-bottom: 2px; }
-        .chz { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 300; }
-        .cn { font-size: 0.6rem; margin-bottom: 2px; color: var(--em2); }
-        .cd { font-size: 0.5rem; color: var(--mut); line-height: 1.3; }
-
-        .nav-tabs {
-            display: flex;
-            gap: 0.3rem;
-            justify-content: center;
-            margin: 1rem 0 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-tab {
-            background: transparent;
-            border: 1px solid var(--bdr);
-            color: var(--mut);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.6rem;
-            cursor: pointer;
-            font-family: 'Outfit', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .nav-tab:hover { border-color: var(--em); }
-        .nav-tab.active { background: rgba(16, 185, 129, 0.1); border-color: var(--em2); color: var(--em2); }
-
-        .content-section {
-            display: none;
-            width: 100%;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--em2);
-            margin-bottom: 0.8rem;
-            text-align: center;
-        }
-
-        .meditation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 0.8rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .meditation-card {
-            background: var(--card);
-            border: 1px solid var(--bdr);
-            border-radius: 8px;
-            padding: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        .meditation-card:hover { border-color: var(--em); transform: translateY(-2px); }
-
-        .meditation-icon { font-size: 1.6rem; }
-        .meditation-name { font-size: 0.7rem; font-weight: 400; }
-        .meditation-time { font-size: 0.55rem; color: var(--mut); }
-        .meditation-label { font-size: 0.45rem; color: var(--em2); letter-spacing: 0.08em; text-transform: uppercase; }
-
-        .stories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 0.8rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .story-card {
-            background: var(--card);
-            border: 1px solid var(--bdr);
-            border-radius: 8px;
-            padding: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 130px;
-        }
-
-        .story-card:hover { border-color: var(--gold); transform: translateY(-2px); background: rgba(198, 154, 58, 0.04); }
-
-        .story-title { font-size: 0.75rem; font-weight: 400; margin-bottom: 0.3rem; color: var(--gold); }
-        .story-author { font-size: 0.55rem; color: var(--mut); margin-bottom: 0.3rem; }
-        .story-duration { font-size: 0.55rem; color: var(--em2); }
-        .story-label { font-size: 0.45rem; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.3rem; }
-
-        .ambient-socalo-footer {
-            position: sticky;
-            bottom: 0;
-            z-index: 20;
-            width: 100%;
-            background: rgba(7, 9, 14, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--bdr);
-            padding: 0.5rem 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .ambient-label-footer {
-            font-size: 0.5rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--mut);
-        }
-
-        .ambient-buttons-footer {
-            display: flex;
-            gap: 0.4rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .ambient-chip-footer {
-            background: transparent;
-            border: 1px solid var(--bdr);
-            color: var(--txt);
-            padding: 0.3rem 0.6rem;
-            border-radius: 15px;
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
-
-        .ambient-chip-footer:hover { border-color: var(--em); }
-        .ambient-chip-footer.active { border-color: var(--em2); background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 10px rgba(52, 211, 153, 0.15); }
-
-        .ambient-icon-footer { font-size: 0.75rem; }
-
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: rgba(16, 185, 129, 0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 2px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
     </style>
+
+    <!-- ========== ESTILOS ARCHIVO 2 (Experiencia) - Encapsulados en #screen-experience ========== -->
+    <style>
+        /* Contenedor principal de la experiencia (pantalla completa, con scroll funcional) */
+        #screen-experience {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            opacity: 0; pointer-events: none;
+            transition: opacity 1.2s ease;
+            /* ELIMINADO display:flex; ahora es block para permitir scroll real */
+            display: block !important;
+            overflow-y: auto !important;   /* <--- SCROLL VERTICAL SIEMPRE */
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+        }
+        #screen-experience.active {
+            opacity: 1; pointer-events: all;
+        }
+
+        /* Fondo con imágenes y gradientes (solo dentro de la experiencia) */
+        #screen-experience .bg-images{
+            position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+        }
+        #screen-experience .bg-img{
+            position:absolute;
+            width:320px;
+            border-radius:18px;
+            opacity:0.07;
+            filter:saturate(0.3) brightness(1.9) sepia(0.3) hue-rotate(130deg);
+            transition:opacity 0.8s;
+            mix-blend-mode:screen;
+        }
+        #screen-experience .bg-img-1{top:-30px;left:-60px;width:350px;transform:rotate(-8deg);}
+        #screen-experience .bg-img-2{bottom:-40px;right:-50px;width:310px;transform:rotate(6deg);}
+        #screen-experience .bg-img-3{top:40%;left:calc(50% - 140px);width:260px;transform:rotate(2deg);opacity:0.05;}
+
+        #screen-experience::before{
+            content:'';position:fixed;inset:0;z-index:0;
+            background:
+                radial-gradient(ellipse 90% 55% at 50% 110%,rgba(16,185,129,0.14) 0%,transparent 65%),
+                radial-gradient(ellipse 45% 40% at 8%  2%,rgba(110,231,183,0.10) 0%,transparent 60%),
+                radial-gradient(ellipse 40% 35% at 92% 4%,rgba(16,185,129,0.08) 0%,transparent 55%),
+                radial-gradient(ellipse 60% 30% at 50% 50%,rgba(14,50,35,0.5) 0%,transparent 80%);
+            animation:bgpulse 12s ease-in-out infinite alternate;
+        }
+        @keyframes bgpulse{0%{opacity:.85}100%{opacity:1}}
+
+        #screen-experience canvas#exp-pc{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+        /* Layout interno (ahora simplemente fluye hacia abajo) */
+        #screen-experience .exp-w{
+            position:relative; z-index:2;
+            display:flex; flex-direction:column; align-items:center;
+            padding:1.8rem 1rem 5rem;   /* 5rem abajo asegura que el scroll llegue al footer */
+            gap:1.5rem;
+        }
+
+        /* Header */
+        #screen-experience header{text-align:center}
+        #screen-experience .br{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:.35rem}
+        #screen-experience h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.9rem,5.5vw,2.9rem);letter-spacing:.03em;
+           background:linear-gradient(130deg,var(--em3) 0%,var(--em2) 50%,var(--em) 100%);
+           -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        #screen-experience .sb{font-size:.77rem;color:var(--mut);margin-top:.3rem;font-weight:300;letter-spacing:.09em}
+
+        /* Orb */
+        #screen-experience .vw{position:relative;width:min(292px,84vw);height:min(292px,84vw);display:flex;align-items:center;justify-content:center}
+        #screen-experience canvas#exp-vc{position:absolute;inset:0;border-radius:50%}
+        #screen-experience .rng{position:absolute;border-radius:50%;border:1px solid rgba(16,185,129,0.15);animation:rpl 4.2s ease-out infinite;opacity:0}
+        #screen-experience .rng:nth-child(1){width:160px;height:160px;animation-delay:0s}
+        #screen-experience .rng:nth-child(2){width:207px;height:207px;animation-delay:1.4s}
+        #screen-experience .rng:nth-child(3){width:260px;height:260px;animation-delay:2.8s}
+        @keyframes rpl{0%{opacity:.5;transform:scale(.83)}100%{opacity:0;transform:scale(1.1)}}
+        #screen-experience .rng.on{animation-duration:1.8s;border-color:rgba(16,185,129,.52)}
+        #screen-experience .orb{
+            width:134px;height:134px;border-radius:50%;position:relative;z-index:2;cursor:pointer;
+            background:radial-gradient(circle at 33% 33%,rgba(110,231,183,.26),rgba(16,185,129,.12) 45%,rgba(9,28,21,.82));
+            border:1px solid rgba(16,185,129,.3);
+            box-shadow:0 0 38px rgba(16,185,129,0.22),inset 0 0 26px rgba(16,185,129,.09);
+            display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+            transition:transform .2s,box-shadow .3s;user-select:none
+        }
+        #screen-experience .orb:hover{transform:scale(1.06);box-shadow:0 0 58px rgba(16,185,129,0.22),inset 0 0 36px rgba(16,185,129,.15)}
+        #screen-experience .orb:active{transform:scale(.96)}
+        #screen-experience .pi{font-size:1.9rem;line-height:1}
+        #screen-experience .ol{font-size:.64rem;font-weight:300;letter-spacing:.18em;color:rgba(110,231,183,.6);text-transform:uppercase}
+
+        /* Freq Display */
+        #screen-experience .fd{text-align:center}
+        #screen-experience .fh{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7vw,3.1rem);font-weight:300;
+            background:linear-gradient(90deg,var(--em3),var(--em));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:all .4s}
+        #screen-experience .fn{font-size:.75rem;color:var(--mut);letter-spacing:.12em;margin-top:2px;font-weight:300}
+
+        /* Timer */
+        #screen-experience .tr{display:flex;align-items:center;gap:.9rem}
+        #screen-experience .td{font-size:1.32rem;font-weight:200;min-width:62px;text-align:center;color:var(--em2)}
+        #screen-experience .tc{display:flex;gap:.3rem}
+        #screen-experience .tb{background:transparent;border:1px solid var(--bdr);color:var(--mut);border-radius:8px;padding:.25rem .6rem;font-size:.69rem;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif}
+        #screen-experience .tb:hover{border-color:var(--em);color:var(--txt)}
+        #screen-experience .tb.on{background:rgba(16,185,129,.12);border-color:var(--em);color:var(--em2)}
+
+        /* Volume */
+        #screen-experience .vr{display:flex;align-items:center;gap:.75rem;width:100%;max-width:308px}
+        #screen-experience .vr label{font-size:.72rem;color:var(--mut);min-width:48px}
+        #screen-experience input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;
+            background:linear-gradient(to right,var(--em) 0%,var(--em) var(--v,70%),rgba(16,185,129,.14) var(--v,70%),rgba(16,185,129,.14) 100%);
+            border-radius:3px;outline:none;cursor:pointer}
+        #screen-experience input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--em);box-shadow:0 0 8px rgba(16,185,129,0.22);transition:transform .1s}
+        #screen-experience input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+        #screen-experience .vv{font-size:.69rem;color:var(--mut);min-width:28px;text-align:right}
+
+        /* Tabs */
+        #screen-experience .tabs{display:flex;gap:.32rem;flex-wrap:wrap;justify-content:center}
+        #screen-experience .tab{background:transparent;border:1px solid var(--bdr);color:var(--mut);border-radius:20px;padding:.26rem .75rem;font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;letter-spacing:.06em}
+        #screen-experience .tab:hover{border-color:var(--em);color:var(--txt)}
+        #screen-experience .tab.on{background:rgba(16,185,129,.12);border-color:var(--em);color:var(--em2)}
+
+        /* Freq Grid */
+        #screen-experience .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.58rem;width:100%;max-width:650px}
+        #screen-experience .fc{background:rgba(14,30,22,0.88);border:1px solid var(--bdr);border-radius:14px;padding:.9rem .85rem;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+        #screen-experience .fc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,.07),transparent);opacity:0;transition:opacity .3s}
+        #screen-experience .fc:hover{border-color:rgba(16,185,129,.35);transform:translateY(-2px)}
+        #screen-experience .fc:hover::before,#screen-experience .fc.sel::before{opacity:1}
+        #screen-experience .fc.sel{border-color:var(--em);background:rgba(16,185,129,.11);box-shadow:0 0 18px rgba(16,185,129,.16)}
+        #screen-experience .fc.hid{display:none}
+        #screen-experience .dot{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--em);opacity:0;transition:opacity .3s}
+        #screen-experience .fc.sel .dot{opacity:1;box-shadow:0 0 5px var(--em)}
+        #screen-experience .cc{font-size:.56rem;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;margin-bottom:2px}
+        #screen-experience .chz{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;margin-bottom:1px}
+        #screen-experience .cn{font-size:.68rem;font-weight:400;margin-bottom:3px}
+        #screen-experience .cd{font-size:.61rem;color:var(--mut);line-height:1.4}
+
+        /* Pill */
+        #screen-experience .pill-main{
+            background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);
+            border-radius:50px;padding:.45rem 1.1rem;font-size:.68rem;color:var(--em2);
+            text-align:center;max-width:440px;line-height:1.5;
+        }
+
+        /* Guía */
+        #screen-experience .guide-toggle{
+            display:flex;align-items:center;gap:.6rem;
+            background:transparent;border:1px solid rgba(16,185,129,.22);
+            border-radius:50px;padding:.42rem 1.1rem;
+            cursor:pointer;font-family:'Outfit',sans-serif;
+            font-size:.72rem;color:var(--em2);letter-spacing:.08em;
+            transition:all .25s;
+        }
+        #screen-experience .guide-toggle:hover{background:rgba(16,185,129,.08);border-color:var(--em);}
+        #screen-experience .guide-toggle .arrow{transition:transform .3s;font-size:.75rem;}
+        #screen-experience .guide-toggle.open .arrow{transform:rotate(180deg);}
+
+        #screen-experience .guide-panel{
+            width:100%;max-width:650px;
+            background:rgba(14,30,22,0.90);
+            border:1px solid rgba(16,185,129,.16);
+            border-radius:18px;
+            padding:1.4rem 1.6rem;
+            display:none;
+            gap:1rem;
+            flex-direction:column;
+            backdrop-filter:blur(12px);
+            animation:slideDown .35s ease;
+        }
+        #screen-experience .guide-panel.open{display:flex;}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+        #screen-experience .guide-title{
+            font-family:'Cormorant Garamond',serif;
+            font-size:1.15rem;font-weight:300;
+            letter-spacing:.18em;color:var(--em3);
+            text-transform:uppercase;
+            border-bottom:1px solid rgba(16,185,129,.12);
+            padding-bottom:.7rem;margin-bottom:.2rem;
+        }
+        #screen-experience .guide-cards{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+        @media(max-width:520px){#screen-experience .guide-cards{grid-template-columns:1fr;}}
+
+        #screen-experience .guide-card{
+            background:rgba(9,28,21,0.75);
+            border:1px solid rgba(16,185,129,.12);
+            border-radius:12px;
+            padding:.95rem 1.1rem;
+            display:flex;flex-direction:column;gap:.35rem;
+        }
+        #screen-experience .guide-card.highlight{
+            border-color:rgba(198,154,58,.35);
+            background:rgba(198,154,58,.05);
+        }
+        #screen-experience .guide-icon{font-size:1.35rem;line-height:1;}
+        #screen-experience .guide-card-title{
+            font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--em2);font-weight:400;
+        }
+        #screen-experience .guide-card.highlight .guide-card-title{color:var(--gold);}
+        #screen-experience .guide-card-body{font-size:.69rem;color:var(--mut);line-height:1.6;}
+        #screen-experience .guide-card-body strong{color:var(--txt);}
+
+        #screen-experience .guide-vol-bar{display:flex;align-items:center;gap:.5rem;margin-top:.35rem;}
+        #screen-experience .vol-zone{
+            height:8px;border-radius:4px;font-size:.5rem;
+            display:flex;align-items:center;justify-content:center;
+            color:rgba(255,255,255,.5);letter-spacing:.05em;
+        }
+        #screen-experience .vol-zone.low{background:rgba(16,185,129,.18);flex:3;}
+        #screen-experience .vol-zone.ok{background:rgba(16,185,129,.55);flex:3;}
+        #screen-experience .vol-zone.high{background:rgba(251,146,60,.4);flex:2;}
+        #screen-experience .vol-labels{display:flex;justify-content:space-between;font-size:.5rem;color:var(--mut);margin-top:2px;}
+
+        #screen-experience .guide-steps{display:flex;flex-direction:column;gap:.4rem;margin-top:.2rem;}
+        #screen-experience .guide-step{display:flex;gap:.6rem;align-items:flex-start;font-size:.68rem;color:var(--mut);line-height:1.5;}
+        #screen-experience .step-num{
+            min-width:18px;height:18px;border-radius:50%;
+            background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.2);
+            display:flex;align-items:center;justify-content:center;
+            font-size:.56rem;color:var(--em2);margin-top:1px;
+        }
+
+        /* Productos */
+        #screen-experience .section-divider{
+            width:100%;max-width:650px;
+            display:flex;align-items:center;gap:1rem;
+            margin-top:1rem;
+        }
+        #screen-experience .section-divider::before,#screen-experience .section-divider::after{
+            content:'';flex:1;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(16,185,129,.2),transparent);
+        }
+        #screen-experience .section-divider span{
+            font-family:'Cormorant Garamond',serif;
+            font-size:.72rem;letter-spacing:.25em;
+            color:var(--em2);text-transform:uppercase;white-space:nowrap;
+        }
+
+        #screen-experience .products-section{
+            width:100%;max-width:650px;
+            display:flex;flex-direction:column;
+            gap:1rem;
+        }
+        #screen-experience .products-header{text-align:center;}
+        #screen-experience .products-header h2{
+            font-family:'Cormorant Garamond',serif;
+            font-size:1.9rem;font-weight:300;letter-spacing:.18em;
+            text-transform:uppercase;
+            background:linear-gradient(130deg,var(--em3),var(--em));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        #screen-experience .products-header p{font-size:.65rem;color:var(--mut);letter-spacing:.1em;margin-top:.3rem;}
+
+        #screen-experience .products-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(160px,1fr));  /* ligeramente más angostas */
+            gap:.7rem;
+        }
+        #screen-experience .product-card{
+            background:rgba(14,30,22,0.88);
+            border:1px solid rgba(16,185,129,.13);
+            border-radius:16px;
+            padding:1rem 0.9rem;         /* menos padding vertical */
+            display:flex;flex-direction:column;
+            align-items:center;gap:.5rem;
+            backdrop-filter:blur(10px);
+            position:relative;overflow:hidden;
+            transition:transform .25s, box-shadow .25s;
+        }
+        #screen-experience .product-card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 28px rgba(16,185,129,.12);
+        }
+        #screen-experience .product-card::before{
+            content:'';position:absolute;inset:0;
+            background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(16,185,129,.06),transparent);
+        }
+        #screen-experience .product-icon{
+            width:56px;height:56px;            /* ícono más chico */
+            border-radius:50%;
+            background:radial-gradient(circle,rgba(16,185,129,.15),rgba(16,185,129,.04));
+            border:1px solid rgba(16,185,129,.2);
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.4rem;
+        }
+        #screen-experience .product-name{
+            font-family:'Cormorant Garamond',serif;
+            font-size:.9rem;font-weight:300;letter-spacing:.1em;
+            color:var(--em3);text-align:center;
+        }
+        #screen-experience .product-desc{font-size:.58rem;color:var(--mut);text-align:center;line-height:1.4;}
+        #screen-experience .product-badge{
+            background:rgba(16,185,129,.08);
+            border:1px solid rgba(16,185,129,.22);
+            border-radius:50px;
+            padding:.22rem .7rem;
+            font-size:.55rem;letter-spacing:.15em;
+            color:var(--em2);text-transform:uppercase;
+            font-weight:300;
+        }
+        #screen-experience .coming-soon-overlay{
+            position:absolute;inset:0;
+            background:rgba(9,28,21,0.45);
+            backdrop-filter:blur(2px);
+            display:flex;align-items:center;justify-content:center;
+            border-radius:16px;
+            opacity:0;transition:opacity .3s;
+            pointer-events:none;
+        }
+        #screen-experience .product-card:hover .coming-soon-overlay{opacity:1;}
+        #screen-experience .coming-soon-text{
+            font-family:'Cormorant Garamond',serif;
+            font-style:italic;font-size:1rem;
+            color:var(--em2);letter-spacing:.12em;
+        }
+
+        #screen-experience footer{font-size:.57rem;color:var(--mut);opacity:.35;text-align:center;margin-top:.5rem;}
+
+        /* Ambient Bar */
+        #screen-experience .ambient-bar{
+            width:100%;max-width:650px;
+            background:rgba(10,22,16,0.94);
+            border:1px solid rgba(16,185,129,.15);
+            border-radius:16px;
+            padding:.85rem 1.2rem;
+            display:flex;flex-direction:column;gap:.65rem;
+            backdrop-filter:blur(14px);
+        }
+        #screen-experience .ambient-top{
+            display:flex;align-items:center;justify-content:space-between;
+            flex-wrap:wrap;gap:.4rem;
+        }
+        #screen-experience .ambient-label{
+            font-size:.57rem;letter-spacing:.22em;text-transform:uppercase;
+            color:var(--mut);display:flex;align-items:center;gap:.4rem;
+        }
+        #screen-experience .ambient-dot{
+            width:6px;height:6px;border-radius:50%;
+            background:var(--mut);transition:background .4s, box-shadow .4s;
+        }
+        #screen-experience .ambient-dot.on{
+            background:var(--em);
+            box-shadow:0 0 6px var(--em);
+            animation:dotpulse 2s ease-in-out infinite;
+        }
+        @keyframes dotpulse{0%,100%{opacity:.6}50%{opacity:1}}
+        #screen-experience .ambient-status{
+            font-size:.6rem;color:var(--em2);letter-spacing:.08em;
+            font-style:italic;min-width:80px;text-align:right;
+            transition:all .3s;opacity:.8;
+        }
+        #screen-experience .ambient-btns{display:flex;gap:.38rem;flex-wrap:wrap;}
+        #screen-experience .amb-btn{
+            display:flex;align-items:center;gap:.38rem;
+            background:transparent;
+            border:1px solid rgba(16,185,129,.13);
+            border-radius:50px;
+            padding:.3rem .78rem;
+            cursor:pointer;
+            font-family:'Outfit',sans-serif;
+            font-size:.62rem;color:var(--mut);
+            transition:all .22s;white-space:nowrap;
+        }
+        #screen-experience .amb-btn:hover{
+            border-color:rgba(16,185,129,.32);
+            color:var(--txt);background:rgba(16,185,129,.06);
+        }
+        #screen-experience .amb-btn.on{
+            border-color:var(--em);color:var(--em2);
+            background:rgba(16,185,129,.12);
+            box-shadow:0 0 12px rgba(16,185,129,.14);
+        }
+        #screen-experience .amb-icon{font-size:.92rem;line-height:1;}
+        #screen-experience .ambient-mix{display:flex;align-items:center;gap:.65rem;}
+        #screen-experience .ambient-mix label{font-size:.58rem;color:var(--mut);white-space:nowrap;letter-spacing:.08em;}
+        #screen-experience input.mix-range{
+            -webkit-appearance:none;appearance:none;
+            flex:1;height:3px;
+            background:linear-gradient(to right,rgba(198,154,58,.7) 0%,rgba(198,154,58,.7) var(--mv,30%),rgba(16,185,129,.12) var(--mv,30%),rgba(16,185,129,.12) 100%);
+            border-radius:3px;outline:none;cursor:pointer;
+        }
+        #screen-experience input.mix-range::-webkit-slider-thumb{
+            -webkit-appearance:none;width:13px;height:13px;border-radius:50%;
+            background:var(--gold);box-shadow:0 0 7px rgba(198,154,58,.4);
+            transition:transform .1s;
+        }
+        #screen-experience input.mix-range::-webkit-slider-thumb:hover{transform:scale(1.3);}
+        #screen-experience .mix-val{font-size:.6rem;color:var(--mut);min-width:26px;text-align:right;}
+    </style>
 </head>
 <body>
 
+    <!-- Canvas de ondas global (Archivo 1) -->
     <canvas id="silk-canvas"></canvas>
 
+    <!-- ======================== PANTALLA BIENVENIDA (Archivo 1) ======================== -->
     <div id="screen-welcome" class="screen active">
         <div class="welcome-content">
             <svg class="ku-logo-large" viewBox="0 0 100 100">
@@ -616,490 +575,714 @@
             <h1 class="welcome-title">Kalma<em>Umbra</em></h1>
             <p class="welcome-subtitle">Ritual Sonoro · Antigravity</p>
             <p class="welcome-text">Estás a un susurro de la ingravidez total.<br>Cada frecuencia es un umbral. Cada sonido, una puerta.</p>
-            <button class="btn-primary" onclick="toScreen('player')">Activar Ritual</button>
+            <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
         </div>
     </div>
 
-    <div id="screen-player" class="screen">
-        <div class="player-container">
-            
-            <div class="player-header-socalo">
-                <div class="header-left">
-                    <button class="btn-back-header" onclick="toScreen('welcome')">⬆ Inicio</button>
-                </div>
-
-                <div class="header-center">
-                    <div class="vol-header">
-                        <label class="vol-label-header">Freq</label>
-                        <input type="range" min="0" max="100" value="50" class="vol-slider-header" id="freq-vol" oninput="updateFreqVolume(this.value)">
-                        <span class="vol-value-header" id="freq-vol-display">50%</span>
-                    </div>
-
-                    <div class="orb-mini" id="orb-mini" onclick="togglePlay()">
-                        <span class="pi-mini" id="pi-mini">▶</span>
-                        <span class="ol-mini" id="ol-mini">Play</span>
-                    </div>
-
-                    <div class="vol-header">
-                        <label class="vol-label-header">Amb</label>
-                        <input type="range" min="0" max="100" value="30" class="vol-slider-header" id="ambient-vol" oninput="updateAmbientVolume(this.value)">
-                        <span class="vol-value-header" id="ambient-vol-display">30%</span>
-                    </div>
-
-                    <div class="vol-header">
-                        <label class="vol-label-header">Timer</label>
-                        <select id="timer-select" class="timer-selector" onchange="setTimer(this.value)">
-                            <option value="0">Sin timer</option>
-                            <option value="0">∞ Acostado</option>
-                            <option value="1200">20 min</option>
-                            <option value="1800">30 min</option>
-                            <option value="2700">45 min</option>
-                        </select>
-                        <span class="timer-display" id="timer-display"></span>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <button class="waitlist-btn-header" onclick="joinWaitlist()">✓ Únete</button>
-                </div>
-            </div>
-
-            <div class="player-content">
-                <div class="content-inner">
-
-                    <div class="freq-display-header">
-                        <div class="freq-hz-header" id="fh">432 Hz</div>
-                        <div class="freq-name-header" id="fn">Del Corazón</div>
-                        <div class="freq-desc-header" id="fd">Armonía interna</div>
-                    </div>
-
-                    <div class="poetic-text" id="poetic"></div>
-
-                    <div class="tabs">
-                        <button class="tab on" onclick="filtrar('all', this)">Todos</button>
-                        <button class="tab" onclick="filtrar('solfeggio', this)">Solfeggio</button>
-                        <button class="tab" onclick="filtrar('binaural', this)">Binaural</button>
-                        <button class="tab" onclick="filtrar('especial', this)">Especial</button>
-                    </div>
-
-                    <div class="grid" id="grid"></div>
-
-                    <div class="nav-tabs">
-                        <button class="nav-tab active" onclick="switchContent('frequencies', this)">Frecuencias</button>
-                        <button class="nav-tab" onclick="switchContent('meditations', this)">Meditaciones</button>
-                        <button class="nav-tab" onclick="switchContent('stories', this)">Historias</button>
-                    </div>
-
-                    <div id="content-meditations" class="content-section">
-                        <div class="section-title">PRUEBA GRATIS · Meditaciones</div>
-                        <div class="meditation-grid">
-                            <div class="meditation-card" onclick="playMeditation('Despertar Consciente', '🌅')">
-                                <div class="meditation-icon">🌅</div>
-                                <div class="meditation-name">Despertar Consciente</div>
-                                <div class="meditation-time">12 min</div>
-                                <div class="meditation-label">Gratis</div>
-                            </div>
-                            <div class="meditation-card" onclick="playMeditation('Conexión Interior', '💫')">
-                                <div class="meditation-icon">💫</div>
-                                <div class="meditation-name">Conexión Interior</div>
-                                <div class="meditation-time">18 min</div>
-                                <div class="meditation-label">Gratis</div>
-                            </div>
-                            <div class="meditation-card" onclick="playMeditation('Sueño Profundo', '😴')">
-                                <div class="meditation-icon">😴</div>
-                                <div class="meditation-name">Sueño Profundo</div>
-                                <div class="meditation-time">25 min</div>
-                                <div class="meditation-label">Gratis</div>
-                            </div>
-                            <div class="meditation-card" onclick="playMeditation('Chakras Alineados', '🌀')">
-                                <div class="meditation-icon">🌀</div>
-                                <div class="meditation-name">Chakras Alineados</div>
-                                <div class="meditation-time">20 min</div>
-                                <div class="meditation-label">Gratis</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="content-stories" class="content-section">
-                        <div class="section-title">PRUEBA GRATIS · Relatos & Experiencias</div>
-                        <div class="stories-grid">
-                            <div class="story-card" onclick="playStory('El Jardín Secreto', 'Luna Mar')">
-                                <div><div class="story-title">El Jardín Secreto</div><div class="story-author">por Luna Mar</div></div>
-                                <div><div class="story-duration">8 min</div><div class="story-label">Gratis</div></div>
-                            </div>
-                            <div class="story-card" onclick="playStory('Encuentros de Medianoche', 'Aurora Vex')">
-                                <div><div class="story-title">Encuentros de Medianoche</div><div class="story-author">por Aurora Vex</div></div>
-                                <div><div class="story-duration">10 min</div><div class="story-label">Gratis</div></div>
-                            </div>
-                            <div class="story-card" onclick="playStory('Umbrales del Deseo', 'Sienna Rose')">
-                                <div><div class="story-title">Umbrales del Deseo</div><div class="story-author">por Sienna Rose</div></div>
-                                <div><div class="story-duration">12 min</div><div class="story-label">Gratis</div></div>
-                            </div>
-                            <div class="story-card" onclick="playStory('Susurros en la Noche', 'Indigo Soul')">
-                                <div><div class="story-title">Susurros en la Noche</div><div class="story-author">por Indigo Soul</div></div>
-                                <div><div class="story-duration">9 min</div><div class="story-label">Gratis</div></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="ambient-socalo-footer">
-                <div class="ambient-label-footer">Ambientes</div>
-                <div class="ambient-buttons-footer">
-                    <button class="ambient-chip-footer" onclick="toggleAmbient('rain', this)"><span class="ambient-icon-footer">🌧️</span><span>Lluvia</span></button>
-                    <button class="ambient-chip-footer" onclick="toggleAmbient('ocean', this)"><span class="ambient-icon-footer">🌊</span><span>Océano</span></button>
-                    <button class="ambient-chip-footer" onclick="toggleAmbient('forest', this)"><span class="ambient-icon-footer">🌲</span><span>Bosque</span></button>
-                    <button class="ambient-chip-footer" onclick="toggleAmbient('fire', this)"><span class="ambient-icon-footer">🔥</span><span>Fuego</span></button>
-                </div>
-            </div>
-
+    <!-- ======================== PANTALLA EXPERIENCIA (Archivo 2 integrado) ======================== -->
+    <div id="screen-experience" class="screen">
+        <!-- Fondo imágenes -->
+        <div class="bg-images">
+            <img class="bg-img bg-img-1" src="smiling-lady-smart-trendy-wear-is-sitting-armchair-with-cup-tea.jpg" alt="" aria-hidden="true">
+            <img class="bg-img bg-img-2" src="woman-kissing-her-girlfriend-cheek.jpg" alt="" aria-hidden="true">
+            <img class="bg-img bg-img-3" src="fotoportada1.jpg" alt="" aria-hidden="true">
         </div>
-    </div>
+
+        <canvas id="exp-pc"></canvas>
+
+        <!-- Botón volver al inicio -->
+        <button onclick="toScreen('welcome')" style="
+          position:fixed;top:14px;left:16px;z-index:200;
+          display:flex;align-items:center;gap:.4rem;
+          background:rgba(9,28,21,0.75);
+          border:1px solid rgba(16,185,129,0.18);
+          border-radius:50px;padding:.3rem .85rem;
+          font-family:'Outfit',sans-serif;font-size:.58rem;
+          letter-spacing:.14em;text-transform:uppercase;
+          color:rgba(107,158,138,0.8);
+          backdrop-filter:blur(10px);
+          cursor:pointer;
+          transition:all .25s;
+        " onmouseover="this.style.color='#34d399';this.style.borderColor='rgba(16,185,129,0.4)'"
+           onmouseout="this.style.color='rgba(107,158,138,0.8)';this.style.borderColor='rgba(16,185,129,0.18)'">
+          ← Inicio
+        </button>
+
+        <div class="exp-w">
+            <!-- Header -->
+            <header>
+                <p class="br">KalmaUmbra · Bienestar</p>
+                <h1>Frecuencias para el Alma</h1>
+                <p class="sb">Tonos terapéuticos generados en tiempo real</p>
+            </header>
+
+            <!-- Orb -->
+            <div class="vw">
+                <div class="rng" id="exp-r1"></div>
+                <div class="rng" id="exp-r2"></div>
+                <div class="rng" id="exp-r3"></div>
+                <canvas id="exp-vc" width="292" height="292"></canvas>
+                <div class="orb" onclick="Exp.togglePlay()">
+                    <span class="pi" id="exp-pi">▶</span>
+                    <span class="ol" id="exp-ol">Iniciar</span>
+                </div>
+            </div>
+
+            <!-- Freq Display -->
+            <div class="fd">
+                <div class="fh" id="exp-fh">432 Hz</div>
+                <div class="fn" id="exp-fn">Frecuencia del Corazón</div>
+            </div>
+
+            <!-- Timer -->
+            <div class="tr">
+                <div class="td" id="exp-td">00:00</div>
+                <div class="tc">
+                    <button class="tb" onclick="Exp.setTimer(5,this)">5 min</button>
+                    <button class="tb" onclick="Exp.setTimer(10,this)">10 min</button>
+                    <button class="tb" onclick="Exp.setTimer(20,this)">20 min</button>
+                    <button class="tb on" onclick="Exp.setTimer(0,this)">∞</button>
+                </div>
+            </div>
+
+            <!-- Volume -->
+            <div class="vr">
+                <label>Volumen</label>
+                <input type="range" id="exp-vs" min="0" max="100" value="45" oninput="Exp.setVol(this.value)" style="--v:45%"/>
+                <span class="vv" id="exp-vv">45%</span>
+            </div>
+
+            <!-- Guide Toggle -->
+            <button class="guide-toggle" id="exp-guideToggle" onclick="Exp.toggleGuide()">
+                <span>🌿</span>
+                <span>Cómo usar la experiencia</span>
+                <span class="arrow" id="exp-guideArrow">▾</span>
+            </button>
+
+            <!-- Guide Panel -->
+            <div class="guide-panel" id="exp-guidePanel">
+                <div class="guide-title">Guía de Experiencia · KalmaUmbra</div>
+                <div class="guide-cards">
+                    <div class="guide-card highlight">
+                        <div class="guide-icon">🎧</div>
+                        <div class="guide-card-title">Audífonos — Esencial</div>
+                        <div class="guide-card-body">
+                            <strong>Siempre usá auriculares</strong> para la experiencia completa.
+                            Los tonos binaurales <em>solo funcionan con headphones</em> —
+                            cada oído recibe una frecuencia diferente y el efecto ocurre en el cerebro.
+                            Sin auriculares, el efecto binaural no se produce.
+                        </div>
+                    </div>
+                    <div class="guide-card">
+                        <div class="guide-icon">🔊</div>
+                        <div class="guide-card-title">Volumen Recomendado</div>
+                        <div class="guide-card-body">
+                            Mantené el volumen entre <strong>30 % y 55 %</strong>.
+                            Suficiente para sentir las frecuencias sin fatigar el sistema nervioso.
+                            <br><br>
+                            <div class="guide-vol-bar">
+                                <div class="vol-zone low">Bajo</div>
+                                <div class="vol-zone ok">Ideal ✓</div>
+                                <div class="vol-zone high">Evitar</div>
+                            </div>
+                            <div class="vol-labels"><span>0%</span><span>30%</span><span>55%</span><span>80%</span><span>100%</span></div>
+                        </div>
+                    </div>
+                    <div class="guide-card">
+                        <div class="guide-icon">🎛️</div>
+                        <div class="guide-card-title">Mezclar Frecuencias</div>
+                        <div class="guide-card-body">
+                            <div class="guide-steps">
+                                <div class="guide-step"><div class="step-num">1</div><span>Elegí una <strong>frecuencia</strong> de la grilla según tu intención (relax, sueño, energía…)</span></div>
+                                <div class="guide-step"><div class="step-num">2</div><span>Presioná <strong>▶ Iniciar</strong> para activar el tono</span></div>
+                                <div class="guide-step"><div class="step-num">3</div><span>Ajustá el <strong>volumen</strong> a un nivel confortable (30–55 %)</span></div>
+                                <div class="guide-step"><div class="step-num">4</div><span>Configurá un <strong>timer</strong> de 10–20 min y cerrá los ojos</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="guide-card">
+                        <div class="guide-icon">🌙</div>
+                        <div class="guide-card-title">Postura & Ambiente</div>
+                        <div class="guide-card-body">
+                            <strong>Acostada o sentada cómoda.</strong> Oscuridad o luz tenue.
+                            Temperatura agradable. Podés combinar la frecuencia con aromas
+                            (lavanda, sándalo) para amplificar la respuesta sensorial.
+                            <br><br>
+                            Cerrá los ojos, respirá profundo y <strong>dejá que el sonido haga su trabajo.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ambient Bar -->
+            <div class="ambient-bar">
+                <div class="ambient-top">
+                    <div class="ambient-label">
+                        <div class="ambient-dot" id="exp-ambDot"></div>
+                        <span>Ambiente Sonoro</span>
+                    </div>
+                    <div class="ambient-status" id="exp-ambStatus">sin ambiente</div>
+                </div>
+                <div class="ambient-btns">
+                    <button class="amb-btn" id="exp-amb-rain"   onclick="Exp.toggleAmb('rain',this)"><span class="amb-icon">🌧️</span><span>Lluvia</span></button>
+                    <button class="amb-btn" id="exp-amb-fire"   onclick="Exp.toggleAmb('fire',this)"><span class="amb-icon">🔥</span><span>Fuego</span></button>
+                    <button class="amb-btn" id="exp-amb-ocean"  onclick="Exp.toggleAmb('ocean',this)"><span class="amb-icon">🌊</span><span>Océano</span></button>
+                    <button class="amb-btn" id="exp-amb-stream" onclick="Exp.toggleAmb('bosque',this)"><span class="amb-icon">🌲</span><span>Bosque</span></button>
+                    <button class="amb-btn" id="exp-amb-heart"  onclick="Exp.toggleAmb('heart',this)"><span class="amb-icon">💓</span><span>Latidos</span></button>
+                </div>
+                <div class="ambient-mix">
+                    <label>Mezcla ambiente</label>
+                    <input type="range" class="mix-range" id="exp-mixRange" min="0" max="100" value="30" oninput="Exp.setMixVol(this.value)" style="--mv:30%"/>
+                    <span class="mix-val" id="exp-mixVal">30%</span>
+                </div>
+            </div>
+
+            <!-- Freq Tabs -->
+            <div class="tabs">
+                <button class="tab on" onclick="Exp.filterCat('all',this)">Todos</button>
+                <button class="tab" onclick="Exp.filterCat('solfeggio',this)">Solfeggio</button>
+                <button class="tab" onclick="Exp.filterCat('binaural',this)">Binaural</button>
+                <button class="tab" onclick="Exp.filterCat('especial',this)">Especial</button>
+            </div>
+
+            <!-- Freq Grid (se construye con JS) -->
+            <div class="grid" id="exp-grid"></div>
+
+            <!-- Pill -->
+            <div class="pill-main">
+                🎧 Auriculares recomendados para tonos binaurales &nbsp;·&nbsp; 🔊 Volumen suave 30–55 % &nbsp;·&nbsp; 😮‍💨 Cerrá los ojos y respirá
+            </div>
+
+            <!-- Productos -->
+            <div class="section-divider" style="margin-top:1.5rem;"><span>Tienda &amp; Productos</span></div>
+            <div class="products-section" id="exp-productos">
+                <div class="products-header">
+                    <h2>Selección Kalma</h2>
+                    <p>Productos curados para tu ritual · Bienestar consciente</p>
+                </div>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-icon">🌿</div>
+                        <div class="product-name">Rituales de Bienestar</div>
+                        <div class="product-desc">Aceites y esencias terapéuticas para complementar tu experiencia sonora.</div>
+                        <div class="product-badge">En Construcción</div>
+                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-icon">🎧</div>
+                        <div class="product-name">Audio Premium</div>
+                        <div class="product-desc">Audífonos y accesorios seleccionados para la mejor experiencia binaural.</div>
+                        <div class="product-badge">En Construcción</div>
+                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-icon">✨</div>
+                        <div class="product-name">Skincare Íntimo</div>
+                        <div class="product-desc">Fórmulas naturales para el cuidado y la reconexión con tu cuerpo.</div>
+                        <div class="product-badge">En Construcción</div>
+                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-icon">🛁</div>
+                        <div class="product-name">Ritual en Casa</div>
+                        <div class="product-desc">Kits de autocuidado para crear tu espacio sagrado de bienestar sensorial.</div>
+                        <div class="product-badge">En Construcción</div>
+                        <div class="coming-soon-overlay"><span class="coming-soon-text">Próximamente</span></div>
+                    </div>
+                </div>
+                <div style="text-align:center;margin-top:.5rem;">
+                    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--mut);letter-spacing:.1em;">Estamos curadurando los mejores productos para vos.</p>
+                </div>
+            </div>
+
+            <footer>Generado con Web Audio API · No reemplaza atención médica profesional · kalmaumbra.com</footer>
+        </div><!-- /exp-w -->
+    </div><!-- /screen-experience -->
+
+    <!-- ======================== SCRIPTS ======================== -->
+    <script>
+        /* ========== ARCHIVO 1: Canvas de ondas + Navegación ========== */
+        (function() {
+            const canvas = document.getElementById('silk-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, canvasTime = 0;
+
+            function resizeCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function drawSilk() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                for (let x = 0; x <= width; x += 15) {
+                    const y = height * 0.5 + Math.sin(x * 0.002 + canvasTime) * 50 + Math.cos(x * 0.001 + canvasTime * 0.6) * 25;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(width, height);
+                ctx.fillStyle = 'rgba(74, 185, 155, 0.08)';
+                ctx.fill();
+                canvasTime += 0.006;
+                requestAnimationFrame(drawSilk);
+            }
+            drawSilk();
+
+            // Navegación entre pantallas
+            window.toScreen = function(name) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById('screen-' + name);
+                if (target) target.classList.add('active');
+                if (name === 'experience' && window.Exp && typeof window.Exp.onActivate === 'function') {
+                    window.Exp.onActivate();
+                } else if (name === 'welcome' && window.Exp && typeof window.Exp.onDeactivate === 'function') {
+                    window.Exp.onDeactivate();
+                }
+            };
+        })();
+    </script>
 
     <script>
-        // CANVAS
-        const canvas = document.getElementById('silk-canvas');
-        const canvasCtx = canvas.getContext('2d');
-        let width, height;
+        /* ========== ARCHIVO 2: Experiencia de Frecuencias (Encapsulada) ========== */
+        (function() {
+            /* ─── FRECUENCIAS ─── */
+            const F = [
+                {hz:174, name:"Anestesia Natural",   cat:"solfeggio", color:"#4ade80", desc:"Base del sistema · alivia el dolor y la ansiedad aguda"},
+                {hz:285, name:"Sanación Tisular",    cat:"solfeggio", color:"#34d399", desc:"Reparación y regeneración celular profunda"},
+                {hz:396, name:"Liberación",          cat:"solfeggio", color:"#f87171", desc:"Libera el miedo y la culpa · equilibra la raíz"},
+                {hz:417, name:"Cambio",              cat:"solfeggio", color:"#fbbf24", desc:"Desbloqueo emocional y apertura al cambio"},
+                {hz:432, name:"Del Corazón",         cat:"solfeggio", color:"#a78bfa", desc:"Afinación natural · armonía interna y calma profunda"},
+                {hz:528, name:"Amor / ADN",          cat:"solfeggio", color:"#5ce8d4", desc:"Reduce cortisol · reparación celular y amor propio"},
+                {hz:639, name:"Conexión",            cat:"solfeggio", color:"#f472b6", desc:"Armoniza vínculos · empatía y apertura del corazón"},
+                {hz:741, name:"Intuición",           cat:"solfeggio", color:"#818cf8", desc:"Claridad mental · expande creatividad e intuición"},
+                {hz:852, name:"Retorno al Orden",    cat:"solfeggio", color:"#38bdf8", desc:"Equilibrio celular · reconecta con el flujo natural"},
+                {hz:963, name:"Conciencia Pura",     cat:"solfeggio", color:"#e879f9", desc:"Activa la glándula pineal · conciencia expandida"},
+                {hz:2,   name:"Sueño Delta",         cat:"binaural",  color:"#6ee7b7", desc:"2 Hz · sueño profundo y recuperación total",       b:true, c:100},
+                {hz:6,   name:"Meditación Theta",    cat:"binaural",  color:"#fc5c9c", desc:"6 Hz · meditación profunda y calma interior",      b:true, c:180},
+                {hz:10,  name:"Calma Alfa",          cat:"binaural",  color:"#7c5cfc", desc:"10 Hz · relajación activa y foco suave",           b:true, c:200},
+                {hz:14,  name:"Vitalidad & Libido",  cat:"binaural",  color:"#fb923c", desc:"14 Hz · energía vital, motivación y deseo",        b:true, c:220},
+                {hz:40,  name:"Integración Gamma",   cat:"binaural",  color:"#a8dadc", desc:"40 Hz · claridad cognitiva y reducción de pánico", b:true, c:220},
+                {hz:7.83,name:"Frecuencia Tierra",   cat:"especial",  color:"#86efac", desc:"Schumann · conexión con el campo electromagnético terrestre", b:true, c:150},
+                {hz:110, name:"Chamánica",           cat:"especial",  color:"#c9963c", desc:"110 Hz · resonancia ancestral y meditación profunda"},
+            ];
 
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
+            /* ─── ESTADO ─── */
+            let ac = null, gn = null, lo = null, ro = null, mo = null;
+            let playing = false, si = 4, vol = 0.45, tsec = 0, ttick = null;
+            let ambientEls = {}, heartCurrent = null, mixVol = 0.30, ambActiveType = null;
+            let expActive = false;
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+            /* ─── PERLIN NOISE ─── */
+            const PN = (() => {
+                const G = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+                const p = new Uint8Array(512);
+                const arr = Array.from({length:256}, (_, i) => i);
+                for (let i = 255; i > 0; i--) { const j = Math.random()*(i+1)|0; [arr[i],arr[j]]=[arr[j],arr[i]]; }
+                for (let i = 0; i < 512; i++) p[i] = arr[i & 255];
+                const fade = t => t*t*t*(t*(6*t-15)+10);
+                const lerp = (a,b,t) => a+t*(b-a);
+                const dot  = (g,x,y) => g[0]*x+g[1]*y;
+                return {
+                    n(x,y){
+                        const X=Math.floor(x)&255, Y=Math.floor(y)&255;
+                        x-=Math.floor(x); y-=Math.floor(y);
+                        const u=fade(x), v=fade(y);
+                        const a=p[X]+Y, b2=p[X+1]+Y;
+                        return lerp(
+                            lerp(dot(G[p[a]&7],x,y),    dot(G[p[b2]&7],x-1,y),    u),
+                            lerp(dot(G[p[a+1]&7],x,y-1),dot(G[p[b2+1]&7],x-1,y-1),u),
+                            v
+                        );
+                    }
+                };
+            })();
 
-        let canvasTime = 0;
-        function drawSilk() {
-            canvasCtx.clearRect(0, 0, width, height);
-            canvasCtx.beginPath();
-            canvasCtx.moveTo(0, height);
-            for (let x = 0; x <= width; x += 15) {
-                const y = height * 0.5 + Math.sin(x * 0.002 + canvasTime) * 50 + Math.cos(x * 0.001 + canvasTime * 0.6) * 25;
-                canvasCtx.lineTo(x, y);
-            }
-            canvasCtx.lineTo(width, height);
-            canvasCtx.fillStyle = 'rgba(74, 185, 155, 0.08)';
-            canvasCtx.fill();
-            canvasTime += 0.006;
-            requestAnimationFrame(drawSilk);
-        }
-        drawSilk();
+            /* ─── PARTÍCULAS ─── */
+            let pc, pctx, PW=0, PH=0, parts=[], ptime=0, pspd=0.3, ptgt=0.3;
+            let animFrameId = null;
 
-        // VARIABLES GLOBALES
-        let ac = null, freqGain = null, ambientGain = null, mainNodes = [];
-        let playing = false, si = 3;
-        let ambientOscillators = {};
-        let timerInterval = null;
-        let timeRemaining = 0;
-
-        // DATOS
-        const F = [
-            { hz: 174, name: "Anestesia Natural", cat: "solfeggio", desc: "Alivia dolor y ansiedad" },
-            { hz: 285, name: "Sanación Tisular", cat: "solfeggio", desc: "Regeneración celular" },
-            { hz: 396, name: "Liberación", cat: "solfeggio", desc: "Libera el miedo" },
-            { hz: 432, name: "Del Corazón", cat: "solfeggio", desc: "Armonía interna" },
-            { hz: 528, name: "Amor / ADN", cat: "solfeggio", desc: "Amor propio" },
-            { hz: 639, name: "Conexión", cat: "solfeggio", desc: "Armoniza vínculos" },
-            { hz: 741, name: "Intuición", cat: "solfeggio", desc: "Claridad mental" },
-            { hz: 963, name: "Conciencia Pura", cat: "solfeggio", desc: "Conciencia expandida" },
-            { hz: 2, name: "Sueño Delta", cat: "binaural", desc: "Sueño profundo", b: true, c: 100 },
-            { hz: 6, name: "Meditación Theta", cat: "binaural", desc: "Meditación profunda", b: true, c: 180 },
-            { hz: 10, name: "Calma Alfa", cat: "binaural", desc: "Relajación activa", b: true, c: 200 },
-            { hz: 18, name: "Enfoque & Estudio", cat: "binaural", desc: "Concentración", b: true, c: 210 },
-            { hz: 14, name: "Vitalidad", cat: "binaural", desc: "Energía vital", b: true, c: 220 },
-            { hz: 7.83, name: "Tierra", cat: "especial", desc: "Resonancia Schumann", b: true, c: 150 },
-            { hz: 110, name: "Chamánica", cat: "especial", desc: "Resonancia ancestral" },
-        ];
-
-        const TX = {
-            174: "El cuerpo recuerda lo que la mente olvidó.",
-            285: "Hay un fuego que no quema.",
-            396: "Qué cansancio cargar lo que nadie pidió.",
-            432: "Tu corazón late en red con todos.",
-            528: "El amor está en el código.",
-            639: "Hay personas que te tocan sin tocarte.",
-            741: "Antes de que sepas que sabés, ya sabés.",
-            963: "Antes del nombre, eras.",
-            2: "La noche es un cuerpo que te recibe.",
-            6: "Estás donde los sueños se tejen.",
-            10: "El río que no corre refleja el cielo.",
-            18: "La mente que se enfoca se aquieta.",
-            14: "El deseo es inteligente.",
-            7.83: "La Tierra también tiene un cuerpo.",
-            110: "Las que vinieron antes guardaron esto para vos.",
-        };
-
-        // NAVEGACIÓN
-        function toScreen(name) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-' + name).classList.add('active');
-        }
-
-        // TIMER
-        function setTimer(seconds) {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
+            function initParticles() {
+                pc = document.getElementById('exp-pc');
+                if (!pc) return;
+                pctx = pc.getContext('2d');
+                resizePc();
+                window.addEventListener('resize', resizePc);
+                parts = Array.from({length:145}, () => {
+                    const pt = new Particle();
+                    pt.life = Math.random() * pt.max;
+                    return pt;
+                });
+                if (!animFrameId) loop();
             }
 
-            timeRemaining = parseInt(seconds);
+            function resizePc(){ PW=pc.width=window.innerWidth; PH=pc.height=window.innerHeight; }
 
-            if (timeRemaining === 0) {
-                document.getElementById('timer-display').textContent = '';
-                return;
-            }
-
-            function updateTimerDisplay() {
-                const mins = Math.floor(timeRemaining / 60);
-                const secs = timeRemaining % 60;
-                document.getElementById('timer-display').textContent = 
-                    mins > 0 ? mins + 'm' : secs + 's';
-
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    togglePlay();
-                    stopAllAmbients();
-                    document.getElementById('timer-display').textContent = '✓';
-                    setTimeout(() => {
-                        document.getElementById('timer-display').textContent = '';
-                        document.getElementById('timer-select').value = '0';
-                    }, 2000);
-                } else {
-                    timeRemaining--;
+            class Particle {
+                constructor(){ this.init(); }
+                init(){
+                    this.x=Math.random()*PW; this.y=Math.random()*PH;
+                    this.vx=0; this.vy=0; this.life=0;
+                    this.max=90+Math.random()*170;
+                    this.sz=0.5+Math.random()*1.8;
+                    this.h=148+Math.random()*28;
+                }
+                step(){
+                    const ang=PN.n(this.x*0.0016,this.y*0.0016+ptime*0.00011)*Math.PI*4;
+                    this.vx=this.vx*0.93+Math.cos(ang)*pspd;
+                    this.vy=this.vy*0.93+Math.sin(ang)*pspd;
+                    this.x+=this.vx; this.y+=this.vy; this.life++;
+                    if(this.life>this.max||this.x<-20||this.x>PW+20||this.y<-20||this.y>PH+20) this.init();
+                }
+                draw(){
+                    const lr=this.life/this.max;
+                    const alpha=(playing?0.55:0.20)*Math.sin(lr*Math.PI);
+                    const light=40+lr*28;
+                    pctx.globalAlpha=alpha;
+                    pctx.fillStyle=`hsl(${this.h},62%,${light}%)`;
+                    pctx.beginPath();
+                    pctx.arc(this.x,this.y,this.sz,0,Math.PI*2);
+                    pctx.fill();
                 }
             }
 
-            updateTimerDisplay();
-            timerInterval = setInterval(updateTimerDisplay, 1000);
-        }
+            /* ─── ORB CANVAS ─── */
+            let vc, vctx, VW, VH, CX, CY, VR=108, aa=0;
 
-        function stopAllAmbients() {
-            Object.keys(ambientOscillators).forEach(type => {
-                const btns = document.querySelectorAll('.ambient-chip-footer');
-                btns.forEach(btn => btn.classList.remove('active'));
-                stopAmbient(type);
-            });
-        }
-
-        // AUDIO
-        function getAudioCtx() {
-            if (!ac) {
-                ac = new (window.AudioContext || window.webkitAudioContext)();
-                freqGain = ac.createGain();
-                ambientGain = ac.createGain();
-                freqGain.gain.value = 0.3;
-                ambientGain.gain.value = 0.4;
-                freqGain.connect(ac.destination);
-                ambientGain.connect(ac.destination);
+            function initOrbCanvas() {
+                vc = document.getElementById('exp-vc');
+                if (!vc) return;
+                vctx = vc.getContext('2d');
+                VW = vc.width; VH = vc.height; CX = VW/2; CY = VH/2;
             }
-            if (ac.state === 'suspended') ac.resume();
-            return ac;
-        }
 
-        function updateFreqVolume(value) {
-            document.getElementById('freq-vol-display').textContent = value + '%';
-            if (freqGain) freqGain.gain.value = (value / 100) * 0.5;
-        }
-
-        function updateAmbientVolume(value) {
-            document.getElementById('ambient-vol-display').textContent = value + '%';
-            const boost = (value / 100) * 3; // boost hasta 3x
-            Object.values(ambientOscillators).forEach(obj => {
-                if (obj.gainNode) obj.gainNode.gain.value = boost;
-                else if (obj.audioElement) obj.audioElement.volume = Math.min(value / 100, 1);
-            });
-        }
-
-        function toggleAmbient(type, btn) {
-            getAudioCtx();
-            btn.classList.toggle('active');
-            if (btn.classList.contains('active')) {
-                startAmbient(type);
-            } else {
-                stopAmbient(type);
+            function drawOrb(){
+                if (!vctx) return;
+                vctx.clearRect(0,0,VW,VH);
+                const f = F[si];
+                const pulse = playing ? (Math.sin(Date.now()*0.0019)*0.5+0.5) : 0;
+                const bR = playing ? VR + pulse*7 : VR;
+                if(playing){
+                    const g = vctx.createRadialGradient(CX,CY,bR-13,CX,CY,bR+14);
+                    g.addColorStop(0, f.color+'40'); g.addColorStop(1,'transparent');
+                    vctx.beginPath(); vctx.arc(CX,CY,bR+3,0,Math.PI*2);
+                    vctx.strokeStyle = g; vctx.lineWidth = 15; vctx.stroke();
+                }
+                vctx.beginPath();
+                for(let i=0;i<=128;i++){
+                    const ang = (i/128)*Math.PI*2 + aa;
+                    const w = playing ? Math.sin(i*0.44+aa*9)*(6+pulse*13) : 0;
+                    const r = bR + w;
+                    i===0 ? vctx.moveTo(CX+Math.cos(ang)*r, CY+Math.sin(ang)*r) : vctx.lineTo(CX+Math.cos(ang)*r, CY+Math.sin(ang)*r);
+                }
+                vctx.closePath();
+                vctx.strokeStyle = f.color;
+                vctx.lineWidth = playing ? 1.5 : 1;
+                vctx.globalAlpha = playing ? 0.55+pulse*0.4 : 0.22;
+                vctx.stroke();
+                vctx.globalAlpha = 1;
+                aa += playing ? 0.0025 : 0.0004;
             }
-        }
 
-        function startAmbient(type) {
-            if (ambientOscillators[type]) return;
-            getAudioCtx(); // asegurar que ac existe antes de crear MediaElementSource
+            /* ─── LOOP ─── */
+            function loop(){
+                pspd += (ptgt - pspd) * 0.04;
+                ptime++;
+                if (pctx) {
+                    pctx.clearRect(0,0,PW,PH);
+                    pctx.globalAlpha = 1;
+                    parts.forEach(p => { p.step(); p.draw(); });
+                    pctx.globalAlpha = 1;
+                }
+                drawOrb();
+                animFrameId = requestAnimationFrame(loop);
+            }
 
-            const audioUrls = {
+            function startIdleLoop() {
+                function idle() {
+                    if (!expActive && !playing) {
+                        if (vc && vctx) drawOrb();
+                    }
+                    if (!animFrameId && (expActive || playing)) loop();
+                    requestAnimationFrame(idle);
+                }
+                idle();
+            }
+
+            /* ─── AUDIO ─── */
+            function mkCtx(){
+                if(!ac){
+                    ac = new(window.AudioContext||window.webkitAudioContext)();
+                    gn = ac.createGain(); gn.connect(ac.destination); gn.gain.setValueAtTime(vol, ac.currentTime);
+                }
+                if(ac.state === 'suspended') ac.resume();
+            }
+            function startAudio(){
+                mkCtx();
+                const f = F[si];
+                if(f.b){
+                    const mg = ac.createChannelMerger(2); mg.connect(gn);
+                    lo = ac.createOscillator(); lo.type='sine'; lo.frequency.value = f.c;
+                    ro = ac.createOscillator(); ro.type='sine'; ro.frequency.value = +(f.c+f.hz).toFixed(4);
+                    const gL = ac.createGain(), gR = ac.createGain();
+                    lo.connect(gL); gL.connect(mg,0,0);
+                    ro.connect(gR); gR.connect(mg,0,1);
+                    lo.start(); ro.start();
+                } else {
+                    mo = ac.createOscillator(); mo.type='sine'; mo.frequency.value = f.hz;
+                    mo.connect(gn); mo.start();
+                }
+            }
+            function stopAudio(fade){
+                if(!ac) return;
+                const t = ac.currentTime;
+                if(fade){ gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t+0.7); }
+                setTimeout(()=>{
+                    [lo,ro,mo].forEach(o=>{ if(o){ try{o.stop();o.disconnect();}catch(e){} } });
+                    lo=ro=mo=null;
+                    if(fade && gn) gn.gain.setValueAtTime(vol, ac.currentTime);
+                }, fade?750:0);
+            }
+
+            /* ─── CONTROLES ─── */
+            function togglePlay(){
+                if(playing){
+                    stopAudio(true); playing = false; clearTimeout(ttick); ptgt = 0.28;
+                    document.getElementById('exp-pi').textContent = '▶';
+                    document.getElementById('exp-ol').textContent = 'Iniciar';
+                    document.querySelectorAll('#screen-experience .rng').forEach(r=>r.classList.remove('on'));
+                } else {
+                    startAudio(); playing = true; ptgt = 1.3;
+                    document.getElementById('exp-pi').textContent = '⏸';
+                    document.getElementById('exp-ol').textContent = 'Pausar';
+                    document.querySelectorAll('#screen-experience .rng').forEach(r=>r.classList.add('on'));
+                    if(tsec>0) startCountdown();
+                }
+            }
+            function selectFreq(i){
+                const was = playing;
+                if(was){ stopAudio(false); playing = false; }
+                si = i;
+                const f = F[i];
+                document.getElementById('exp-fh').textContent = f.b ? `${f.c} + ${+(f.c+f.hz).toFixed(2)} Hz` : `${f.hz} Hz`;
+                document.getElementById('exp-fn').textContent = `Frecuencia ${f.name}`;
+                document.querySelectorAll('#exp-grid .fc').forEach((c,j)=>c.classList.toggle('sel', j===i));
+                if(was) setTimeout(()=>{ startAudio(); playing=true; }, 80);
+            }
+            function setVol(v){
+                vol = v/100;
+                document.getElementById('exp-vv').textContent = v+'%';
+                document.getElementById('exp-vs').style.setProperty('--v', v+'%');
+                if(gn) gn.gain.setValueAtTime(vol, ac.currentTime);
+            }
+            function setTimer(m, btn){
+                clearTimeout(ttick); tsec = m*60;
+                document.querySelectorAll('#screen-experience .tb').forEach(b=>b.classList.remove('on'));
+                btn.classList.add('on');
+                if(m===0){ document.getElementById('exp-td').textContent = '00:00'; }
+                else { updTimer(tsec); if(playing) startCountdown(); }
+            }
+            function startCountdown(){
+                clearTimeout(ttick); let r = tsec; updTimer(r);
+                function tick(){
+                    r--; updTimer(r);
+                    if(r<=0){
+                        if(playing) togglePlay();
+                        document.getElementById('exp-td').textContent = '✓ Listo';
+                    } else {
+                        ttick = setTimeout(tick, 1000);
+                    }
+                }
+                if(r>0) ttick = setTimeout(tick, 1000);
+            }
+            function updTimer(s){
+                document.getElementById('exp-td').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+            }
+            function filterCat(cat, btn){
+                document.querySelectorAll('#screen-experience .tabs .tab').forEach(b=>b.classList.remove('on'));
+                btn.classList.add('on');
+                document.querySelectorAll('#exp-grid .fc').forEach((c,i)=>{
+                    c.classList.toggle('hid', cat!=='all' && F[i].cat!==cat);
+                });
+            }
+
+            /* ─── GUIDE TOGGLE ─── */
+            function toggleGuide(){
+                const panel = document.getElementById('exp-guidePanel');
+                const toggle = document.getElementById('exp-guideToggle');
+                if (!panel || !toggle) return;
+                panel.classList.toggle('open');
+                toggle.classList.toggle('open');
+            }
+
+            /* ─── AMBIENT SOUND ENGINE ─── */
+            const AMBIENT_URLS = {
                 rain:   'https://p.scdn.co/mp3-preview/8021a841788a243a06321baaba8d77cdf49cb4db.mp3',
                 ocean:  'https://p.scdn.co/mp3-preview/26d86a5d7fc6f9eef6201aa192edb766de5f7fd5.mp3',
                 fire:   'https://p.scdn.co/mp3-preview/4fec7fc24306ce4837378af4669b32a80799e7b6.mp3',
-                forest: 'https://p.scdn.co/mp3-preview/bef6e7d70864c6a022cdacf3da20f9b9ca311e51.mp3'
+                bosque: 'https://p.scdn.co/mp3-preview/bef6e7d70864c6a022cdacf3da20f9b9ca311e51.mp3',
+            };
+            const AMB_NAME = {
+                rain:'🌧️ Lluvia', ocean:'🌊 Océano', fire:'🔥 Fuego',
+                bosque:'🌲 Bosque', heart:'💓 Latidos',
             };
 
-            const audioElement = new Audio(audioUrls[type]);
-            audioElement.loop = true;
-            audioElement.crossOrigin = 'anonymous';
+            function startAmbientAudio(type){
+                if(ambientEls[type]) return;
+                const el = new Audio(AMBIENT_URLS[type]);
+                el.loop = true;
+                el.crossOrigin = 'anonymous';
+                ambientEls[type] = { el };
 
-            audioElement.addEventListener('canplay', () => {
-                try {
-                    // Conectar al Web Audio API para gain > 1.0
-                    const source = ac.createMediaElementSource(audioElement);
-                    const gainNode = ac.createGain();
-                    const sliderVal = parseFloat(document.getElementById('ambient-vol').value) / 100;
-                    gainNode.gain.value = sliderVal * 3; // boost hasta 3x
-                    source.connect(gainNode);
-                    gainNode.connect(ac.destination);
-                    ambientOscillators[type].gainNode = gainNode;
-                } catch(e) {
-                    // fallback: volume nativo
-                    audioElement.volume = 1.0;
+                el.addEventListener('canplay', ()=>{
+                    try {
+                        if(!ac) mkCtx();
+                        const src = ac.createMediaElementSource(el);
+                        const gnNode = ac.createGain();
+                        gnNode.gain.value = mixVol * 2.5;
+                        src.connect(gnNode);
+                        gnNode.connect(ac.destination);
+                        ambientEls[type].gnNode = gnNode;
+                    } catch(e){ el.volume = Math.min(mixVol * 1.5, 1); }
+                }, { once: true });
+
+                el.play().catch(e => console.log('Ambient:', e));
+            }
+
+            function stopAmbientAudio(type){
+                if(!ambientEls[type]) return;
+                try{
+                    ambientEls[type].el.pause();
+                    ambientEls[type].el.src = '';
+                    if(ambientEls[type].gnNode) ambientEls[type].gnNode.disconnect();
+                } catch(e){}
+                delete ambientEls[type];
+            }
+
+            function startHeartbeat(){
+                if(heartCurrent) return;
+                if(!ac) mkCtx();
+                const osc = ac.createOscillator();
+                osc.type = 'sine'; osc.frequency.value = 52;
+                const lpf = (()=>{ const f=ac.createBiquadFilter(); f.type='lowpass'; f.frequency.value=130; f.Q.value=1.8; return f; })();
+                const hGn = ac.createGain(); hGn.gain.value = 0;
+                osc.connect(lpf); lpf.connect(hGn); hGn.connect(ac.destination);
+                osc.start();
+                const bpm=52, cycle=60/bpm*1000;
+                let running=true;
+                function beat(){
+                    if(!running||!ac) return;
+                    const peak=mixVol*1.8, t=ac.currentTime;
+                    hGn.gain.cancelScheduledValues(t);
+                    hGn.gain.setValueAtTime(0,t);
+                    hGn.gain.linearRampToValueAtTime(peak*0.9,t+0.045);
+                    hGn.gain.exponentialRampToValueAtTime(0.001,t+0.25);
+                    hGn.gain.setValueAtTime(0.001,t+0.32);
+                    hGn.gain.linearRampToValueAtTime(peak*0.42,t+0.39);
+                    hGn.gain.exponentialRampToValueAtTime(0.0001,t+0.62);
+                    hGn.gain.setValueAtTime(0,t+0.64);
+                    setTimeout(beat, cycle);
                 }
-            }, { once: true });
-
-            audioElement.play().catch(err => console.log('Audio error:', err));
-            ambientOscillators[type] = { audioElement };
-        }
-
-        function stopAmbient(type) {
-            if (ambientOscillators[type]) {
-                try {
-                    ambientOscillators[type].audioElement.pause();
-                    ambientOscillators[type].audioElement.src = '';
-                    if (ambientOscillators[type].gainNode) {
-                        ambientOscillators[type].gainNode.disconnect();
-                    }
-                } catch (e) { }
-                delete ambientOscillators[type];
+                beat();
+                heartCurrent = { osc, hGn, stop:()=>{ running=false; try{osc.stop(); hGn.disconnect();}catch(e){} } };
             }
-        }
 
-        function stopAmbient(type) {
-            if (ambientOscillators[type]) {
-                try {
-                    if (ambientOscillators[type].audioElement) {
-                        ambientOscillators[type].audioElement.pause();
-                        ambientOscillators[type].audioElement.src = '';
-                    }
-                } catch (e) { }
-                delete ambientOscillators[type];
+            function stopHeartbeat(){
+                if(heartCurrent){ heartCurrent.stop(); heartCurrent=null; }
             }
-        }
 
-        function startTone() {
-            getAudioCtx();
-            stopTone();
-            const f = F[si];
-            if (f.b) {
-                const mg = ac.createChannelMerger(2);
-                mg.connect(freqGain);
-                const oL = ac.createOscillator(), oR = ac.createOscillator();
-                const gL = ac.createGain(), gR = ac.createGain();
-                gL.gain.value = gR.gain.value = 1;
-                oL.type = oR.type = 'sine';
-                oL.frequency.value = f.c;
-                oR.frequency.value = f.c + f.hz;
-                oL.connect(gL);
-                gL.connect(mg, 0, 0);
-                oR.connect(gR);
-                gR.connect(mg, 0, 1);
-                oL.start();
-                oR.start();
-                mainNodes = [oL, oR, mg];
-            } else {
-                const o = ac.createOscillator();
-                o.type = 'sine';
-                o.frequency.value = f.hz;
-                o.connect(freqGain);
-                o.start();
-                mainNodes = [o];
+            function toggleAmb(type, btn){
+                if (!expActive) return;
+                const wasOn = btn.classList.contains('on');
+
+                if(ambActiveType && ambActiveType!=='heart') stopAmbientAudio(ambActiveType);
+                if(ambActiveType==='heart') stopHeartbeat();
+                document.querySelectorAll('#screen-experience .amb-btn').forEach(b=>b.classList.remove('on'));
+                document.getElementById('exp-ambStatus').textContent = 'sin ambiente';
+                document.getElementById('exp-ambDot').classList.remove('on');
+                ambActiveType = null;
+
+                if(wasOn) return;
+
+                if(type==='heart'){ startHeartbeat(); }
+                else { if(!ac) mkCtx(); startAmbientAudio(type); }
+
+                ambActiveType = type;
+                btn.classList.add('on');
+                document.getElementById('exp-ambStatus').textContent = AMB_NAME[type];
+                document.getElementById('exp-ambDot').classList.add('on');
             }
-        }
 
-        function stopTone() {
-            mainNodes.forEach(n => { try { n.stop && n.stop(); n.disconnect(); } catch (e) { } });
-            mainNodes = [];
-        }
-
-        function togglePlay() {
-            playing ? stopTone() : startTone();
-            playing = !playing;
-            const orb = document.getElementById('orb-mini');
-            const pi = document.getElementById('pi-mini');
-            const ol = document.getElementById('ol-mini');
-            if (playing) {
-                orb.classList.add('playing');
-                pi.textContent = '⏸';
-                ol.textContent = 'Escuchando';
-            } else {
-                orb.classList.remove('playing');
-                pi.textContent = '▶';
-                ol.textContent = 'Play';
+            function setMixVol(v){
+                mixVol = v/100;
+                document.getElementById('exp-mixVal').textContent = v+'%';
+                document.getElementById('exp-mixRange').style.setProperty('--mv', v+'%');
+                Object.values(ambientEls).forEach(obj=>{
+                    if(obj.gnNode) obj.gnNode.gain.value = mixVol*2.5;
+                    else if(obj.el) obj.el.volume = Math.min(mixVol*1.5, 1);
+                });
             }
-        }
 
-        function updateFreq() {
-            const f = F[si];
-            document.getElementById('fh').textContent = f.hz + ' Hz';
-            document.getElementById('fn').textContent = f.name;
-            document.getElementById('fd').textContent = f.desc;
-            document.getElementById('poetic').textContent = TX[f.hz] || '';
-        }
-
-        function renderGrid(cat = 'all') {
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
-            F.forEach((f, i) => {
-                if (cat !== 'all' && f.cat !== cat) return;
-                const card = document.createElement('div');
-                card.className = 'fc' + (i === si ? ' sel' : '');
-                card.onclick = () => {
-                    si = i;
-                    updateFreq();
-                    renderGrid(cat);
-                    if (playing) { stopTone(); startTone(); }
-                };
-                card.innerHTML = `<div class="cc">${f.cat.toUpperCase()}</div><div class="chz">${f.hz} Hz</div><div class="cn">${f.name}</div><div class="cd">${f.desc}</div>`;
-                grid.appendChild(card);
-            });
-        }
-
-        function filtrar(cat, btn) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-            btn.classList.add('on');
-            renderGrid(cat);
-        }
-
-        function switchContent(section, btn) {
-            document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            if (section === 'frequencies') {
-                document.getElementById('grid').style.display = 'grid';
-                document.getElementById('poetic').style.display = 'block';
-            } else {
-                document.getElementById('grid').style.display = 'none';
-                document.getElementById('poetic').style.display = 'none';
-                document.getElementById('content-' + section).classList.add('active');
+            /* ─── BUILD GRID ─── */
+            function buildGrid() {
+                const grid = document.getElementById('exp-grid');
+                if (!grid) return;
+                const CL = {solfeggio:'Solfeggio', binaural:'Binaural', especial:'Especial'};
+                F.forEach((f,i)=>{
+                    const el = document.createElement('div');
+                    el.className = 'fc' + (i===4 ? ' sel' : '');
+                    el.onclick = () => selectFreq(i);
+                    const beatLabel = f.b ? `${f.hz} Hz beat` : `${f.hz} Hz`;
+                    el.innerHTML = `
+                        <div class="dot"></div>
+                        <div class="cc">${CL[f.cat]}</div>
+                        <div class="chz" style="color:${f.color}">${beatLabel}</div>
+                        <div class="cn" style="color:${f.color}bb">${f.name}</div>
+                        <div class="cd">${f.desc}</div>`;
+                    grid.appendChild(el);
+                });
             }
-        }
 
-        function playMeditation(name, icon) {
-            alert(`▶ ${icon} ${name}\n\nPrueba gratis disponible\nÚnete a la lista para acceso completo`);
-        }
-
-        function playStory(title, author) {
-            alert(`▶ ${title}\npor ${author}\n\nPrueba gratis disponible\nÚnete a la lista para acceso completo`);
-        }
-
-        function joinWaitlist() {
-            const email = prompt('Tu email para la lista de espera:');
-            if (email) {
-                alert(`✓ ¡Gracias!\nConfirmamos: ${email}\n\nSerás de los primeros en acceder`);
+            /* ─── ACTIVACIÓN / DESACTIVACIÓN ─── */
+            function onActivate() {
+                if (expActive) return;
+                expActive = true;
+                if (!pc) initParticles();
+                if (!vc) initOrbCanvas();
+                if (!animFrameId) loop();
             }
-        }
 
-        renderGrid();
-        updateFreq();
+            function onDeactivate() {
+                expActive = false;
+                if (playing) togglePlay();
+                if (ambActiveType && ambActiveType !== 'heart') stopAmbientAudio(ambActiveType);
+                if (ambActiveType === 'heart') stopHeartbeat();
+                document.querySelectorAll('#screen-experience .amb-btn').forEach(b=>b.classList.remove('on'));
+                document.getElementById('exp-ambStatus').textContent = 'sin ambiente';
+                document.getElementById('exp-ambDot').classList.remove('on');
+                ambActiveType = null;
+            }
+
+            // Exportar API pública
+            window.Exp = {
+                togglePlay,
+                setVol,
+                setTimer,
+                filterCat,
+                toggleGuide,
+                toggleAmb,
+                setMixVol,
+                onActivate,
+                onDeactivate
+            };
+
+            // Inicialización
+            buildGrid();
+            initOrbCanvas();
+            startIdleLoop();
+
+        })();
     </script>
-
 </body>
 </html>
