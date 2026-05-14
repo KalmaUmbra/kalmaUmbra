@@ -717,6 +717,54 @@
         }
         #screen-experience input.mix-range::-webkit-slider-thumb:hover{transform:scale(1.3);}
         #screen-experience .mix-val{font-size:.6rem;color:var(--mut);min-width:26px;text-align:right;}
+
+        /* ── Relatos DreamWeaver ── */
+        #screen-experience .fc.relato {
+            display:flex;flex-direction:column;gap:.4rem;
+            border-color:rgba(198,154,58,.22);
+        }
+        #screen-experience .fc.relato:hover { border-color:rgba(198,154,58,.45); }
+        #screen-experience .fc.relato .dot { background:var(--gold); }
+        #screen-experience .relato-badge {
+            font-size:.52rem;letter-spacing:.16em;color:rgba(198,154,58,.7);
+            text-transform:uppercase;margin-bottom:1px;
+        }
+        #screen-experience .relato-title {
+            font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;
+            color:var(--gold);line-height:1.2;
+        }
+        #screen-experience .relato-desc {
+            font-size:.59rem;color:var(--mut);line-height:1.4;flex:1;
+        }
+        #screen-experience .relato-player {
+            display:flex;flex-direction:column;gap:.35rem;margin-top:auto;
+        }
+        #screen-experience .relato-btn {
+            display:flex;align-items:center;justify-content:center;gap:.4rem;
+            background:rgba(198,154,58,.08);border:1px solid rgba(198,154,58,.25);
+            border-radius:50px;padding:.32rem .6rem;cursor:pointer;
+            font-size:.6rem;color:rgba(198,154,58,.85);letter-spacing:.1em;
+            font-family:'Outfit',sans-serif;transition:all .22s;
+            width:100%;
+        }
+        #screen-experience .relato-btn:hover {
+            background:rgba(198,154,58,.15);border-color:rgba(198,154,58,.5);
+            color:var(--gold);
+        }
+        #screen-experience .relato-btn.playing {
+            background:rgba(198,154,58,.14);border-color:var(--gold);
+            color:var(--gold);
+        }
+        #screen-experience .relato-progress-wrap {
+            height:2px;background:rgba(198,154,58,.12);border-radius:2px;overflow:hidden;
+        }
+        #screen-experience .relato-progress-bar {
+            height:100%;background:rgba(198,154,58,.55);border-radius:2px;width:0%;
+            transition:width .5s linear;
+        }
+        #screen-experience .relato-time {
+            font-size:.52rem;color:rgba(198,154,58,.45);text-align:right;letter-spacing:.06em;
+        }
     </style>
 </head>
 <body>
@@ -1942,6 +1990,84 @@
                         <div class="cn" style="color:${f.color}bb">${f.name}</div>
                         <div class="cd">${f.desc}</div>`;
                     grid.appendChild(el);
+                });
+
+                /* ── Relatos DreamWeaver ── */
+                const RELATOS = [
+                    { id:'r1', src:'maya_relato_1_final.mp3', title:'Densidad', desc:'La voz de Maya te lleva a un estado de peso y presencia absoluta.' },
+                    { id:'r2', src:'maya_relato_2_final.mp3', title:'Metal & Sal', desc:'Texturas sonoras íntimas. Fricción, calor y disolución.' },
+                    { id:'r3', src:'maya_relato_3_final.mp3', title:'Geometría', desc:'Formas invisibles que se trazan sobre la piel. Un relato de contornos.' },
+                ];
+                const relatoAudios = {};
+
+                function fmtTime(s) {
+                    const m = Math.floor(s/60);
+                    return `${m}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+                }
+
+                RELATOS.forEach(r => {
+                    const audio = new Audio(r.src);
+                    audio.preload = 'metadata';
+                    relatoAudios[r.id] = audio;
+
+                    const card = document.createElement('div');
+                    card.className = 'fc relato';
+                    card.id = 'relato-card-' + r.id;
+                    card.innerHTML = `
+                        <div class="dot"></div>
+                        <div class="relato-badge">DreamWeaver · Maya</div>
+                        <div class="relato-title">${r.title}</div>
+                        <div class="relato-desc">${r.desc}</div>
+                        <div class="relato-player">
+                            <div class="relato-progress-wrap">
+                                <div class="relato-progress-bar" id="rpb-${r.id}"></div>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <button class="relato-btn" id="rbtn-${r.id}">▶ Escuchar</button>
+                                <span class="relato-time" id="rtm-${r.id}">0:00</span>
+                            </div>
+                        </div>`;
+                    grid.appendChild(card);
+
+                    const btn  = card.querySelector('#rbtn-' + r.id);
+                    const bar  = card.querySelector('#rpb-'  + r.id);
+                    const time = card.querySelector('#rtm-'  + r.id);
+
+                    audio.addEventListener('loadedmetadata', () => {
+                        time.textContent = '0:00 / ' + fmtTime(audio.duration);
+                    });
+                    audio.addEventListener('timeupdate', () => {
+                        if (!audio.duration) return;
+                        const pct = (audio.currentTime / audio.duration * 100).toFixed(1);
+                        bar.style.width = pct + '%';
+                        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+                    });
+                    audio.addEventListener('ended', () => {
+                        btn.textContent = '▶ Escuchar';
+                        btn.classList.remove('playing');
+                        bar.style.width = '0%';
+                    });
+
+                    btn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        // Pausar otros relatos
+                        RELATOS.forEach(other => {
+                            if (other.id !== r.id) {
+                                relatoAudios[other.id].pause();
+                                document.getElementById('rbtn-' + other.id).textContent = '▶ Escuchar';
+                                document.getElementById('rbtn-' + other.id).classList.remove('playing');
+                            }
+                        });
+                        if (audio.paused) {
+                            audio.play().catch(()=>{});
+                            btn.textContent = '⏸ Pausar';
+                            btn.classList.add('playing');
+                        } else {
+                            audio.pause();
+                            btn.textContent = '▶ Escuchar';
+                            btn.classList.remove('playing');
+                        }
+                    });
                 });
             }
 
