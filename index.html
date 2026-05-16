@@ -972,32 +972,34 @@
                 <p class="sb">Tonos terapéuticos generados en tiempo real</p>
             </header>
 
-            <!-- Orb -->
-            <div class="vw">
-                <div class="rng" id="exp-r1"></div>
-                <div class="rng" id="exp-r2"></div>
-                <div class="rng" id="exp-r3"></div>
-                <canvas id="exp-vc" width="292" height="292"></canvas>
-                <div class="orb" onclick="Exp.togglePlay()">
-                    <span class="pi" id="exp-pi">▶</span>
-                    <span class="ol" id="exp-ol">Iniciar</span>
-                </div>
-            </div>
-
-            <!-- Freq Display -->
-            <div class="fd">
-                <div class="fh" id="exp-fh">432 Hz</div>
+            <!-- Freq Display — centrado arriba del timer -->
+            <div class="fd" style="text-align:center;">
+                <div class="fh" id="exp-fh" style="font-size:clamp(1.8rem,6vw,2.6rem);">432 Hz</div>
                 <div class="fn" id="exp-fn">Frecuencia del Corazón</div>
             </div>
 
-            <!-- Timer -->
-            <div class="tr">
-                <div class="td" id="exp-td">00:00</div>
-                <div class="tc">
-                    <button class="tb" onclick="Exp.setTimer(5,this)">5 min</button>
-                    <button class="tb" onclick="Exp.setTimer(10,this)">10 min</button>
-                    <button class="tb" onclick="Exp.setTimer(20,this)">20 min</button>
-                    <button class="tb on" onclick="Exp.setTimer(0,this)">∞</button>
+            <!-- Timer + Play — integrados en la misma fila -->
+            <div style="width:100%;max-width:650px;display:flex;flex-direction:column;align-items:center;gap:.6rem;">
+                <!-- Fila: timer display + botones -->
+                <div class="tr" style="width:100%;justify-content:center;">
+                    <div class="td" id="exp-td">00:00</div>
+                    <div class="tc">
+                        <button class="tb" onclick="Exp.setTimer(5,this)">5 min</button>
+                        <button class="tb" onclick="Exp.setTimer(10,this)">10 min</button>
+                        <button class="tb" onclick="Exp.setTimer(20,this)">20 min</button>
+                        <button class="tb on" onclick="Exp.setTimer(0,this)">∞</button>
+                    </div>
+                </div>
+                <!-- Orb play — debajo del timer, centrado -->
+                <div class="vw" style="width:80px;height:80px;min-width:80px;">
+                    <div class="rng" id="exp-r1" style="width:44px;height:44px;"></div>
+                    <div class="rng" id="exp-r2" style="width:58px;height:58px;"></div>
+                    <div class="rng" id="exp-r3" style="width:72px;height:72px;"></div>
+                    <canvas id="exp-vc" width="80" height="80"></canvas>
+                    <div class="orb" onclick="Exp.togglePlay()" style="width:46px;height:46px;gap:2px;">
+                        <span class="pi" id="exp-pi" style="font-size:1rem;">▶</span>
+                        <span class="ol" id="exp-ol" style="font-size:.48rem;letter-spacing:.12em;">Iniciar</span>
+                    </div>
                 </div>
             </div>
 
@@ -1065,6 +1067,11 @@
                 </div>
             </div>
 
+            <!-- Pill auriculares — justo después de la guía -->
+            <div class="pill-main">
+                🎧 Auriculares para tonos binaurales &nbsp;·&nbsp; 🔊 Volumen 30–55 % &nbsp;·&nbsp; 😮‍💨 Cerrá los ojos y respirá
+            </div>
+
             <!-- Ambient Bar -->
             <div class="ambient-bar">
                 <div class="ambient-top">
@@ -1083,6 +1090,22 @@
                 </div>
                 <div class="ambient-mix" style="display:none">
                     <input type="range" class="mix-range" id="exp-mixRange-hidden" min="0" max="100" value="30" style="--mv:30%"/>
+                </div>
+            </div>
+
+            <!-- Controles de volumen — debajo del ambient bar -->
+            <div style="width:100%;max-width:650px;display:flex;flex-direction:column;gap:.4rem;">
+                <div class="vr" style="max-width:100%">
+                    <label style="min-width:80px;font-size:.62rem">🎵 Frecuencia</label>
+                    <input type="range" id="exp-vs" min="0" max="4" step="0.1" value="2" style="--v:50%"
+                        oninput="Exp.setVol(+this.value);this.style.setProperty('--v',(this.value/4*100)+'%')">
+                    <span class="vv" id="exp-vv">2%</span>
+                </div>
+                <div class="vr" style="max-width:100%">
+                    <label style="min-width:80px;font-size:.62rem">🌿 Ambiente</label>
+                    <input class="mix-range" type="range" id="exp-mixRange" min="0" max="100" value="50" style="--mv:50%"
+                        oninput="Exp.setMixVol(+this.value);this.style.setProperty('--mv',this.value+'%')">
+                    <span class="mix-val" id="exp-mixVal">50%</span>
                 </div>
             </div>
 
@@ -1176,22 +1199,6 @@
 
             </div><!-- /day-grid -->
 
-            <!-- Controles de volumen por capa -->
-            <div style="width:100%;max-width:650px;display:flex;flex-direction:column;gap:.45rem;padding:.1rem 0;">
-                <div class="vr" style="max-width:100%">
-                    <label style="min-width:80px;font-size:.62rem">🎵 Frecuencia</label>
-                    <input type="range" id="exp-vs" min="0" max="4" step="0.1" value="2" style="--v:50%"
-                        oninput="Exp.setVol(+this.value);this.style.setProperty('--v',(this.value/4*100)+'%')">
-                    <span class="vv" id="exp-vv">2%</span>
-                </div>
-                <div class="vr" style="max-width:100%">
-                    <label style="min-width:80px;font-size:.62rem">🌿 Ambiente</label>
-                    <input class="mix-range" type="range" id="exp-mixRange" min="0" max="100" value="50" style="--mv:50%"
-                        oninput="Exp.setMixVol(+this.value);this.style.setProperty('--mv',this.value+'%')">
-                    <span class="mix-val" id="exp-mixVal">50%</span>
-                </div>
-            </div>
-
             <!-- Grid de relatos DreamWeaver + tarjeta on-demand -->
             <div class="section-divider"><span>DreamWeaver · Relatos de Maya</span></div>
             <div class="grid" id="exp-grid">
@@ -1240,11 +1247,6 @@
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         loading="lazy" style="border-radius:14px;"></iframe>
                 </div>
-            </div>
-
-            <!-- Pill -->
-            <div class="pill-main">
-                🎧 Auriculares recomendados para tonos binaurales &nbsp;·&nbsp; 🔊 Volumen suave 30–55 % &nbsp;·&nbsp; 😮‍💨 Cerrá los ojos y respirá
             </div>
 
             <!-- Botón Sintetizador -->
