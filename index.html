@@ -2203,15 +2203,15 @@
 
                 /* ── Relatos DreamWeaver ── */
                 const RELATOS = [
-                    { id:'r1', src:'maya_relato_1_final.mp3', title:'Densidad', desc:'La voz de Maya te lleva a un estado de peso y presencia absoluta.' },
-                    { id:'r2', src:'maya_relato_2_final.mp3', title:'Metal & Sal', desc:'Texturas sonoras íntimas. Fricción, calor y disolución.' },
-                    { id:'r3', src:'maya_relato_3_final.mp3', title:'Geometría', desc:'Formas invisibles que se trazan sobre la piel. Un relato de contornos.' },
+                    { id:'r1', src:'audio/maya_audio_1_densidad_slow.mp3',  title:'Densidad',    desc:'La voz de Maya te lleva a un estado de peso y presencia absoluta.' },
+                    { id:'r2', src:'audio/maya_audio_2_metal_sal_slow.mp3', title:'Metal & Sal',  desc:'Texturas sonoras íntimas. Fricción, calor y disolución.' },
+                    { id:'r3', src:'audio/maya_audio_3_geometria_slow.mp3', title:'Geometría',    desc:'Formas invisibles que se trazan sobre la piel. Un relato de contornos.' },
                 ];
                 const relatoAudios = {};
 
                 function fmtTime(s) {
-                    const m = Math.floor(s/60);
-                    return `${m}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+                    const m = Math.floor(s / 60);
+                    return `${m}:${String(Math.floor(s % 60)).padStart(2,'0')}`;
                 }
 
                 RELATOS.forEach(r => {
