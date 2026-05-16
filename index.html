@@ -1520,6 +1520,36 @@
                     <input type="range" min="0" max="100" value="55" oninput="KS.setLayerVol('pad',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 55%,rgba(16,185,129,.14) 55%,rgba(16,185,129,.14) 100%)"/>
                     <span class="sy-ly-label" id="sv-pad" style="min-width:28px;text-align:right">55%</span>
                 </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">🔔 Campana</span>
+                    <button class="sy-mute" id="sm-bell" onclick="KS.toggleMute('bell',this)">ON</button>
+                    <input type="range" min="0" max="100" value="60" oninput="KS.setLayerVol('bell',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 60%,rgba(16,185,129,.14) 60%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-bell" style="min-width:28px;text-align:right">60%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">🎻 Cuerda</span>
+                    <button class="sy-mute" id="sm-cuerda" onclick="KS.toggleMute('cuerda',this)">ON</button>
+                    <input type="range" min="0" max="100" value="50" oninput="KS.setLayerVol('cuerda',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 50%,rgba(16,185,129,.14) 50%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-cuerda" style="min-width:28px;text-align:right">50%</span>
+                </div>
+                <div class="sy-ly-row">
+                    <span class="sy-ly-label">〰 Binaural</span>
+                    <button class="sy-mute" id="sm-binaural" onclick="KS.toggleMute('binaural',this)">ON</button>
+                    <input type="range" min="0" max="100" value="25" oninput="KS.setLayerVol('binaural',this.value)" style="flex:1;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 25%,rgba(16,185,129,.14) 25%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-binaural" style="min-width:28px;text-align:right">25%</span>
+                </div>
+                <div class="sy-ly-row" style="flex-wrap:wrap;gap:.4rem;">
+                    <span class="sy-ly-label">🎙 Maya</span>
+                    <button class="sy-mute" id="sm-narracion" onclick="KS.toggleMute('narracion',this)">ON</button>
+                    <select id="sy-narr-sel" onchange="KS.setNarracion(this.value)" style="flex:1;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--txt);border-radius:6px;padding:.15rem .4rem;font-size:.65rem;font-family:'Outfit',sans-serif;outline:none;cursor:pointer;">
+                        <option value="">— sin narración —</option>
+                        <option value="audio/maya_audio_1_densidad_slow.mp3">Densidad</option>
+                        <option value="audio/maya_audio_2_metal_sal_slow.mp3">Metal & Sal</option>
+                        <option value="audio/maya_audio_3_geometria_slow.mp3">Geometría</option>
+                    </select>
+                    <input type="range" min="0" max="100" value="30" oninput="KS.setLayerVol('narracion',this.value)" style="width:80px;height:2px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:linear-gradient(to right,var(--em) 0%,var(--em) 30%,rgba(16,185,129,.14) 30%,rgba(16,185,129,.14) 100%)"/>
+                    <span class="sy-ly-label" id="sv-narracion" style="min-width:28px;text-align:right">30%</span>
+                </div>
             </div>
 
             <div class="sy-dur-row">
@@ -1540,20 +1570,22 @@
     /* ════ MOTOR DE SÍNTESIS KALMAUMBRA ════ */
     window.KS = (function(){
         const MOODS = {
-            sueno:      {label:'Sueño',      icon:'🌙',bpm:80, baseHz:432,kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],bass:[55,0,0,0,0,0,0,0,55,0,0,0,0,0,41,0],pad:[108,144,216,288],kickDecay:.6,kickPunch:160,kickFloor:38,color:'#7c5cfc'},
-            intimo:     {label:'Íntimo',     icon:'🔥',bpm:100,baseHz:528,kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[65,0,0,65,0,0,0,0,73,0,0,65,0,0,0,0],pad:[132,165,220,264],kickDecay:.45,kickPunch:140,kickFloor:42,color:'#fb6060'},
-            meditacion: {label:'Meditación', icon:'🧘',bpm:70, baseHz:396,kick:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],snare:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],hat:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],bass:[44,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0],pad:[99,132,198,264],kickDecay:.9,kickPunch:120,kickFloor:36,color:'#10b981'},
-            energia:    {label:'Energía',    icon:'⚡',bpm:128,baseHz:741,kick:[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[82,0,82,0,0,0,110,0,82,0,0,82,0,110,0,0],pad:[185,220,277,370],kickDecay:.3,kickPunch:180,kickFloor:45,color:'#facc15'},
+            sueno:      {label:'Sueño',      icon:'🌙',bpm:80, baseHz:432,binauralBeat:3.5,kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],bass:[55,0,0,0,0,0,0,0,55,0,0,0,0,0,41,0],pad:[108,144,216,288],bell:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],bellHz:432,cuerda:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],cuerdaHz:[72,0,0,0,0,0,0,0,60,0,0,0,0,0,0,0],kickDecay:.6,kickPunch:160,kickFloor:38,color:'#7c5cfc'},
+            intimo:     {label:'Íntimo',     icon:'🔥',bpm:100,baseHz:528,binauralBeat:6,  kick:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[65,0,0,65,0,0,0,0,73,0,0,65,0,0,0,0],pad:[132,165,220,264],bell:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],bellHz:528,cuerda:[1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],cuerdaHz:[65,0,0,0,0,0,0,0,0,0,0,0,73,0,0,0],kickDecay:.45,kickPunch:140,kickFloor:42,color:'#fb6060'},
+            meditacion: {label:'Meditación', icon:'🧘',bpm:70, baseHz:396,binauralBeat:6,  kick:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],snare:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],hat:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],bass:[44,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0],pad:[99,132,198,264],bell:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],bellHz:396,cuerda:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],cuerdaHz:[0,0,0,0,55,0,0,0,0,0,0,0,0,0,0,0],kickDecay:.9,kickPunch:120,kickFloor:36,color:'#10b981'},
+            energia:    {label:'Energía',    icon:'⚡',bpm:128,baseHz:741,binauralBeat:14, kick:[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],snare:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],hat:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],bass:[82,0,82,0,0,0,110,0,82,0,0,82,0,110,0,0],pad:[185,220,277,370],bell:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],bellHz:741,cuerda:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],cuerdaHz:[82,0,0,0,0,0,0,0,110,0,0,0,0,0,0,0],kickDecay:.3,kickPunch:180,kickFloor:45,color:'#facc15'},
         };
         const KEYS = Object.keys(MOODS);
         let ac=null,playing=false,currentMood=null;
         let step=0,nextStepTime=0,schedTimer=null;
         let totalSec=45*60,elapsedSec=0,clockTimer=null;
         let analyser=null,dataArr=null;
-        const gains={kick:null,snare:null,hat:null,bass:null,pad:null};
-        const vols={kick:.85,snare:.70,hat:.45,bass:.75,pad:.55};
-        const muted={kick:false,snare:false,hat:false,bass:false,pad:false};
+        const gains={kick:null,snare:null,hat:null,bass:null,pad:null,bell:null,cuerda:null,binaural:null,narracion:null};
+        const vols={kick:.85,snare:.70,hat:.45,bass:.75,pad:.55,bell:.60,cuerda:.50,binaural:.25,narracion:.30};
+        const muted={kick:false,snare:false,hat:false,bass:false,pad:false,bell:false,cuerda:false,binaural:false,narracion:false};
         let padNodes=[];
+        let binauralNodes=[];
+        let narracionAudio=null;
         let _noiseBuf=null;
 
         function initAudio(){
@@ -1565,7 +1597,13 @@
             analyser=ac.createAnalyser();analyser.fftSize=256;
             dataArr=new Uint8Array(analyser.frequencyBinCount);
             analyser.connect(comp);
-            for(const k in gains){gains[k]=ac.createGain();gains[k].gain.value=vols[k];gains[k].connect(analyser);}
+            for(const k in gains){
+                if(k==='narracion') continue; // narracion usa Audio nativo
+                gains[k]=ac.createGain();
+                gains[k].gain.value=muted[k]?0:vols[k];
+                if(k==='binaural') gains[k].connect(ac.destination); // stereo directo
+                else gains[k].connect(analyser);
+            }
         }
 
         function noise(){
@@ -1613,6 +1651,82 @@
             o.start(t);o2.start(t);o.stop(t+d+.02);o2.stop(t+d+.02);
         }
 
+        /* ── CAMPANA (singing bowl) ── */
+        function bell(t,p){
+            const freq=p.bellHz||528;
+            const o=ac.createOscillator(),g=ac.createGain();
+            o.type='sine';o.frequency.value=freq;
+            g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+2.2);
+            o.connect(g);g.connect(gains.bell);o.start(t);o.stop(t+2.4);
+            const o2=ac.createOscillator(),g2=ac.createGain();
+            o2.type='sine';o2.frequency.value=freq*2.756;
+            g2.gain.setValueAtTime(.35,t);g2.gain.exponentialRampToValueAtTime(.001,t+.9);
+            o2.connect(g2);g2.connect(gains.bell);o2.start(t);o2.stop(t+1.1);
+            const o3=ac.createOscillator(),g3=ac.createGain();
+            o3.type='sine';o3.frequency.value=freq*5.404;
+            g3.gain.setValueAtTime(.12,t);g3.gain.exponentialRampToValueAtTime(.001,t+.4);
+            o3.connect(g3);g3.connect(gains.bell);o3.start(t);o3.stop(t+.5);
+        }
+
+        /* ── CUERDA (bowed string) ── */
+        function cuerda(t,freq,dur){
+            if(!freq) return;
+            const o=ac.createOscillator(),o2=ac.createOscillator(),lpf=ac.createBiquadFilter(),g=ac.createGain();
+            lpf.type='lowpass';lpf.frequency.value=700;lpf.Q.value=1.8;
+            o.type='sawtooth';o.frequency.value=freq;
+            o2.type='sawtooth';o2.frequency.value=freq*1.003;
+            const d=dur*.88;
+            g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.8,t+.18);
+            g.gain.setValueAtTime(.8,t+d*.65);g.gain.exponentialRampToValueAtTime(.001,t+d);
+            o.connect(lpf);o2.connect(lpf);lpf.connect(g);g.connect(gains.cuerda);
+            o.start(t);o2.start(t);o.stop(t+d+.05);o2.stop(t+d+.05);
+        }
+
+        /* ── BINAURAL (stereo, directo a destination) ── */
+        function startBinaural(p){
+            stopBinaural();
+            if(muted.binaural) return;
+            const t=ac.currentTime;
+            const carrier=p.baseHz, beat=p.binauralBeat||6;
+            const merger=ac.createChannelMerger(2);
+            merger.connect(gains.binaural);
+            const oL=ac.createOscillator(),oR=ac.createOscillator();
+            const gL=ac.createGain(),gR=ac.createGain();
+            oL.type='sine';oL.frequency.value=carrier;
+            oR.type='sine';oR.frequency.value=carrier+beat;
+            gL.gain.setValueAtTime(0,t);gL.gain.linearRampToValueAtTime(1,t+3);
+            gR.gain.setValueAtTime(0,t);gR.gain.linearRampToValueAtTime(1,t+3);
+            oL.connect(gL);gL.connect(merger,0,0);
+            oR.connect(gR);gR.connect(merger,0,1);
+            oL.start(t);oR.start(t);
+            binauralNodes=[oL,oR,gL,gR,merger];
+        }
+        function stopBinaural(fade){
+            const t=ac?ac.currentTime:0;
+            binauralNodes.forEach(n=>{
+                if(n instanceof GainNode){try{if(fade){n.gain.setValueAtTime(n.gain.value,t);n.gain.linearRampToValueAtTime(0,t+1.2);}else{n.gain.setValueAtTime(0,t);}}catch(e){}}
+                else{setTimeout(()=>{try{n.stop();}catch(e){}},fade?1300:0);}
+            });
+            binauralNodes=[];
+        }
+
+        /* ── NARRACIÓN MAYA ── */
+        function startNarracion(){
+            if(muted.narracion) return;
+            const sel=document.getElementById('sy-narr-sel');
+            if(!sel) return;
+            const src=sel.value;
+            if(!src) return;
+            stopNarracion();
+            narracionAudio=new Audio(src);
+            narracionAudio.loop=true;
+            narracionAudio.volume=vols.narracion;
+            narracionAudio.play().catch(()=>{});
+        }
+        function stopNarracion(){
+            if(narracionAudio){narracionAudio.pause();narracionAudio.currentTime=0;narracionAudio=null;}
+        }
+
         function startPad(p){
             stopPad();
             const t=ac.currentTime;
@@ -1644,6 +1758,8 @@
             if(!muted.snare && p.snare[step]) snare(t);
             if(!muted.hat   && p.hat  [step]) hat(t);
             if(!muted.bass)                   bass(t,p.bass[step],dur);
+            if(!muted.bell  && p.bell[step])  bell(t,p);
+            if(!muted.cuerda)                 cuerda(t,p.cuerdaHz[step],dur);
             nextStepTime+=dur; step=(step+1)%16;
         }
 
@@ -1718,6 +1834,8 @@
         function stop(fade){
             playing=false;clearInterval(schedTimer);clearInterval(clockTimer);
             stopPad(fade);
+            stopBinaural(fade);
+            stopNarracion();
             const btn=document.getElementById('sy-btn-play');if(btn)btn.textContent='▶';
             const dot=document.getElementById('sy-dot');if(dot)dot.classList.remove('on');
             for(let i=0;i<16;i++){const el=document.getElementById(`sy-sd-${i}`);if(el)el.className='sy-sd';}
@@ -1730,6 +1848,8 @@
                 if(playing){stop(false);return;}
                 playing=true;step=0;nextStepTime=ac.currentTime+.05;elapsedSec=0;
                 startPad(MOODS[currentMood]);
+                startBinaural(MOODS[currentMood]);
+                startNarracion();
                 schedTimer=setInterval(scheduler,40);
                 startClock();
                 const btn=document.getElementById('sy-btn-play');if(btn)btn.textContent='⏸';
@@ -1741,22 +1861,28 @@
                 const prev=currentMood; currentMood=key;
                 const m=MOODS[key];
                 const sn=document.getElementById('sy-name');if(sn)sn.textContent=`${m.icon} ${m.label}`;
-                const sb=document.getElementById('sy-bpm');if(sb)sb.textContent=`${m.bpm} BPM · ${m.baseHz} Hz`;
+                const sb=document.getElementById('sy-bpm');if(sb)sb.textContent=`${m.bpm} BPM · ${m.baseHz} Hz · ${m.binauralBeat} Hz beat`;
                 for(let i=0;i<16;i++){const el=document.getElementById(`sy-sd-${i}`);if(el){el.className='sy-sd';if(m.kick[i])el.classList.add('k');else if(m.snare[i])el.classList.add('s');else if(m.hat[i])el.classList.add('h');}}
-                if(playing&&prev!==key){stopPad(true);setTimeout(()=>startPad(MOODS[key]),1000);}
+                if(playing&&prev!==key){stopPad(true);stopBinaural(true);setTimeout(()=>{startPad(MOODS[key]);startBinaural(MOODS[key]);},1000);}
             },
             prevMood(){const i=KEYS.indexOf(currentMood);document.querySelector(`[data-m="${KEYS[(i<=0?KEYS.length:i)-1]}"]`).click();},
             nextMood(){const i=KEYS.indexOf(currentMood??KEYS[KEYS.length-1]);document.querySelector(`[data-m="${KEYS[(i+1)%KEYS.length]}"]`).click();},
             setLayerVol(layer,v){
                 vols[layer]=v/100;
                 const el=document.getElementById(`sv-${layer}`);if(el)el.textContent=v+'%';
+                if(layer==='narracion'){if(narracionAudio)narracionAudio.volume=vols.narracion;return;}
                 if(gains[layer]&&!muted[layer])gains[layer].gain.value=vols[layer];
             },
             toggleMute(layer,btn){
                 muted[layer]=!muted[layer];
                 btn.textContent=muted[layer]?'OFF':'ON';
                 btn.classList.toggle('off',muted[layer]);
+                if(layer==='narracion'){if(muted.narracion)stopNarracion();else if(playing)startNarracion();return;}
+                if(layer==='binaural'){if(muted.binaural)stopBinaural(true);else if(playing)startBinaural(MOODS[currentMood]);return;}
                 if(gains[layer])gains[layer].gain.value=muted[layer]?0:vols[layer];
+            },
+            setNarracion(src){
+                if(playing)startNarracion();
             },
             setDur(min,btn){
                 totalSec=min*60;elapsedSec=0;
@@ -2215,8 +2341,9 @@
                 }
 
                 RELATOS.forEach(r => {
-                    const audio = new Audio(r.src);
-                    audio.preload = 'metadata';
+                    const base = window.location.href.endsWith('/') ? window.location.href : window.location.href.replace(/\/[^\/]*$/, '/');
+                    const audio = new Audio(base + r.src);
+                    audio.preload = 'auto';
                     relatoAudios[r.id] = audio;
 
                     const card = document.createElement('div');
@@ -2268,9 +2395,14 @@
                             }
                         });
                         if (audio.paused) {
-                            audio.play().catch(()=>{});
-                            btn.textContent = '⏸ Pausar';
-                            btn.classList.add('playing');
+                            audio.play().then(() => {
+                                btn.textContent = '⏸ Pausar';
+                                btn.classList.add('playing');
+                            }).catch(err => {
+                                btn.textContent = '▶ Escuchar';
+                                btn.classList.remove('playing');
+                                console.warn('Audio error:', err, audio.src);
+                            });
                         } else {
                             audio.pause();
                             btn.textContent = '▶ Escuchar';
