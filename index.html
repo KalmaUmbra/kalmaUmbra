@@ -1226,27 +1226,41 @@
             </div>
 
             <!-- Sección Spotify — debajo de los relatos -->
-            <div class="spotify-section">
-                <div class="spotify-header">
-                    <div>
-                        <div class="spotify-label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.371-.721.49-1.101.24-3.021-1.858-6.832-2.278-11.322-1.237-.421.1-.851-.16-.96-.58-.1-.421.16-.851.58-.96 4.91-1.121 9.122-.64 12.522 1.431.38.241.49.721.241 1.101l.04.005zm1.44-3.3c-.301.42-.841.561-1.262.261-3.45-2.122-8.7-2.739-12.781-1.5-.5.16-1.022-.12-1.182-.62-.16-.5.12-1.022.62-1.182 4.66-1.42 10.46-.731 14.441 1.71.42.301.571.841.27 1.262l-.106.069zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.23-.181-1.419-.779-.18-.6.18-1.23.78-1.42 4.28-1.28 11.369-1.02 15.88 1.62.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3l.04-.002z"/></svg>
-                            Playlist KalmaUmbra · Spotify
+            <!-- LIVE NEURAL SOUNDS -->
+            <div id="ku-live-block" style="width:100%;max-width:650px;background:rgba(5,12,10,0.9);border:1px solid rgba(16,185,129,0.18);border-radius:18px;overflow:hidden;">
+                <!-- Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid rgba(16,185,129,0.1);">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div id="ku-live-bars" style="display:flex;align-items:flex-end;gap:2px;height:14px;">
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:4px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:10px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:7px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:13px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:5px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:9px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:6px;"></span>
                         </div>
-                        <div class="spotify-title">Para Sentir</div>
-                        <div class="spotify-sub">Binaural beats · Tantric healing · Frecuencias sensoriales</div>
+                        <div>
+                            <div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,185,129,0.45);margin-bottom:2px;">KalmaUmbra · Stream</div>
+                            <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:rgba(110,231,183,0.85);">Live · Neural Sounds</div>
+                            <div style="font-size:.55rem;color:var(--mut);margin-top:1px;letter-spacing:.06em;">Frecuencias en vivo · AWS IVS</div>
+                        </div>
                     </div>
-                    <a class="spotify-btn" href="https://open.spotify.com/playlist/5FPHEOzrtckwCiavlyBepm" target="_blank">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#000"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.371-.721.49-1.101.24-3.021-1.858-6.832-2.278-11.322-1.237-.421.1-.851-.16-.96-.58-.1-.421.16-.851.58-.96 4.91-1.121 9.122-.64 12.522 1.431.38.241.49.721.241 1.101l.04.005zm1.44-3.3c-.301.42-.841.561-1.262.261-3.45-2.122-8.7-2.739-12.781-1.5-.5.16-1.022-.12-1.182-.62-.16-.5.12-1.022.62-1.182 4.66-1.42 10.46-.731 14.441 1.71.42.301.571.841.27 1.262l-.106.069zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.23-.181-1.419-.779-.18-.6.18-1.23.78-1.42 4.28-1.28 11.369-1.02 15.88 1.62.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3l.04-.002z"/></svg>
-                        Abrir en Spotify
-                    </a>
+                    <button onclick="kuLiveToggle()" id="ku-live-btn" style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:50px;padding:.3rem .85rem;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(110,231,183,0.45);transition:all .3s;">
+                        <span id="ku-live-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(16,185,129,0.25);display:inline-block;transition:all .3s;"></span>
+                        <span id="ku-live-label">OFF</span>
+                    </button>
                 </div>
-                <div class="spotify-embed">
-                    <iframe src="https://open.spotify.com/embed/playlist/5FPHEOzrtckwCiavlyBepm?utm_source=generator&theme=0"
-                        width="100%" height="152" frameborder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy" style="border-radius:14px;"></iframe>
+                <!-- Ecualizador -->
+                <div style="padding:.7rem 1.1rem .5rem;">
+                    <canvas id="ku-eq-canvas" height="52" style="width:100%;display:block;border-radius:8px;background:rgba(0,0,0,0.25);"></canvas>
                 </div>
+                <!-- Status -->
+                <div style="padding:.35rem 1.1rem .75rem;">
+                    <span id="ku-live-status" style="font-size:.54rem;letter-spacing:.1em;color:rgba(16,185,129,0.3);text-transform:uppercase;">Sin señal · Activá OBS para transmitir</span>
+                </div>
+                <!-- Video oculto para audio -->
+                <video id="ku-live-video" playsinline style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;"></video>
             </div>
 
             <!-- Botón Sintetizador -->
@@ -2566,6 +2580,157 @@
             startIdleLoop();
 
         })();
+    </script>
+
+    <!-- LIVE NEURAL SOUNDS SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+    (function(){
+        var HLS_URL = 'https://ba2e233bbbdb.us-east-1.playback.live-video.net/api/video/v1/us-east-1.180745324770.channel.PuaGOrptaVT1.m3u8';
+        var liveOn = false;
+        var hlsInst = null;
+        var eqRaf = null;
+        var eqPhase = 0;
+        var canvas, ctx, W, H;
+
+        function initEq() {
+            canvas = document.getElementById('ku-eq-canvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            resize();
+            window.addEventListener('resize', resize);
+            drawIdle();
+        }
+
+        function resize() {
+            if (!canvas) return;
+            W = canvas.width = canvas.offsetWidth;
+            H = canvas.height = canvas.offsetHeight || 52;
+        }
+
+        function drawIdle() {
+            if (!ctx) return;
+            cancelAnimationFrame(eqRaf);
+            (function loop(){
+                if (liveOn) return;
+                ctx.clearRect(0,0,W,H);
+                var n = 40, bw = W/n;
+                for (var i=0; i<n; i++) {
+                    var h = (Math.sin(i*0.45+eqPhase)*0.5+0.5)*H*0.15 + 3;
+                    ctx.fillStyle = 'rgba(16,185,129,0.15)';
+                    ctx.fillRect(i*bw+1, H-h, bw-2, h);
+                }
+                eqPhase += 0.035;
+                eqRaf = requestAnimationFrame(loop);
+            })();
+        }
+
+        function drawLive() {
+            if (!ctx) return;
+            cancelAnimationFrame(eqRaf);
+            (function loop(){
+                if (!liveOn) return;
+                ctx.clearRect(0,0,W,H);
+                var n = 40, bw = W/n;
+                for (var i=0; i<n; i++) {
+                    var v = Math.sin(i*0.38+eqPhase)*0.45 + Math.sin(i*0.9+eqPhase*1.4)*0.3;
+                    var h = (v*0.5+0.55)*H*0.88;
+                    var g = Math.round(185 + v*35);
+                    ctx.fillStyle = 'rgba(16,'+g+',129,0.72)';
+                    ctx.fillRect(i*bw+1, H-h, bw-2, h);
+                }
+                eqPhase += 0.06;
+                eqRaf = requestAnimationFrame(loop);
+            })();
+        }
+
+        function animBars(on) {
+            var bars = document.getElementById('ku-live-bars');
+            if (!bars) return;
+            var spans = bars.querySelectorAll('span');
+            spans.forEach(function(s, i){
+                if (on) {
+                    s.style.animation = 'kubar '+(0.4+i*0.08)+'s ease-in-out '+(i*0.07)+'s infinite alternate';
+                } else {
+                    s.style.animation = 'none';
+                }
+            });
+        }
+
+        window.kuLiveToggle = function() {
+            liveOn = !liveOn;
+            var btn    = document.getElementById('ku-live-btn');
+            var dot    = document.getElementById('ku-live-dot');
+            var label  = document.getElementById('ku-live-label');
+            var status = document.getElementById('ku-live-status');
+
+            if (liveOn) {
+                btn.style.color = '#10b981';
+                btn.style.borderColor = 'rgba(16,185,129,0.5)';
+                btn.style.background = 'rgba(16,185,129,0.1)';
+                dot.style.background = '#10b981';
+                dot.style.boxShadow = '0 0 7px #10b981';
+                label.textContent = 'ON';
+                status.textContent = 'Conectando...';
+                status.style.color = 'rgba(16,185,129,0.55)';
+                animBars(true);
+                drawLive();
+                startStream();
+            } else {
+                btn.style.color = 'rgba(110,231,183,0.45)';
+                btn.style.borderColor = 'rgba(16,185,129,0.22)';
+                btn.style.background = 'rgba(16,185,129,0.06)';
+                dot.style.background = 'rgba(16,185,129,0.25)';
+                dot.style.boxShadow = 'none';
+                label.textContent = 'OFF';
+                status.textContent = 'Sin señal · Activá OBS para transmitir';
+                status.style.color = 'rgba(16,185,129,0.3)';
+                animBars(false);
+                stopStream();
+                drawIdle();
+            }
+        };
+
+        function startStream() {
+            var video = document.getElementById('ku-live-video');
+            var status = document.getElementById('ku-live-status');
+            if (!video) return;
+            if (window.Hls && Hls.isSupported()) {
+                if (hlsInst) hlsInst.destroy();
+                hlsInst = new Hls({ lowLatencyMode: true });
+                hlsInst.loadSource(HLS_URL);
+                hlsInst.attachMedia(video);
+                hlsInst.on(Hls.Events.MANIFEST_PARSED, function(){
+                    video.play().catch(function(){});
+                    if (status) { status.textContent = '● En vivo · Neural Sounds'; status.style.color = '#10b981'; }
+                });
+                hlsInst.on(Hls.Events.ERROR, function(e, d){
+                    if (d.fatal && status) { status.textContent = 'Stream offline · Iniciá OBS'; status.style.color = 'rgba(251,146,60,0.7)'; }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = HLS_URL;
+                video.play().catch(function(){});
+            }
+        }
+
+        function stopStream() {
+            var video = document.getElementById('ku-live-video');
+            if (video) { video.pause(); video.src = ''; }
+            if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+        }
+
+        // CSS animación barras
+        var style = document.createElement('style');
+        style.textContent = '@keyframes kubar { from{transform:scaleY(0.2);opacity:0.4} to{transform:scaleY(1);opacity:1} }';
+        document.head.appendChild(style);
+
+        // Iniciar al cargar
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEq);
+        } else {
+            initEq();
+        }
+    })();
     </script>
 </body>
 </html>
