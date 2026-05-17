@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KalmaUmbra</title>
+<meta name="description" content="Rituales de bienestar sensorial. Próximamente.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #06080d;
+    --em: #10b981;
+    --em2: #34d399;
+    --em3: #6ee7b7;
+    --gold: #c69a3a;
+    --txt: #dff0e8;
+    --mut: #4a7060;
+    --bdr: rgba(16,185,129,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ── PARTÍCULAS ── */
+canvas#particles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── LAYOUT ── */
+.page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px 48px;
+}
+
+/* ── LOGO ── */
+.logo-wrap {
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    animation: fadeUp 1.4s ease forwards;
+    opacity: 0;
+}
+.logo-svg {
+    width: 72px;
+    height: 72px;
+    filter: drop-shadow(0 0 18px rgba(16,185,129,0.28));
+    animation: float 5s ease-in-out infinite;
+}
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+.brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    background: linear-gradient(130deg, var(--em3), var(--em));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.brand-tag {
+    font-size: 0.62rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--mut);
+    text-align: center;
+}
+
+/* ── PRIDE BAR ── */
+.pride {
+    display: flex;
+    height: 2px;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 60px;
+    margin-top: 4px;
+}
+.pride span { flex: 1; }
+
+/* ── TAGLINE ── */
+.tagline {
+    margin-top: 40px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(223,240,232,0.65);
+    max-width: 300px;
+    animation: fadeUp 1.6s ease forwards;
+    opacity: 0;
+}
+
+/* ── LIVE BUTTON ── */
+.live-btn {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 340px;
+    background: rgba(5,12,10,0.9);
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.3s ease;
+    animation: fadeUp 1.8s ease forwards;
+    opacity: 0;
+    -webkit-user-select: none;
+}
+.live-btn:active { transform: scale(0.97); }
+.live-btn.on {
+    border-color: rgba(16,185,129,0.5);
+    background: rgba(16,185,129,0.08);
+}
+.live-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.live-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+}
+.live-bars span {
+    display: block;
+    width: 2.5px;
+    border-radius: 2px;
+    background: #e05555;
+    transition: all 0.3s;
+}
+.live-bars span:nth-child(1){ height: 5px; }
+.live-bars span:nth-child(2){ height: 12px; }
+.live-bars span:nth-child(3){ height: 8px; }
+.live-bars span:nth-child(4){ height: 15px; }
+.live-bars span:nth-child(5){ height: 6px; }
+.live-bars span:nth-child(6){ height: 10px; }
+.live-bars span:nth-child(7){ height: 7px; }
+.live-text-wrap {}
+.live-label {
+    font-size: 0.54rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(16,185,129,0.4);
+    margin-bottom: 3px;
+}
+.live-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(110,231,183,0.85);
+    letter-spacing: 1px;
+}
+.live-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(110,231,183,0.4);
+    transition: color 0.3s;
+}
+.live-toggle-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(16,185,129,0.25);
+    transition: all 0.3s;
+}
+.live-btn.on .live-toggle { color: #10b981; }
+.live-btn.on .live-toggle-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+/* Ecualizador canvas */
+.eq-wrap {
+    width: 100%;
+    max-width: 340px;
+    height: 42px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 0 0 14px 14px;
+    overflow: hidden;
+    margin-top: -2px;
+    display: none;
+}
+.eq-wrap.visible { display: block; }
+canvas#eq-canvas { width: 100%; height: 100%; display: block; }
+
+/* Status */
+.live-status {
+    margin-top: 8px;
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(16,185,129,0.3);
+    text-align: center;
+    min-height: 14px;
+    transition: color 0.3s;
+}
+
+/* ── TARJETA EXPERIENCIAS ── */
+.card-exp {
+    margin-top: 32px;
+    width: 100%;
+    max-width: 340px;
+    background: rgba(8,14,12,0.85);
+    border: 1px solid rgba(198,154,58,0.15);
+    border-radius: 16px;
+    padding: 22px 20px;
+    animation: fadeUp 2s ease forwards;
+    opacity: 0;
+    backdrop-filter: blur(10px);
+}
+.card-exp-tag {
+    font-size: 0.5rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(198,154,58,0.5);
+    margin-bottom: 10px;
+}
+.card-exp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 300;
+    color: rgba(198,154,58,0.85);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+.card-exp-desc {
+    font-size: 0.72rem;
+    color: var(--mut);
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+.card-exp-items {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.card-exp-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.68rem;
+    color: rgba(223,240,232,0.45);
+    letter-spacing: 1px;
+}
+.card-exp-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(198,154,58,0.4);
+    flex-shrink: 0;
+}
+.card-exp-badge {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(198,154,58,0.07);
+    border: 1px solid rgba(198,154,58,0.2);
+    border-radius: 50px;
+    padding: 6px 14px;
+    font-size: 0.56rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(198,154,58,0.6);
+}
+.badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(198,154,58,0.6);
+    animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── REDES ── */
+.socials {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: fadeUp 2.2s ease forwards;
+    opacity: 0;
+}
+.soc-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--mut);
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+.soc-link:active { color: var(--em2); }
+.soc-icon {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(16,185,129,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16,185,129,0.04);
+    transition: all 0.3s;
+}
+.soc-link:active .soc-icon {
+    border-color: rgba(16,185,129,0.4);
+    background: rgba(16,185,129,0.1);
+}
+.soc-sep { color: rgba(16,185,129,0.2); font-size: 1rem; }
+
+/* ── FOOTER ── */
+.footer {
+    margin-top: 40px;
+    font-size: 0.48rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(16,185,129,0.2);
+    text-align: center;
+    animation: fadeUp 2.4s ease forwards;
+    opacity: 0;
+}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes kubar {
+    from { transform: scaleY(0.2); opacity: 0.4; }
+    to   { transform: scaleY(1);   opacity: 1; }
+}
+
+/* ── VIDEO OCULTO ── */
+#ku-video { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="page">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <g fill="none" stroke="#6ee7b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M30 20 V80"/>
+                <path d="M65 20 L30 50 L65 80"/>
+                <path d="M75 35 V70 A10 10 0 0 0 95 70 V35"/>
+            </g>
+        </svg>
+        <div class="brand-name">KalmaUmbra</div>
+        <div class="brand-tag">Bienestar sensorial · Buenos Aires</div>
+        <div class="pride">
+            <span style="background:#FF8C8C"></span>
+            <span style="background:#FFB86C"></span>
+            <span style="background:#FFE066"></span>
+            <span style="background:#7BE495"></span>
+            <span style="background:#6EB5FF"></span>
+            <span style="background:#C39AFA"></span>
+        </div>
+    </div>
+
+    <!-- Tagline -->
+    <p class="tagline">
+        Donde el placer<br>encuentra su centro.
+    </p>
+
+    <!-- Live Button -->
+    <div class="live-btn" id="live-btn" onclick="toggleLive()">
+        <div class="live-btn-left">
+            <div class="live-bars" id="live-bars">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="live-text-wrap">
+                <div class="live-label">KalmaUmbra · Stream</div>
+                <div class="live-title">Live · Neural Sounds</div>
+            </div>
+        </div>
+        <div class="live-toggle">
+            <div class="live-toggle-dot" id="live-dot"></div>
+            <span id="live-label">OFF</span>
+        </div>
+    </div>
+    <div class="eq-wrap" id="eq-wrap">
+        <canvas id="eq-canvas"></canvas>
+    </div>
+    <div class="live-status" id="live-status">Activá OBS · tocá para conectar</div>
+
+    <!-- Tarjeta Experiencias -->
+    <div class="card-exp">
+        <div class="card-exp-tag">Próximamente · 2026</div>
+        <div class="card-exp-title">Experiencias en construcción</div>
+        <div class="card-exp-desc">
+            Una tienda ritual para tu bienestar sensorial.<br>
+            Selección premium, relatos inmersivos y frecuencias terapéuticas.
+        </div>
+        <div class="card-exp-items">
+            <div class="card-exp-item">Selección de productos sextech y bienestar</div>
+            <div class="card-exp-item">Rituales sonoros · frecuencias binaurales</div>
+            <div class="card-exp-item">Relatos inmersivos de DreamWeaver</div>
+            <div class="card-exp-item">Experiencias personalizadas on-demand</div>
+        </div>
+        <div class="card-exp-badge">
+            <div class="badge-dot"></div>
+            Lanzamiento pronto
+        </div>
+    </div>
+
+    <!-- Redes -->
+    <div class="socials">
+        <a href="https://instagram.com/kalmaumbra" target="_blank" class="soc-link">
+            <div class="soc-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            Instagram
+        </a>
+        <div class="soc-sep">·</div>
+        <a href="mailto:kalmaumbra@gmail.com" class="soc-link">
+            <div class="soc-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="M2 7l10 7 10-7"/>
+                </svg>
+            </div>
+            Contacto
+        </a>
+        <div class="soc-sep">·</div>
+        <a href="https://kalmaumbra.github.io/kalmaUmbra/" target="_blank" class="soc-link">
+            <div class="soc-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
+                </svg>
+            </div>
+            Experiencia
+        </a>
+    </div>
+
+    <div class="footer">kalmaumbra.com · bienestar · diversidad · placer consciente</div>
+
+</div>
+
+<!-- Video oculto para stream -->
+<video id="ku-video" playsinline></video>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+(function(){
+
+    /* ── PARTÍCULAS ── */
+    var pc = document.getElementById('particles');
+    var px = pc.getContext('2d');
+    var pw = 0, ph = 0;
+    var parts = [];
+    var PCOUNT = 45;
+
+    function resizeP() {
+        pw = pc.width = window.innerWidth;
+        ph = pc.height = window.innerHeight;
+    }
+
+    /* Perlin noise simple */
+    var perm = new Uint8Array(512);
+    (function(){
+        var arr = [];
+        for(var i=0;i<256;i++) arr[i]=i;
+        for(var i=255;i>0;i--){var j=Math.random()*(i+1)|0;var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+        for(var i=0;i<512;i++) perm[i]=arr[i&255];
+    })();
+    function lerp(a,b,t){return a+t*(b-a);}
+    function fade(t){return t*t*t*(t*(6*t-15)+10);}
+    function grad(h,x,y){var g=h&3;var u=g<2?x:y;var v=g<2?y:x;return((h&1)?-u:u)+((h&2)?-v:v);}
+    function noise(x,y){
+        var X=Math.floor(x)&255, Y=Math.floor(y)&255;
+        x-=Math.floor(x); y-=Math.floor(y);
+        var u=fade(x), v=fade(y);
+        var a=perm[X]+Y, b=perm[X+1]+Y;
+        return lerp(lerp(grad(perm[a],x,y),grad(perm[b],x-1,y),u),
+                    lerp(grad(perm[a+1],x,y-1),grad(perm[b+1],x-1,y-1),u),v);
+    }
+
+    function Particle(){
+        this.x = Math.random()*pw;
+        this.y = Math.random()*ph;
+        this.vx = 0; this.vy = 0;
+        this.life = Math.random()*120;
+        this.max = 100+Math.random()*120;
+        this.sz = 0.6+Math.random()*1.4;
+        this.h = 148+Math.random()*25;
+    }
+    Particle.prototype.step = function(t){
+        var ang = noise(this.x*0.0014, this.y*0.0014+t*0.00008)*Math.PI*4;
+        this.vx = this.vx*0.93+Math.cos(ang)*0.4;
+        this.vy = this.vy*0.93+Math.sin(ang)*0.4;
+        this.x += this.vx; this.y += this.vy; this.life++;
+        if(this.life>this.max||this.x<-10||this.x>pw+10||this.y<-10||this.y>ph+10){
+            this.x=Math.random()*pw;this.y=Math.random()*ph;
+            this.vx=0;this.vy=0;this.life=0;this.max=100+Math.random()*120;
+        }
+    };
+    Particle.prototype.draw = function(){
+        var lr=this.life/this.max;
+        px.globalAlpha=0.22*Math.sin(lr*Math.PI);
+        px.fillStyle='hsl('+this.h+',60%,42%)';
+        px.beginPath();px.arc(this.x,this.y,this.sz,0,Math.PI*2);px.fill();
+    };
+
+    resizeP();
+    window.addEventListener('resize', resizeP);
+    for(var i=0;i<PCOUNT;i++){var p=new Particle();p.life=Math.random()*p.max;parts.push(p);}
+
+    var ptime=0;
+    function loopP(){
+        px.clearRect(0,0,pw,ph);
+        parts.forEach(function(p){p.step(ptime);p.draw();});
+        px.globalAlpha=1;
+        ptime++;
+        requestAnimationFrame(loopP);
+    }
+    loopP();
+
+    /* ── ECUALIZADOR ── */
+    var eqCanvas = document.getElementById('eq-canvas');
+    var eqCtx = eqCanvas && eqCanvas.getContext('2d');
+    var eqPhase = 0, eqRaf = null, liveOn = false;
+
+    function resizeEq(){
+        if(!eqCanvas) return;
+        eqCanvas.width = eqCanvas.offsetWidth || 340;
+        eqCanvas.height = eqCanvas.offsetHeight || 42;
+    }
+
+    function drawEqLive(){
+        if(!eqCtx||!liveOn) return;
+        var W=eqCanvas.width, H=eqCanvas.height;
+        eqCtx.clearRect(0,0,W,H);
+        var n=50, bw=W/n;
+        for(var i=0;i<n;i++){
+            var v=Math.sin(i*0.38+eqPhase)*0.45+Math.sin(i*0.9+eqPhase*1.3)*0.3;
+            var h=(v*0.5+0.56)*H*0.85;
+            var g=Math.round(180+v*30);
+            eqCtx.fillStyle='rgba(16,'+g+',120,0.7)';
+            eqCtx.fillRect(i*bw+1,H-h,bw-2,h);
+        }
+        eqPhase+=0.065;
+        eqRaf=requestAnimationFrame(drawEqLive);
+    }
+
+    /* ── LIVE TOGGLE ── */
+    var hlsInst = null;
+    var HLS_URL = 'https://ba2e233bbbdb.us-east-1.playback.live-video.net/api/video/v1/us-east-1.180745324770.channel.PuaGOrptaVT1.m3u8';
+
+    window.toggleLive = function(){
+        liveOn = !liveOn;
+        var btn    = document.getElementById('live-btn');
+        var dot    = document.getElementById('live-dot');
+        var label  = document.getElementById('live-label');
+        var status = document.getElementById('live-status');
+        var eqWrap = document.getElementById('eq-wrap');
+        var bars   = document.getElementById('live-bars').querySelectorAll('span');
+
+        if(liveOn){
+            btn.classList.add('on');
+            dot.style.background='#10b981';
+            dot.style.boxShadow='0 0 8px #10b981';
+            label.textContent='ON';
+            status.textContent='Conectando al stream...';
+            status.style.color='rgba(16,185,129,0.6)';
+            eqWrap.classList.add('visible');
+            setTimeout(resizeEq,50);
+            bars.forEach(function(s,i){
+                s.style.animation='kubar '+(0.4+i*0.07)+'s ease-in-out '+(i*0.06)+'s infinite alternate';
+            });
+            cancelAnimationFrame(eqRaf);
+            drawEqLive();
+            startStream(status);
+        } else {
+            btn.classList.remove('on');
+            dot.style.background='rgba(16,185,129,0.25)';
+            dot.style.boxShadow='none';
+            label.textContent='OFF';
+            status.textContent='Activá OBS · tocá para conectar';
+            status.style.color='rgba(16,185,129,0.3)';
+            eqWrap.classList.remove('visible');
+            cancelAnimationFrame(eqRaf);
+            bars.forEach(function(s){ s.style.animation='none'; });
+            stopStream();
+        }
+    };
+
+    function startStream(status){
+        var video = document.getElementById('ku-video');
+        if(!video) return;
+        if(window.Hls && Hls.isSupported()){
+            if(hlsInst) hlsInst.destroy();
+            hlsInst = new Hls({lowLatencyMode:true});
+            hlsInst.loadSource(HLS_URL);
+            hlsInst.attachMedia(video);
+            hlsInst.on(Hls.Events.MANIFEST_PARSED,function(){
+                video.play().catch(function(){});
+                if(status){status.textContent='● En vivo · Neural Sounds';status.style.color='#10b981';}
+            });
+            hlsInst.on(Hls.Events.ERROR,function(e,d){
+                if(d.fatal&&status){status.textContent='Stream offline · Iniciá OBS';status.style.color='rgba(251,146,60,0.7)';}
+            });
+        } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+            video.src=HLS_URL;
+            video.play().catch(function(){});
+            if(status){status.textContent='● En vivo · Neural Sounds';status.style.color='#10b981';}
+        }
+    }
+
+    function stopStream(){
+        var video=document.getElementById('ku-video');
+        if(video){video.pause();video.src='';}
+        if(hlsInst){hlsInst.destroy();hlsInst=null;}
+    }
+
+    /* CSS animación barras */
+    var st=document.createElement('style');
+    st.textContent='@keyframes kubar{from{transform:scaleY(0.2);opacity:0.4}to{transform:scaleY(1);opacity:1}}';
+    document.head.appendChild(st);
+
+})();
+</script>
+</body>
+</html>
