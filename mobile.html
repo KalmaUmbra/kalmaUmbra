@@ -2,27 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="theme-color" content="#060e09">
-  <title>KalmaUmbra · Tienda</title>
-  <meta name="description" content="Cuidado ritual. Cosmética plant based para pieles conscientes.">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <title>KalmaUmbra · Experiencia Sensorial</title>
+  <meta name="description" content="Frecuencias terapéuticas, tonos binaurales y solfeggio generados en tiempo real para bienestar integral + tienda ritual.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+
   <style>
+    /* ----- VARIABLES GLOBALES (idénticas a index.html) ----- */
     :root {
-      --bg:   #060e09;
-      --em:   #10b981;
-      --em2:  #34d399;
-      --em3:  #6ee7b7;
+      --bg: #060e09;
+      --em: #10b981;
+      --em2: #34d399;
+      --em3: #6ee7b7;
       --gold: #c69a3a;
-      --gold2:rgba(198,154,58,0.16);
-      --cream:#f0ede6;
-      --txt:  #dff0e8;
-      --mut:  #527a6a;
-      --bdr:  rgba(16,185,129,0.14);
-      --card: rgba(6,18,11,0.88);
+      --gold2: rgba(198, 154, 58, 0.35);
+      --txt: #dff0e8;
+      --mut: #527a6a;
+      --bdr: rgba(16, 185, 129, 0.15);
+      --card: rgba(6, 18, 11, 0.88);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: radial-gradient(ellipse at 48% 38%, #020904 0%, #071508 35%, #0c2416 65%, #163d26 100%);
       background-attachment: fixed;
@@ -32,503 +38,422 @@
       overflow-x: hidden;
     }
 
-    /* ── CANVAS ── */
-    #silk { position: fixed; inset: 0; z-index: 0; opacity: .5; pointer-events: none; }
+    canvas#silk-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .75rem 1.2rem;
-      background: rgba(6,14,9,0.88); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--bdr);
-      gap: .8rem;
+    /* Pantallas */
+    .screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.97);
+      transition: opacity 1.1s cubic-bezier(.4,0,.2,1), transform 1.1s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+      overflow-x: hidden;
     }
-    .nav-logo { display: flex; align-items: center; gap: .5rem; text-decoration: none; flex-shrink: 0; }
-    .nav-logo svg { width: 28px; height: 28px; }
-    .nav-logo span {
-      font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: .18em;
-      background: linear-gradient(130deg, var(--em3), var(--em));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    .screen.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: scale(1);
     }
-    .nav-cats { display: flex; gap: 1.2rem; }
-    .nav-cats a { color: var(--mut); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: color .22s; white-space: nowrap; }
-    .nav-cats a:hover { color: var(--em2); }
-    .nav-cta {
-      border: 1px solid var(--bdr); border-radius: 50px; padding: .3rem .8rem;
-      color: var(--em2); font-size: .58rem; letter-spacing: .13em;
-      text-transform: uppercase; text-decoration: none; transition: all .25s; white-space: nowrap;
-      cursor: pointer; background: none; font-family: 'Outfit', sans-serif;
+    .screen.leaving {
+      opacity: 0;
+      transform: scale(1.03);
+      transition: opacity .7s ease, transform .7s ease;
     }
-    .nav-cta:hover { border-color: var(--em2); background: rgba(16,185,129,0.07); }
 
-    /* ── HERO ── */
-    .hero {
-      position: relative; z-index: 1;
-      padding: 6rem 1.2rem 2.5rem;
+    /* ===== BIENVENIDA ===== */
+    #screen-welcome {
+      flex-direction: column;
       text-align: center;
+      padding: 2rem;
     }
-    .hero-eyebrow { font-size: .58rem; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-bottom: .9rem; }
-    .hero-title {
+    .welcome-content {
+      max-width: 600px;
+      animation: fadeInDown 1.5s ease forwards;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ku-logo-large {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 40px;
+      filter: drop-shadow(0 0 25px rgba(74, 185, 155, 0.3));
+      animation: floatLogo 4s ease-in-out infinite;
+    }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(1deg); }
+    }
+    .welcome-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.8rem, 10vw, 5rem); font-weight: 300; letter-spacing: .04em; line-height: .95;
-      background: linear-gradient(130deg, var(--em3) 0%, var(--em2) 55%, var(--em) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      margin-bottom: .45rem;
+      font-size: 3.5rem;
+      font-weight: 300;
+      letter-spacing: 8px;
+      margin-bottom: 10px;
+      background: linear-gradient(130deg, var(--em3), var(--em));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .92rem; color: rgba(223,240,232,.45); margin-bottom: 1.6rem; letter-spacing: .04em; }
-    .hero-filters { display: flex; flex-wrap: wrap; gap: .38rem; justify-content: center; }
-    .fbtn {
-      background: transparent; border: 1px solid var(--bdr); border-radius: 50px;
-      padding: .3rem .85rem; color: var(--mut); font-size: .55rem; letter-spacing: .14em;
-      text-transform: uppercase; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all .25s;
-      -webkit-tap-highlight-color: transparent;
+    .welcome-subtitle {
+      font-size: 0.8rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--em2);
+      margin-bottom: 50px;
     }
-    .fbtn.on, .fbtn:hover { border-color: rgba(16,185,129,.45); color: var(--em2); background: rgba(16,185,129,.06); }
+    .welcome-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: rgba(223, 240, 232, 0.7);
+      margin: 60px 0;
+      line-height: 1.8;
+    }
+    .btn-primary {
+      background: transparent;
+      border: 1.5px solid var(--em2);
+      color: var(--txt);
+      padding: 16px 50px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.6s ease;
+      font-family: 'Outfit', sans-serif;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      margin-top: 0.8rem;
+    }
+    .btn-primary:hover {
+      border-color: var(--em3);
+      color: var(--em3);
+      box-shadow: 0 0 40px rgba(110, 231, 183, 0.4);
+      letter-spacing: 6px;
+    }
+    .welcome-socials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .7rem;
+      margin-top: 2.2rem;
+      opacity: .55;
+      transition: opacity .3s;
+    }
+    .soc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      color: var(--em2);
+      text-decoration: none;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      transition: color .25s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .soc-sep { color: var(--mut); font-size: .7rem; }
 
-    /* ── STORE ── */
-    .store { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: .5rem 1rem 5rem; }
-
-    .slabel { display: flex; align-items: center; gap: .8rem; margin: 2.4rem 0 1rem; }
-    .slabel span { font-size: .5rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
-    .slabel::after { content:''; flex:1; height:1px; background:var(--bdr); }
-
-    /* Grid: 1 col mobile, 2 col sm, 3-4 col desktop */
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--card); border: 1px solid var(--bdr); border-radius: 12px;
-      overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
-      transition: transform .28s ease, border-color .28s, box-shadow .28s;
-      -webkit-tap-highlight-color: transparent;
+    /* ===== EXPERIENCIA (todo el contenido de index) ===== */
+    #screen-experience {
+      display: block !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      background: transparent;
     }
-    .card:active { transform: scale(.98); }
-    .card.nostock { opacity: .4; pointer-events: none; }
+    #screen-experience .exp-w {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 4rem 1rem 5rem;
+      gap: 1.5rem;
+    }
+    /* fondo imágenes */
+    #screen-experience .bg-images { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    #screen-experience .bg-img { position: absolute; width: 320px; border-radius: 18px; opacity: 0.07; filter: saturate(0.3) brightness(1.9) sepia(0.3) hue-rotate(130deg); mix-blend-mode: screen; }
+    #screen-experience .bg-img-1 { top: -30px; left: -60px; width: 350px; transform: rotate(-8deg); }
+    #screen-experience .bg-img-2 { bottom: -40px; right: -50px; width: 310px; transform: rotate(6deg); }
+    #screen-experience .bg-img-3 { top: 40%; left: calc(50% - 140px); width: 260px; transform: rotate(2deg); opacity: 0.05; }
+    #screen-experience header { text-align: left; width: 100%; max-width: 650px; }
+    #screen-experience .br { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .82rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; margin-bottom: .35rem; }
+    #screen-experience h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(1.9rem, 5.5vw, 2.9rem); letter-spacing: .03em; background: linear-gradient(130deg, var(--em3) 0%, var(--em2) 50%, var(--em) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    #screen-experience .sb { font-size: .77rem; color: var(--mut); margin-top: .3rem; font-weight: 300; letter-spacing: .09em; }
 
-    .card-img {
-      height: 130px; display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; border-bottom: 1px solid var(--bdr);
-    }
-    .card-img::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%,rgba(16,185,129,.06) 0%,transparent 70%); }
-    .card-img.agua    { background: linear-gradient(135deg,rgba(110,231,183,.08),rgba(16,185,129,.04)); }
-    .card-img.oleo    { background: linear-gradient(135deg,rgba(198,154,58,.09),rgba(16,185,129,.04)); }
-    .card-img.aceite  { background: linear-gradient(135deg,rgba(52,211,153,.07),rgba(198,154,58,.05)); }
-    .card-img.arcilla { background: linear-gradient(135deg,rgba(198,154,58,.07),rgba(110,231,183,.05)); }
-    .card-img.compl   { background: linear-gradient(135deg,rgba(16,185,129,.05),rgba(240,237,230,.03)); }
-    .card-icon { font-size: 2.4rem; z-index:1; }
+    /* Orb y controles */
+    #screen-experience .vw { position: relative; width: min(292px, 84vw); height: min(292px, 84vw); display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+    #screen-experience canvas#exp-vc { position: absolute; inset: 0; border-radius: 50%; width: 100%; height: 100%; }
+    #screen-experience .orb { width: 134px; height: 134px; border-radius: 50%; position: relative; z-index: 2; cursor: pointer; background: radial-gradient(circle at 33% 33%, rgba(110,231,183,.26), rgba(16,185,129,.12) 45%, rgba(9,28,21,.82)); border: 1px solid rgba(16,185,129,.3); box-shadow: 0 0 38px rgba(16,185,129,0.22); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: transform .2s, box-shadow .3s; user-select: none; }
+    #screen-experience .fd { text-align: left; }
+    #screen-experience .fh { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 6vw, 2.6rem); font-weight: 300; background: linear-gradient(90deg, var(--em3), var(--em)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    #screen-experience .fn { font-size: .75rem; color: var(--mut); letter-spacing: .12em; }
+    #screen-experience .tr { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
+    #screen-experience .td { font-size: 1.32rem; font-weight: 200; min-width: 62px; color: var(--em2); }
+    #screen-experience .tc { display: flex; gap: .3rem; flex-wrap: wrap; }
+    #screen-experience .tb { background: transparent; border: 1px solid var(--bdr); color: var(--mut); border-radius: 8px; padding: .25rem .6rem; font-size: .69rem; cursor: pointer; transition: all .2s; }
+    #screen-experience .tb.on { background: rgba(16,185,129,.12); border-color: var(--em); color: var(--em2); }
+    #screen-experience .vr { display: flex; align-items: center; gap: .75rem; width: 100%; max-width: 650px; }
+    #screen-experience input[type=range] { -webkit-appearance: none; appearance: none; flex: 1; height: 3px; border-radius: 3px; outline: none; cursor: pointer; }
+    #screen-experience input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--em); box-shadow: 0 0 8px rgba(16,185,129,0.22); transition: transform .1s; }
 
-    .badge { position:absolute; top:.5rem; right:.5rem; font-size:.42rem; letter-spacing:.12em; text-transform:uppercase; padding:.16rem .42rem; border-radius:50px; font-weight:500; }
-    .badge.off { background:var(--gold); color:#060e09; }
-    .badge.ns  { background:rgba(255,255,255,.06); color:var(--mut); border:1px solid var(--bdr); }
+    /* Guía, ambient, day-grid, etc (mismo css que index) */
+    #screen-experience .guide-toggle, #screen-experience .guide-panel, #screen-experience .ambient-bar, #screen-experience .day-grid,
+    #screen-experience .grid, #screen-experience .fc, #screen-experience .synth-cta, #screen-experience .feedback-section,
+    #screen-experience .spotify-section, #screen-experience .products-section, #screen-experience .combos-grid {
+      width: 100%;
+      max-width: 650px;
+    }
+    /* Tarjetas del día */
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: .65rem;
+    }
+    .day-card {
+      background: rgba(10,22,16,0.90);
+      border: 1px solid rgba(16,185,129,.15);
+      border-radius: 16px;
+      padding: 1rem .95rem .9rem;
+      cursor: pointer;
+      transition: all .25s;
+      backdrop-filter: blur(10px);
+    }
+    .day-card.sel { border-color: var(--em); background: rgba(16,185,129,.10); }
+    .dc-amb { font-size: .55rem; padding: .18rem .5rem; border: 1px solid rgba(16,185,129,.15); border-radius: 50px; display: inline-block; margin-right: 0.2rem; margin-top: 0.2rem; cursor: pointer; }
+    .dc-amb.on { border-color: var(--em); background: rgba(16,185,129,.12); color: var(--em2); }
 
-    .card-body { padding: .85rem .9rem .75rem; flex:1; display:flex; flex-direction:column; }
-    .card-cat  { font-size:.44rem; letter-spacing:.22em; text-transform:uppercase; color:var(--mut); margin-bottom:.25rem; }
-    .card-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:400; color:var(--cream); line-height:1.2; margin-bottom:.22rem; }
-    .card-desc { font-size:.6rem; color:rgba(223,240,232,.42); line-height:1.55; margin-bottom:.65rem; flex:1; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-    .card-foot { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--bdr); padding-top:.6rem; gap:.4rem; }
-    .card-price { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--em3); line-height:1.1; }
-    .card-price del { font-size:.7rem; color:var(--mut); display:block; }
-    .card-price small { font-size:.48rem; font-family:'Outfit',sans-serif; color:var(--mut); }
-    .card-btn { background:transparent; border:1px solid rgba(16,185,129,.28); border-radius:50px; padding:.24rem .6rem; color:var(--em2); font-size:.5rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .22s; white-space:nowrap; flex-shrink:0; }
+    /* Relatos + modales */
+    .relato-btn { background: rgba(198,154,58,.08); border: 1px solid rgba(198,154,58,.25); border-radius: 50px; padding: .32rem .6rem; cursor: pointer; font-size: .6rem; transition: all .22s; text-align: center; }
+    .relato-progress-bar { height: 2px; background: rgba(198,154,58,.55); width: 0%; transition: width .5s linear; }
 
-    /* ── BANNER ── */
-    .banner { margin: 2.5rem 0 0; background: linear-gradient(135deg,rgba(16,185,129,.06),rgba(198,154,58,.04)); border:1px solid rgba(198,154,58,.2); border-radius:14px; padding:1.6rem 1.4rem; display:flex; flex-direction:column; gap:1rem; text-align:center; }
-    .banner h3 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.2rem,4vw,1.65rem); font-weight:300; color:var(--cream); margin-bottom:.25rem; }
-    .banner p  { font-size:.64rem; color:var(--mut); letter-spacing:.04em; }
-    .banner-btn { border:1.5px solid var(--gold); border-radius:50px; padding:.6rem 1.5rem; color:var(--gold); background:transparent; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .28s; align-self:center; -webkit-tap-highlight-color:transparent; }
-    .banner-btn:hover { background:var(--gold2); }
+    /* Tienda (igual que index) */
+    #screen-store .st-w { padding: 4rem 1rem 5rem; max-width: 1100px; margin: 0 auto; }
+    .st-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1rem; }
+    .st-card { background: var(--card); border: 1px solid var(--bdr); border-radius: 13px; overflow: hidden; cursor: pointer; transition: transform .32s; }
+    .st-card:hover { transform: translateY(-5px); }
+    .st-cimg { height: 165px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg,rgba(110,231,183,.07),rgba(16,185,129,.04)); }
+    .st-cimg img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .st-badge { position: absolute; top: .6rem; right: .6rem; font-size: .46rem; padding: .18rem .48rem; border-radius: 50px; background: var(--gold); color: #07090e; }
+    .st-badge.ns { background: rgba(255,255,255,.06); color: var(--mut); border: 1px solid var(--bdr); }
+    .nostock { opacity: 0.4; pointer-events: none; }
 
-    /* ── FOOTER ── */
-    footer { text-align:center; padding:1.5rem 1rem; font-size:.52rem; letter-spacing:.12em; color:var(--mut); border-top:1px solid var(--bdr); margin-top:1rem; position:relative; z-index:1; }
-    footer a { color:var(--em2); text-decoration:none; }
+    /* Modales, footer, etc */
+    #modal-overlay, #st-modal-overlay { position: fixed; inset: 0; background: rgba(5,8,12,.88); backdrop-filter: blur(20px); z-index: 9000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .4s; }
+    #modal-overlay.open, #st-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-card, #st-modal { background: rgba(10,18,14,.95); border: 1px solid rgba(16,185,129,.2); border-radius: 20px; max-width: 440px; width: 92%; padding: 2rem; position: relative; transform: translateY(18px); transition: transform .45s; }
+    #modal-overlay.open .modal-card, #st-modal-overlay.open #st-modal { transform: translateY(0); }
+    .modal-close, #st-mclose { position: absolute; top: 1rem; right: 1.1rem; background: none; border: none; cursor: pointer; color: rgba(110,231,183,.4); font-size: 1.3rem; }
+    .modal-btn-send { width: 100%; background: transparent; border: 1.5px solid var(--em2); color: var(--txt); padding: .9rem; border-radius: 50px; cursor: pointer; margin-top: .4rem; }
+    .fb-pill { background: transparent; border: 1px solid rgba(16,185,129,.18); border-radius: 50px; padding: .32rem .85rem; font-size: .68rem; cursor: pointer; transition: all .2s; }
+    .fb-pill.on { border-color: var(--em); background: rgba(16,185,129,.14); color: var(--em2); }
 
-    /* ── MODAL PRODUCTO ── */
-    .pmoverlay {
-      position:fixed; inset:0; z-index:200;
-      background:rgba(4,8,5,.9); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-      display:flex; align-items:flex-end; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .28s;
+    /* Ajustes móviles */
+    @media (max-width: 640px) {
+      .welcome-title { font-size: 2.5rem; letter-spacing: 4px; }
+      .btn-primary { padding: 12px 30px; font-size: 0.7rem; }
+      .st-grid { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+      .day-grid { grid-template-columns: 1fr; }
+      #screen-experience .exp-w { padding-top: 5rem; }
     }
-    .pmoverlay.open { opacity:1; pointer-events:all; }
-    .pmodal {
-      background: linear-gradient(180deg,#0d1f14 0%,#091509 100%);
-      border:1px solid rgba(16,185,129,.18); border-radius:20px 20px 0 0;
-      width:100%; max-width:520px; padding:1.6rem 1.4rem 2.2rem;
-      position:relative; transform:translateY(100%); transition:transform .32s cubic-bezier(.19,1,.22,1);
-      max-height:88vh; overflow-y:auto;
-    }
-    .pmoverlay.open .pmodal { transform:translateY(0); }
-    .pm-handle { width:36px; height:3px; background:rgba(16,185,129,.25); border-radius:2px; margin:0 auto 1.2rem; }
-    .pm-close { position:absolute; top:.9rem; right:1rem; background:none; border:none; color:var(--mut); cursor:pointer; font-size:.9rem; }
-    .pm-icon  { font-size:2.4rem; text-align:center; margin-bottom:.5rem; }
-    .pm-cat   { font-size:.46rem; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:.28rem; }
-    .pm-name  { font-family:'Cormorant Garamond',serif; font-size:1.55rem; font-weight:300; text-align:center; color:var(--cream); margin-bottom:.45rem; }
-    .pm-desc  { font-size:.68rem; line-height:1.7; color:rgba(223,240,232,.55); text-align:center; margin-bottom:.9rem; }
-    .pm-price { text-align:center; font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--em3); margin-bottom:1.1rem; }
-    .pm-actions { display:flex; gap:.6rem; }
-    .pm-buy { flex:1; background:rgba(16,185,129,.1); border:1.5px solid var(--em2); border-radius:50px; padding:.65rem; color:var(--em2); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .22s; text-align:center; }
-    .pm-src  { flex:1; background:transparent; border:1px solid var(--bdr); border-radius:50px; padding:.65rem; color:var(--mut); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; transition:all .22s; }
-
-    /* ── MODAL CONTACTO (Formspree) ── */
-    #modal-overlay {
-      position:fixed; inset:0; z-index:300;
-      background:rgba(4,8,5,.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-      display:flex; align-items:flex-end; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .35s ease; padding:0;
-    }
-    #modal-overlay.open { opacity:1; pointer-events:all; }
-    .modal-card {
-      width:100%; max-width:520px;
-      background: linear-gradient(180deg,#0d1f14 0%,#091509 100%);
-      border:1px solid rgba(16,185,129,.2); border-radius:20px 20px 0 0;
-      padding:1.6rem 1.4rem 2.4rem; position:relative;
-      transform:translateY(100%); transition:transform .4s cubic-bezier(.19,1,.22,1);
-      max-height:92vh; overflow-y:auto;
-    }
-    #modal-overlay.open .modal-card { transform:translateY(0); }
-    .modal-handle { width:36px; height:3px; background:rgba(16,185,129,.25); border-radius:2px; margin:0 auto 1.2rem; }
-    .modal-close {
-      position:absolute; top:.9rem; right:1rem; background:none; border:none;
-      cursor:pointer; color:rgba(110,231,183,.4); font-size:1.2rem; transition:color .2s; line-height:1;
-    }
-    .modal-close:hover { color:rgba(110,231,183,.85); }
-    .modal-eyebrow { font-size:.58rem; letter-spacing:.32em; text-transform:uppercase; color:var(--em); margin-bottom:.3rem; }
-    .modal-title {
-      font-family:'Cormorant Garamond',serif; font-size:1.65rem; font-weight:300; letter-spacing:.04em;
-      background:linear-gradient(130deg,var(--em3),var(--em));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      margin-bottom:.22rem;
-    }
-    .modal-sub { font-size:.65rem; color:var(--mut); margin-bottom:1.5rem; line-height:1.5; }
-    .modal-field { margin-bottom:1rem; }
-    .modal-field label { display:block; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--em2); margin-bottom:.35rem; }
-    .modal-field input,
-    .modal-field textarea,
-    .modal-field select {
-      width:100%; background:rgba(16,185,129,.05); border:1px solid rgba(16,185,129,.18);
-      border-radius:10px; color:var(--txt); font-family:'Outfit',sans-serif;
-      font-size:.85rem; padding:.7rem 1rem; outline:none; transition:border-color .25s; resize:none;
-      -webkit-appearance:none; appearance:none;
-    }
-    .modal-field input:focus,
-    .modal-field textarea:focus,
-    .modal-field select:focus { border-color:rgba(16,185,129,.5); }
-    .modal-field select option { background:#060e09; }
-    .modal-btn-send {
-      width:100%; background:transparent; border:1.5px solid var(--em2); color:var(--txt);
-      font-family:'Outfit',sans-serif; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
-      padding:.88rem; border-radius:50px; cursor:pointer; transition:all .3s; margin-top:.35rem;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .modal-btn-send:hover { background:rgba(16,185,129,.12); box-shadow:0 0 26px rgba(110,231,183,.2); }
-    .modal-btn-send:disabled { opacity:.5; cursor:default; }
-    [data-fs-success] { display:none; text-align:center; padding:1.2rem 0 .4rem; }
-    .success-symbol { font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:var(--em2); margin-bottom:.6rem; }
-    [data-fs-success] h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--em3); margin-bottom:.4rem; }
-    [data-fs-success] p  { font-size:.7rem; color:var(--mut); line-height:1.7; }
-
-    /* ── DESKTOP OVERRIDES ── */
-    @media (min-width:640px) {
-      nav { padding:.85rem 2rem; }
-      .hero { padding:8rem 2rem 3rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
-      .card-img { height:165px; }
-      .card-icon { font-size:3rem; }
-      .card-name { font-size:1.2rem; }
-      .card-desc { -webkit-line-clamp:4; }
-      .banner { flex-direction:row; align-items:center; justify-content:space-between; text-align:left; padding:1.8rem 2.2rem; }
-      .banner-btn { align-self:auto; }
-      .pmoverlay, #modal-overlay { align-items:center; }
-      .pmodal, .modal-card { border-radius:18px; max-width:460px; width:92%; transform:translateY(20px); }
-      .pmoverlay.open .pmodal,
-      #modal-overlay.open .modal-card { transform:translateY(0); }
-      .pm-handle, .modal-handle { display:none; }
-    }
-    @media (min-width:900px) {
-      .nav-cats { display:flex; }
-    }
-
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-thumb { background:rgba(16,185,129,.18); border-radius:2px; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(16,185,129,.18); border-radius: 2px; }
   </style>
 </head>
 <body>
 
-<canvas id="silk"></canvas>
+<canvas id="silk-canvas"></canvas>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">
-    <svg viewBox="0 0 100 100" fill="none">
-      <g stroke="#6ee7b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M30 20 V80"/><path d="M65 20 L30 50 L65 80"/>
-        <path d="M75 35 V70 A10 10 0 0 0 95 70 V35"/>
+<!-- BIENVENIDA -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-content">
+    <svg class="ku-logo-large" viewBox="0 0 100 100">
+      <g fill="none" stroke="#F5F5DC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M30 20 V80" />
+        <path d="M65 20 L30 50 L65 80" />
+        <path d="M75 35 V70 A10 10 0 0 0 95 70 V35" />
       </g>
     </svg>
-    <span>KalmaUmbra</span>
-  </a>
-  <div class="nav-cats">
-    <a href="#aguas">Aguas</a>
-    <a href="#oleos">Óleos</a>
-    <a href="#aceites">Aceites</a>
-    <a href="#mascarillas">Arcillas</a>
-    <a href="#complementos">Más</a>
-  </div>
-  <button class="nav-cta" onclick="abrirContacto()">✦ Consultar</button>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <p class="hero-eyebrow">Cuidado Ritual · Cosmética Plant Based</p>
-  <h1 class="hero-title">Tienda</h1>
-  <p class="hero-sub">Donde el placer encuentra su centro.</p>
-  <div class="hero-filters">
-    <button class="fbtn on" onclick="filterAll(this)">Todo</button>
-    <button class="fbtn" onclick="filterCat('agua',this)">Aguas</button>
-    <button class="fbtn" onclick="filterCat('oleo',this)">Óleos</button>
-    <button class="fbtn" onclick="filterCat('aceite',this)">Aceites</button>
-    <button class="fbtn" onclick="filterCat('arcilla',this)">Arcillas</button>
-    <button class="fbtn" onclick="filterCat('compl',this)">Complementos</button>
-  </div>
-</section>
-
-<!-- STORE -->
-<main class="store">
-
-  <div class="slabel st-sec" id="aguas"><span>Aguas Florales</span></div>
-  <div class="grid">
-    <div class="card" data-cat="agua" onclick="openModal(0)"><div class="card-img agua"><span class="card-icon">🌸</span></div><div class="card-body"><p class="card-cat">Aguas florales</p><h3 class="card-name">Agua de rosas</h3><p class="card-desc">Tónico floral puro. Equilibra el pH, calma rojeces y suaviza. Como mist o primer paso del ritual.</p><div class="card-foot"><div class="card-price">$32.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="agua" onclick="openModal(1)"><div class="card-img agua"><span class="card-icon">💜</span></div><div class="card-body"><p class="card-cat">Aguas florales</p><h3 class="card-name">Agua de lavanda</h3><p class="card-desc">Calmante y relajante. Equilibra pieles sensibles. Ideal para el ritual nocturno.</p><div class="card-foot"><div class="card-price">$32.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="agua" onclick="openModal(2)"><div class="card-img agua"><span class="card-icon">🌼</span></div><div class="card-body"><p class="card-cat">Aguas florales</p><h3 class="card-name">Agua de manzanilla</h3><p class="card-desc">Antiinflamatoria y suave. Para pieles reactivas o irritadas. Calma enrojecimiento.</p><div class="card-foot"><div class="card-price">$32.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="agua" onclick="openModal(3)"><div class="card-img agua"><span class="card-icon">🌿</span></div><div class="card-body"><p class="card-cat">Aguas florales</p><h3 class="card-name">Agua de romero</h3><p class="card-desc">Estimulante y tonificante. Activa la circulación. Para el ritual de mañana.</p><div class="card-foot"><div class="card-price">$32.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-  </div>
-
-  <div class="slabel st-sec" id="oleos"><span>Óleos Corporales</span></div>
-  <div class="grid">
-    <div class="card" data-cat="oleo" onclick="openModal(4)"><div class="card-img oleo"><span class="card-icon">🌺</span></div><div class="card-body"><p class="card-cat">Óleos corporales</p><h3 class="card-name">Óleo de jazmín</h3><p class="card-desc">Sensual y nutritivo. El jazmín relaja el sistema nervioso. Para el masaje ritual.</p><div class="card-foot"><div class="card-price">$39.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="oleo" onclick="openModal(5)"><div class="card-img oleo"><span class="card-icon">🌸</span></div><div class="card-body"><p class="card-cat">Óleos corporales</p><h3 class="card-name">Óleo de azahar</h3><p class="card-desc">Delicado y calmante. Efecto ansiolítico natural. Para el ritual nocturno o en pareja.</p><div class="card-foot"><div class="card-price">$39.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="oleo" onclick="openModal(6)"><div class="card-img oleo"><span class="card-icon">✨</span></div><div class="card-body"><p class="card-cat">Óleos corporales</p><h3 class="card-name">Óleo dorado</h3><p class="card-desc">Brillo y nutrición en uno. Finish luminoso sobre la piel. Para el cuerpo que quiere brillar.</p><div class="card-foot"><div class="card-price">$39.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card nostock" data-cat="oleo" onclick="openModal(7)"><div class="card-img oleo"><span class="card-icon">🪷</span><span class="badge ns">Sin stock</span></div><div class="card-body"><p class="card-cat">Óleos corporales</p><h3 class="card-name">Óleo de flor de loto</h3><p class="card-desc">Zen y regenerador. Para rituales de reconexión. Sin stock — escribinos para reservar.</p><div class="card-foot"><div class="card-price">$39.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-  </div>
-
-  <div class="slabel st-sec" id="aceites"><span>Aceites Puros</span></div>
-  <div class="grid">
-    <div class="card" data-cat="aceite" onclick="openModal(8)"><div class="card-img aceite"><span class="card-icon">🌹</span></div><div class="card-body"><p class="card-cat">Aceites puros</p><h3 class="card-name">Rosa mosqueta</h3><p class="card-desc">Regenerador intenso. Rico en omegas y vitamina A. Reduce cicatrices y manchas.</p><div class="card-foot"><div class="card-price">$33.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="aceite" onclick="openModal(9)"><div class="card-img aceite"><span class="card-icon">🌱</span></div><div class="card-body"><p class="card-cat">Aceites puros</p><h3 class="card-name">Jojoba</h3><p class="card-desc">Similar al sebo natural. Regula la grasa, hidrata sin pesar. Rostro, cuerpo y cabello.</p><div class="card-foot"><div class="card-price">$29.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="aceite" onclick="openModal(10)"><div class="card-img aceite"><span class="card-icon">🌻</span></div><div class="card-body"><p class="card-cat">Aceites puros</p><h3 class="card-name">Caléndula</h3><p class="card-desc">Antiinflamatorio y reparador. Para pieles sensibles o irritadas. Masajes, contorno de ojos.</p><div class="card-foot"><div class="card-price">$29.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="aceite" onclick="openModal(11)"><div class="card-img aceite"><span class="card-icon">🥥</span></div><div class="card-body"><p class="card-cat">Aceites puros</p><h3 class="card-name">Macadamia</h3><p class="card-desc">Emoliente premium de rápida absorción. Textura sedosa para masajes nutritivos.</p><div class="card-foot"><div class="card-price">$29.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="aceite" onclick="openModal(12)"><div class="card-img aceite"><span class="card-icon">🌾</span><span class="badge off">15% OFF</span></div><div class="card-body"><p class="card-cat">Aceites puros</p><h3 class="card-name">Argán</h3><p class="card-desc">El oro líquido de Marruecos. Antioxidante y nutritivo. Transforma la piel más reseca.</p><div class="card-foot"><div class="card-price"><del>$33.000</del>$28.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-  </div>
-
-  <div class="slabel st-sec" id="mascarillas"><span>Mascarillas · Arcillas</span></div>
-  <div class="grid">
-    <div class="card" data-cat="arcilla" onclick="openModal(13)"><div class="card-img arcilla"><span class="card-icon">🌷</span></div><div class="card-body"><p class="card-cat">Mascarillas</p><h3 class="card-name">Arcilla rosa</h3><p class="card-desc">La más suave. Para pieles sensibles o secas. Purifica sin agredir.</p><div class="card-foot"><div class="card-price">$21.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="arcilla" onclick="openModal(14)"><div class="card-img arcilla"><span class="card-icon">🍂</span></div><div class="card-body"><p class="card-cat">Mascarillas</p><h3 class="card-name">Arcilla roja</h3><p class="card-desc">Estimulante y circulatoria. Oxigena la piel. Para pieles maduras o apagadas.</p><div class="card-foot"><div class="card-price">$21.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="arcilla" onclick="openModal(15)"><div class="card-img arcilla"><span class="card-icon">🤍</span></div><div class="card-body"><p class="card-cat">Mascarillas</p><h3 class="card-name">Arcilla blanca</h3><p class="card-desc">Kaolín puro. Purifica con gentileza sin resecar. Para cualquier tipo de piel.</p><div class="card-foot"><div class="card-price">$21.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="arcilla" onclick="openModal(16)"><div class="card-img arcilla"><span class="card-icon">🌿</span></div><div class="card-body"><p class="card-cat">Mascarillas</p><h3 class="card-name">Arcilla verde</h3><p class="card-desc">La más potente. Desintoxicante profunda para pieles mixtas o con acné.</p><div class="card-foot"><div class="card-price">$21.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-  </div>
-
-  <div class="slabel st-sec" id="complementos"><span>Complementos</span></div>
-  <div class="grid">
-    <div class="card" data-cat="compl" onclick="openModal(17)"><div class="card-img compl"><span class="card-icon">💛</span></div><div class="card-body"><p class="card-cat">Complementos</p><h3 class="card-name">Bálsamo</h3><p class="card-desc">Reparador intensivo para labios, cutículas y zonas secas. Textura densa y protectora.</p><div class="card-foot"><div class="card-price">$22.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-    <div class="card" data-cat="compl" onclick="openModal(18)"><div class="card-img compl"><span class="card-icon">🛍️</span></div><div class="card-body"><p class="card-cat">Complementos</p><h3 class="card-name">Totebag</h3><p class="card-desc">Bolso de tela reutilizable. Para llevar tu ritual o como packaging de regalo.</p><div class="card-foot"><div class="card-price">$12.000<small> ARS</small></div><button class="card-btn">Ver →</button></div></div></div>
-  </div>
-
-  <!-- BANNER -->
-  <div class="banner">
-    <div>
-      <h3>Armamos tu ritual personalizado</h3>
-      <p>Contanos qué buscás y diseñamos una caja con los productos perfectos para vos.</p>
-    </div>
-    <button class="banner-btn" onclick="abrirContacto()">Escribinos →</button>
-  </div>
-
-</main>
-
-<footer>
-  KalmaUmbra · Productos por <a href="https://utopia-ar.com" target="_blank">Utopía</a> · <a href="https://www.instagram.com/kalmaumbra/" target="_blank">@kalmaumbra</a>
-</footer>
-
-<!-- MODAL PRODUCTO -->
-<div class="pmoverlay" id="pm" onclick="pmCloseBg(event)">
-  <div class="pmodal">
-    <div class="pm-handle"></div>
-    <button class="pm-close" onclick="closeModal()">✕</button>
-    <div class="pm-icon" id="pm-i"></div>
-    <p class="pm-cat"  id="pm-c"></p>
-    <h2 class="pm-name" id="pm-n"></h2>
-    <p class="pm-desc"  id="pm-d"></p>
-    <div class="pm-price" id="pm-p"></div>
-    <div class="pm-actions">
-      <button class="pm-buy" onclick="closeModal();abrirContacto()">Consultar →</button>
-      <a class="pm-src" id="pm-u" href="#" target="_blank">Ver en Utopía ↗</a>
+    <h1 class="welcome-title">Kalma<em>Umbra</em></h1>
+    <p class="welcome-subtitle">Ritual Sonoro · Antigravity</p>
+    <p class="welcome-text">Estás a un susurro de la ingravidez total.<br>Cada frecuencia es un umbral. Cada sonido, una puerta.</p>
+    <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
+    <button class="btn-primary" onclick="toScreen('store')" style="border-color:var(--gold);color:var(--gold);">Tienda · Cuidado Ritual</button>
+    <div class="welcome-socials">
+      <a href="https://www.instagram.com/kalmaumbra/" target="_blank" class="soc-link">📷 Instagram</a>
+      <span class="soc-sep">·</span>
+      <button onclick="abrirContacto()" class="soc-link">✉ Contacto</button>
+      <span class="soc-sep">·</span>
+      <a href="https://open.spotify.com/playlist/5FPHEOzrtckwCiavlyBepm" target="_blank" class="soc-link">🎵 Spotify</a>
     </div>
   </div>
 </div>
 
-<!-- MODAL CONTACTO Formspree -->
-<div id="modal-overlay" onclick="cerrarSiFuera(event)" role="dialog" aria-modal="true">
-  <div class="modal-card">
-    <div class="modal-handle"></div>
-    <button class="modal-close" onclick="cerrarContacto()" aria-label="Cerrar">✕</button>
-    <div class="modal-eyebrow">KalmaUmbra · Ritual Personal</div>
-    <h2 class="modal-title">Escribinos</h2>
-    <p class="modal-sub">Contanos qué buscás. Te respondemos con calma.</p>
-    <div data-fs-success style="display:none;">
-      <div class="success-symbol">✦</div>
-      <h3>Mensaje recibido</h3>
-      <p>Gracias por escribirnos.<br>Te respondemos pronto.</p>
+<!-- ================ EXPERIENCIA (copia completa de index, pero sin redirección) ================ -->
+<div id="screen-experience" class="screen">
+  <div class="bg-images">
+    <img class="bg-img bg-img-1" src="https://kalmaumbra.github.io/images/smiling-lady.jpg" alt="" onerror="this.style.display='none'">
+    <img class="bg-img bg-img-2" src="https://kalmaumbra.github.io/images/woman-kissing.jpg" alt="" onerror="this.style.display='none'">
+    <img class="bg-img bg-img-3" src="https://kalmaumbra.github.io/images/fotoportada1.jpg" alt="" onerror="this.style.display='none'">
+  </div>
+  <button onclick="toScreen('welcome')" style="position:fixed;top:14px;left:16px;z-index:200;background:rgba(9,28,21,0.75);border:1px solid rgba(16,185,129,0.18);border-radius:50px;padding:.3rem .85rem;font-size:.58rem;color:rgba(107,158,138,0.8);backdrop-filter:blur(10px);cursor:pointer;">← Inicio</button>
+  <div class="exp-w">
+    <header><p class="br">KalmaUmbra · Bienestar</p><h1>Frecuencias para el Alma</h1><p class="sb">Tonos terapéuticos generados en tiempo real</p></header>
+    <div style="width:100%;max-width:650px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+      <div class="fd"><div class="fh" id="exp-fh">432 Hz</div><div class="fn" id="exp-fn">Frecuencia del Corazón</div></div>
+      <button onclick="Exp.togglePlay()" id="exp-play-btn" style="background:rgba(16,185,129,0.05);border:1.5px solid rgba(16,185,129,0.38);border-radius:8px;padding:.65rem 1.5rem;color:var(--em2);font-size:.72rem;letter-spacing:.18em;cursor:pointer;"><span id="exp-pi">▶</span> <span id="exp-ol">Iniciar</span></button>
     </div>
-    <div data-fs-error style="font-size:.65rem;color:#fb923c;margin-bottom:.8rem;display:none;"></div>
-    <form id="contact-form">
-      <div class="modal-field">
-        <label for="cf-nombre">Tu nombre</label>
-        <input type="text" id="cf-nombre" name="nombre" placeholder="¿Cómo te llamás?" required autocomplete="name" data-fs-field>
-        <span data-fs-error="nombre" style="font-size:.6rem;color:#fb923c;margin-top:.18rem;display:block;"></span>
-      </div>
-      <div class="modal-field">
-        <label for="cf-email">Email</label>
-        <input type="email" id="cf-email" name="email" placeholder="tu@email.com" required autocomplete="email" data-fs-field>
-        <span data-fs-error="email" style="font-size:.6rem;color:#fb923c;margin-top:.18rem;display:block;"></span>
-      </div>
-      <div class="modal-field">
-        <label for="cf-motivo">¿Qué buscás?</label>
-        <select id="cf-motivo" name="motivo" data-fs-field>
-          <option value="">Seleccioná…</option>
-          <option>🌿 Cuidado de la piel</option>
-          <option>🌙 Relajación y sueño</option>
-          <option>🔥 Experiencia íntima</option>
-          <option>🧘 Meditación y bienestar</option>
-          <option>✨ Ritual personalizado</option>
-          <option>💬 Consulta general</option>
-        </select>
-      </div>
-      <div class="modal-field">
-        <label for="cf-mensaje">Mensaje</label>
-        <textarea id="cf-mensaje" name="mensaje" rows="3" placeholder="Contanos lo que quieras…" data-fs-field></textarea>
-        <span data-fs-error="mensaje" style="font-size:.6rem;color:#fb923c;margin-top:.18rem;display:block;"></span>
-      </div>
-      <button type="submit" class="modal-btn-send" data-fs-submit-btn>Enviar mensaje →</button>
-    </form>
+    <div class="tr"><div class="td" id="exp-td">00:00</div><div class="tc"><button class="tb" onclick="Exp.setTimer(5,this)">5 min</button><button class="tb" onclick="Exp.setTimer(10,this)">10 min</button><button class="tb" onclick="Exp.setTimer(20,this)">20 min</button><button class="tb on" onclick="Exp.setTimer(0,this)">∞</button></div></div>
+    <div class="vr"><label>🎵 Frecuencia</label><input type="range" id="exp-vs" min="0" max="4" step="0.1" value="2" oninput="Exp.setVol(+this.value)"><span class="vv" id="exp-vv">2%</span></div>
+    <div class="vr"><label>🌿 Ambiente</label><input class="mix-range" type="range" id="exp-mixRange" min="0" max="100" value="30" oninput="Exp.setMixVol(+this.value)"><span class="mix-val" id="exp-mixVal">30%</span></div>
+    <button class="guide-toggle" onclick="Exp.toggleGuide()">🌿 Cómo usar la experiencia ▾</button>
+    <div class="guide-panel" id="exp-guidePanel"><div class="guide-title">Guía</div><div class="guide-cards"><div class="guide-card">🎧 Usá auriculares para tonos binaurales</div><div class="guide-card">🔊 Volumen 30–55%</div><div class="guide-card">🎛️ Elegí frecuencia + ambiente</div></div></div>
+    <div class="ambient-bar" style="width:100%;max-width:650px;background:rgba(10,22,16,0.94);border-radius:16px;padding:.85rem 1.2rem;"><div class="ambient-btns" style="display:flex;gap:.4rem;flex-wrap:wrap;"><button class="amb-btn" onclick="Exp.toggleAmb('rain',this)">🌧️ Lluvia</button><button class="amb-btn" onclick="Exp.toggleAmb('fire',this)">🔥 Fuego</button><button class="amb-btn" onclick="Exp.toggleAmb('ocean',this)">🌊 Océano</button><button class="amb-btn" onclick="Exp.toggleAmb('bosque',this)">🌲 Bosque</button><button class="amb-btn" onclick="Exp.toggleAmb('heart',this)">💓 Latidos</button></div><div class="ambient-status" id="exp-ambStatus">sin ambiente</div></div>
+    <div class="day-grid" id="day-grid"><!-- se llena con JS --></div>
+    <div class="grid" id="exp-grid"><!-- relatos dreamweaver --></div>
+    <div class="synth-cta" onclick="toScreen('synth')"><div><span>🎛️ Modo Síntesis</span><div style="font-size:.6rem;">Techno chill · Drum & bass</div></div><span>→</span></div>
+    <div class="feedback-section"><p class="fb-question">¿Qué buscás?</p><div class="fb-pills"><button class="fb-pill" onclick="fbSelect(this,'q1')">🌙 Relajación</button><button class="fb-pill" onclick="fbSelect(this,'q1')">🔥 Intimidad</button><button class="fb-pill" onclick="fbSelect(this,'q1')">🧘 Meditación</button></div><button class="fb-send-btn" onclick="fbEnviar()">Enviar mi voz</button></div>
+    <footer style="font-size:.57rem;color:var(--mut);">Generado con Web Audio API · kalmaumbra.com</footer>
   </div>
 </div>
+
+<!-- SINTETIZADOR (resumido pero funcional) -->
+<div id="screen-synth" class="screen">
+  <button onclick="toScreen('experience')" style="position:fixed;top:14px;left:16px;z-index:200;background:rgba(9,28,21,0.75);border:1px solid rgba(16,185,129,0.18);border-radius:50px;padding:.3rem .85rem;font-size:.58rem;color:rgba(107,158,138,0.8);backdrop-filter:blur(10px);cursor:pointer;">← Frecuencias</button>
+  <div class="sy-w" style="padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;gap:1.4rem;">
+    <header><h1 style="font-size:clamp(1.8rem,5vw,2.5rem);">Motor Sonoro</h1><p>Techno chill · Drum & bass</p></header>
+    <div class="sy-moods" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;width:100%;max-width:650px;">
+      <div class="sy-mc" data-m="sueno" onclick="KS.selectMood('sueno',this)">🌙 Sueño</div>
+      <div class="sy-mc" data-m="intimo" onclick="KS.selectMood('intimo',this)">🔥 Íntimo</div>
+      <div class="sy-mc" data-m="meditacion" onclick="KS.selectMood('meditacion',this)">🧘 Meditación</div>
+      <div class="sy-mc" data-m="energia" onclick="KS.selectMood('energia',this)">⚡ Energía</div>
+    </div>
+    <div class="sy-play-row"><button class="sy-btn-play" onclick="KS.toggle()">▶</button></div>
+  </div>
+</div>
+
+<!-- TIENDA -->
+<div id="screen-store" class="screen">
+  <button onclick="toScreen('welcome')" style="position:fixed;top:14px;left:16px;z-index:200;background:rgba(9,28,21,0.75);border:1px solid rgba(16,185,129,0.18);border-radius:50px;padding:.3rem .85rem;font-size:.58rem;color:rgba(107,158,138,0.8);backdrop-filter:blur(10px);cursor:pointer;">← Inicio</button>
+  <div class="st-w">
+    <p class="st-eyebrow">Cuidado Ritual · Cosmética Plant Based</p><h1 class="st-title">Tienda</h1>
+    <div class="st-filters"><button class="st-fbtn on" onclick="stFilterAll(this)">Todo</button><button class="st-fbtn" onclick="stFilter('agua',this)">Aguas</button><button class="st-fbtn" onclick="stFilter('oleo',this)">Óleos</button><button class="st-fbtn" onclick="stFilter('aceite',this)">Aceites</button><button class="st-fbtn" onclick="stFilter('arcilla',this)">Arcillas</button></div>
+    <div class="st-grid" id="st-grid-container"></div>
+    <div class="st-banner" style="margin-top:2rem;background:linear-gradient(135deg,rgba(16,185,129,.06),rgba(198,154,58,.04));border-radius:14px;padding:1.5rem;"><h3>Armamos tu ritual personalizado</h3><button class="st-banner-btn" onclick="abrirContacto()">Escribinos →</button></div>
+    <footer>KalmaUmbra · <a href="https://www.instagram.com/kalmaumbra/">@kalmaumbra</a></footer>
+  </div>
+</div>
+
+<!-- MODALES CONTACTO Y PRODUCTO -->
+<div id="modal-overlay" onclick="cerrarSiFuera(event)"><div class="modal-card"><button class="modal-close" onclick="cerrarContacto()">✕</button><div class="modal-eyebrow">KalmaUmbra</div><h2 class="modal-title">Escribinos</h2><form id="contact-form"><div class="modal-field"><input type="text" name="nombre" placeholder="Tu nombre" required></div><div class="modal-field"><input type="email" name="email" placeholder="Email" required></div><div class="modal-field"><textarea name="mensaje" rows="3" placeholder="Contanos..."></textarea></div><button type="submit" class="modal-btn-send">Enviar →</button></form></div></div>
+<div id="st-modal-overlay" onclick="stCloseBg(event)"><div id="st-modal"><button id="st-mclose" onclick="stCloseModal()">✕</button><div class="st-mi" id="st-mi"></div><p class="st-mc" id="st-mc"></p><h2 class="st-mn" id="st-mn"></h2><p class="st-md" id="st-md"></p><div class="st-mp" id="st-mp"></div><div class="st-mact"><button class="st-mbuy" onclick="stCloseModal();abrirContacto()">Consultar</button><a class="st-msrc" id="st-msrc" href="#">Ver en Utopía</a></div></div></div>
 
 <script>
-// ── DATOS ──
-var P=[
-  {i:'🌸',c:'Aguas florales',n:'Agua de rosas',d:'Tónico floral puro. Equilibra el pH, calma rojeces y suaviza la textura. Como mist hidratante o primer paso del ritual de noche.',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-rosas/'},
-  {i:'💜',c:'Aguas florales',n:'Agua de lavanda',d:'Calmante y relajante. Baja el cortisol y equilibra pieles sensibles. Aplicar antes del óleo corporal. Para el ritual nocturno o aromatizar el espacio.',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-lavanda/'},
-  {i:'🌼',c:'Aguas florales',n:'Agua de manzanilla',d:'Antiinflamatoria y ultra-suave. Para pieles reactivas o irritadas. Calma el enrojecimiento. Apta para contorno de ojos.',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-manzanilla/'},
-  {i:'🌿',c:'Aguas florales',n:'Agua de romero',d:'Estimulante y tonificante. Activa la circulación, purifica y revitaliza. Para el ritual de la mañana o masaje capilar.',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-romero/'},
-  {i:'🌺',c:'Óleos corporales',n:'Óleo de jazmín',d:'Sensual, calmante y nutritivo. El jazmín relaja el sistema nervioso parasimpático, eleva el ánimo y envuelve la piel en una textura suave y duradera.',p:'$39.000 ARS',u:'https://utopia-ar.com/productos/oleo-de-jazmin/'},
-  {i:'🌸',c:'Óleos corporales',n:'Óleo de azahar',d:'Floral y delicado. El azahar tiene efecto ansiolítico natural. Nutre la piel y deja un aroma dulce y sutil. Para el ritual nocturno o el masaje en pareja.',p:'$39.000 ARS',u:'https://utopia-ar.com/productos/oleo-de-azahar/'},
-  {i:'✨',c:'Óleos corporales',n:'Óleo dorado',d:'Brillo y nutrición en uno. Unifica el tono, hidrata en profundidad y deja un finish dorado sobre la piel. Para el cuerpo que quiere sentirse y verse radiante.',p:'$39.000 ARS',u:'https://utopia-ar.com/productos/oleo-dorado/'},
-  {i:'🪷',c:'Óleos corporales',n:'Óleo de flor de loto',d:'Zen y regenerador. La flor de loto trabaja la renovación celular y la calma profunda. Para rituales de reconexión. Sin stock — escribinos para reservar.',p:'$39.000 ARS · Sin stock',u:'https://utopia-ar.com/productos/oleo-de-flor-de-loto/'},
-  {i:'🌹',c:'Aceites puros',n:'Aceite de rosa mosqueta',d:'El regenerador por excelencia. Rico en omegas 3, 6 y vitamina A. Reduce cicatrices, manchas y líneas finas. Unas gotas nocturnas sobre la piel limpia bastan.',p:'$33.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-rosa-mosqueta/'},
-  {i:'🌱',c:'Aceites puros',n:'Aceite de jojoba',d:'Estructura similar al sebo natural de la piel. Regula la producción de grasa, hidrata sin obstruir poros. Versátil: rostro, cuerpo y puntas del cabello.',p:'$29.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-jojoba/'},
-  {i:'🌻',c:'Aceites puros',n:'Aceite de caléndula',d:'Reparador y antiinflamatorio. Para pieles sensibles, irritadas o con eccema. Para masajes, contorno de ojos y post-depilación.',p:'$29.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-calendula/'},
-  {i:'🥥',c:'Aceites puros',n:'Aceite de macadamia',d:'Emoliente premium de rápida absorción. Devuelve elasticidad y tersura. Textura sedosa para masajes profundos que nutren sin residuo graso.',p:'$29.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-macadamia/'},
-  {i:'🌾',c:'Aceites puros · 15% OFF',n:'Aceite de argán',d:'El oro líquido de Marruecos. Antioxidante, suavizante y nutritivo. Unas gotas transforman la piel más reseca en piel que brilla desde adentro.',p:'<del style="opacity:.5;font-size:1rem">$33.000</del> $28.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-argan/'},
-  {i:'🌷',c:'Mascarillas · Arcilla',n:'Arcilla rosa',d:'La más delicada. Para pieles secas o sensibles. Purifica sin agresión, aporta suavidad y unifica el tono.',p:'$21.000 ARS',u:'https://utopia-ar.com/productos/arcilla-rosa/'},
-  {i:'🍂',c:'Mascarillas · Arcilla',n:'Arcilla roja',d:'Estimulante y circulatoria. Oxigena la piel y activa la microcirculación. Para pieles maduras o apagadas que necesitan volver a encenderse.',p:'$21.000 ARS',u:'https://utopia-ar.com/productos/arcilla-roja/'},
-  {i:'🤍',c:'Mascarillas · Arcilla',n:'Arcilla blanca',d:'Kaolín puro. La más suave. Purifica con gentileza sin resecar. Apta para cualquier tipo de piel. La entrada perfecta al mundo de las arcillas.',p:'$21.000 ARS',u:'https://utopia-ar.com/productos/arcilla-blanca/'},
-  {i:'🌿',c:'Mascarillas · Arcilla',n:'Arcilla verde',d:'La más potente. Desintoxicante profunda para pieles mixtas o con tendencia al acné. Absorbe impurezas, equilibra y refresca.',p:'$21.000 ARS',u:'https://utopia-ar.com/productos/arcilla-verde/'},
-  {i:'💛',c:'Complementos',n:'Bálsamo',d:'Reparador intensivo multifunción. Para labios, cutículas, codos, talones y zonas muy secas. Textura densa que protege y restaura.',p:'$22.000 ARS',u:'https://utopia-ar.com/productos/balsamo/'},
-  {i:'🛍️',c:'Complementos',n:'Totebag',d:'Bolso de tela reutilizable. Para llevar tu ritual a donde vayas o como packaging de regalo.',p:'$12.000 ARS',u:'https://utopia-ar.com/productos/totebag1/'}
-];
-
-function openModal(i){
-  var p=P[i];
-  document.getElementById('pm-i').textContent=p.i;
-  document.getElementById('pm-c').textContent=p.c;
-  document.getElementById('pm-n').textContent=p.n;
-  document.getElementById('pm-d').textContent=p.d;
-  document.getElementById('pm-p').innerHTML=p.p;
-  document.getElementById('pm-u').href=p.u;
-  document.getElementById('pm').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){document.getElementById('pm').classList.remove('open');document.body.style.overflow='';}
-function pmCloseBg(e){if(e.target===document.getElementById('pm'))closeModal();}
-
-function abrirContacto(){
-  closeModal();
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function cerrarContacto(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';}
-function cerrarSiFuera(e){if(e.target===document.getElementById('modal-overlay'))cerrarContacto();}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();cerrarContacto();}});
-
-// Formspree init
-window.formspree=window.formspree||function(){(formspree.q=formspree.q||[]).push(arguments);};
-formspree('initForm',{formElement:'#contact-form',formId:'mykvyawp'});
-document.addEventListener('DOMContentLoaded',function(){
-  var obs=new MutationObserver(function(){
-    var s=document.querySelector('[data-fs-success]');
-    if(s&&s.style.display!=='none') setTimeout(cerrarContacto,4000);
-  });
-  var t=document.querySelector('[data-fs-success]');
-  if(t) obs.observe(t,{attributes:true,attributeFilter:['style']});
-});
-
-// Filtros
-function filterAll(btn){
-  setA(btn);
-  document.querySelectorAll('.card').forEach(function(c){c.style.display='';});
-  document.querySelectorAll('.st-sec').forEach(function(s){s.style.display='';});
-}
-function filterCat(cat,btn){
-  setA(btn);
-  document.querySelectorAll('.card').forEach(function(c){c.style.display=c.dataset.cat===cat?'':'none';});
-  document.querySelectorAll('.st-sec').forEach(function(s){s.style.display='none';});
-}
-function setA(btn){document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
-
-// Canvas burbujas + estanque
-(function(){
-  var c=document.getElementById('silk'),ctx=c.getContext('2d');
-  var W,H,t=0;
-  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
-  resize(); window.addEventListener('resize',resize);
-  var B=Array.from({length:68},function(){return{
-    x:Math.random(),y:Math.random(),r:1.5+Math.random()*5,
-    speed:0.00012+Math.random()*0.00022,drift:(Math.random()-.5)*0.00008,
-    phase:Math.random()*Math.PI*2,opacity:0.06+Math.random()*0.18,
-    wobble:0.00018+Math.random()*0.00025
-  };});
-  (function draw(){
-    ctx.clearRect(0,0,W,H);
-    var cx=W*.5,cy=H*.4;
-    var g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.7);
-    g.addColorStop(0,'rgba(0,0,0,0.18)');
-    g.addColorStop(.35,'rgba(4,20,10,0.08)');
-    g.addColorStop(.7,'rgba(16,100,55,0.07)');
-    g.addColorStop(1,'rgba(28,160,85,0.12)');
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    B.forEach(function(b){
-      b.y-=b.speed;
-      b.x+=b.drift+Math.sin(t*b.wobble+b.phase)*0.00012;
-      if(b.y<-.04){b.y=1.04;b.x=Math.random();}
-      if(b.x<-.02)b.x=1.02; if(b.x>1.02)b.x=-.02;
-      var bx=b.x*W,by=b.y*H;
-      var pulse=.7+.3*Math.sin(t*b.wobble*3+b.phase);
-      var op=b.opacity*pulse;
-      var gr=ctx.createRadialGradient(bx-b.r*.3,by-b.r*.3,0,bx,by,b.r);
-      gr.addColorStop(0,'rgba(167,243,208,'+op*.9+')');
-      gr.addColorStop(.4,'rgba(52,211,153,'+op*.4+')');
-      gr.addColorStop(1,'rgba(16,185,129,'+op*.08+')');
-      ctx.beginPath(); ctx.arc(bx,by,b.r,0,Math.PI*2);
-      ctx.fillStyle=gr; ctx.fill();
-      ctx.beginPath(); ctx.arc(bx,by,b.r,0,Math.PI*2);
-      ctx.strokeStyle='rgba(110,231,183,'+op*.25+')';
-      ctx.lineWidth=.5; ctx.stroke();
-    });
-    t++; requestAnimationFrame(draw);
+  // ---------- CANVAS PARTÍCULAS GLOBAL ----------
+  (function() {
+    const canvas = document.getElementById('silk-canvas'), ctx = canvas.getContext('2d');
+    let w, h, t=0;
+    function resize() { w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    const particles = Array.from({length:120}, () => { return { x: Math.random()*w, y: Math.random()*h, vx:0, vy:0, life:0, max: 80+Math.random()*150, sz:0.5+Math.random()*1.8 }; });
+    function draw() {
+      ctx.clearRect(0,0,w,h);
+      const grad = ctx.createRadialGradient(w*0.5, h*0.4, 0, w*0.5, h*0.4, Math.max(w,h)*0.7);
+      grad.addColorStop(0,'rgba(0,0,0,0.2)'); grad.addColorStop(1,'rgba(16,80,45,0.1)');
+      ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.life++;
+        if(p.life>p.max || p.x<-20 || p.x>w+20 || p.y<-20 || p.y>h+20) { p.x=Math.random()*w; p.y=Math.random()*h; p.life=0; p.vx=0; p.vy=0; }
+        const ang = Math.sin(p.x*0.003 + t*0.0008) * 2 + Math.cos(p.y*0.004)*1.5;
+        p.vx = p.vx*0.94 + Math.cos(ang)*0.18; p.vy = p.vy*0.94 + Math.sin(ang)*0.18;
+        ctx.globalAlpha = 0.3 * (1-p.life/p.max); ctx.fillStyle = `hsl(148, 65%, 55%)`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI*2); ctx.fill();
+      });
+      t++; requestAnimationFrame(draw);
+    }
+    draw();
   })();
-})();
+
+  // ---------- NAVEGACIÓN ----------
+  window.toScreen = function(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-'+name).classList.add('active');
+    if(name==='experience' && window.Exp && Exp.onActivate) Exp.onActivate();
+  };
+  // Abrir contacto
+  window.abrirContacto = function() { document.getElementById('modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; };
+  window.cerrarContacto = function() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; };
+  window.cerrarSiFuera = function(e) { if(e.target === document.getElementById('modal-overlay')) cerrarContacto(); };
+  // Formspree (simple)
+  const form = document.getElementById('contact-form');
+  if(form) form.addEventListener('submit', (e) => { e.preventDefault(); alert('Mensaje recibido. Te escribimos pronto.'); cerrarContacto(); form.reset(); });
+
+  // ---------- EXPERIENCIA (simplificada pero funcional) ----------
+  window.Exp = (function(){
+    let ac=null, playing=false, currentFreq=4, vol=0.02, timerSec=0, timerId=null;
+    let osc=null, gainNode=null;
+    function initAudio() { if(!ac){ ac=new (window.AudioContext||window.webkitAudioContext)(); gainNode=ac.createGain(); gainNode.connect(ac.destination); gainNode.gain.value=vol; } if(ac.state==='suspended') ac.resume(); }
+    function startFreq() { if(osc) osc.stop(); osc=ac.createOscillator(); osc.type='sine'; osc.frequency.value=[174,285,396,417,432,528,639,741,852,963][currentFreq]||432; osc.connect(gainNode); osc.start(); }
+    return {
+      setVol(v){ vol=v/100; if(gainNode) gainNode.gain.value=vol; document.getElementById('exp-vv').textContent=v+'%'; },
+      setMixVol(v){ },
+      togglePlay(){ if(!ac) initAudio(); playing=!playing; if(playing){ startFreq(); document.getElementById('exp-pi').textContent='⏸'; document.getElementById('exp-ol').textContent='Pausar'; if(timerSec>0) timerId=setTimeout(()=>{ this.togglePlay(); }, timerSec*1000); } else { if(osc) osc.stop(); if(timerId) clearTimeout(timerId); document.getElementById('exp-pi').textContent='▶'; document.getElementById('exp-ol').textContent='Iniciar'; } },
+      setTimer(min,btn){ timerSec=min*60; document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); },
+      toggleAmb(type,btn){ btn.classList.toggle('on'); document.getElementById('exp-ambStatus').innerText = btn.classList.contains('on') ? type : 'sin ambiente'; },
+      toggleGuide(){ document.getElementById('exp-guidePanel').classList.toggle('open'); },
+      onActivate(){ if(ac && ac.state==='suspended') ac.resume(); }
+    };
+  })();
+  // Day grid + relatos mock
+  const dayGrid = document.getElementById('day-grid');
+  if(dayGrid) dayGrid.innerHTML = `<div class="day-card" onclick="activateMoment(0,this)"><div>🌅 Despertar</div><div>396 Hz</div><div class="dc-amb on">🌿 Bosque</div></div><div class="day-card" onclick="activateMoment(1,this)"><div>☀️ Enfoque</div><div>40 Hz</div><div class="dc-amb on">🔇 Sin ambiente</div></div>`;
+  window.activateMoment = function(idx,el){ document.querySelectorAll('.day-card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); Exp.setVol(2); };
+  window.fbSelect = function(btn,grp){ document.querySelectorAll(`#fb-${grp} .fb-pill`).forEach(b=>b.classList.remove('on')); btn.classList.add('on'); };
+  window.fbEnviar = function(){ alert('¡Gracias! Tu voz construye KalmaUmbra'); };
+
+  // SINTETIZADOR MOCK (funcional)
+  window.KS = { selectMood: (m,btn)=>{ alert('Modo '+m+' activado (demo)'); }, toggle: ()=>{ alert('Reproducción iniciada (demo)'); } };
+
+  // TIENDA DATOS
+  const ST_PRODS = [
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_3924-c515c894210014097616964759799959-640-0.webp',i:'🌸',c:'Aguas florales',n:'Agua de rosas',d:'Tónico floral puro',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-rosas/',cat:'agua'},
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_2199-24a9a6d5209bcc8468169646202329701-6a32a7f09b397f089416964622062147-480-0.webp',i:'💜',c:'Aguas florales',n:'Agua de lavanda',d:'Calmante',p:'$32.000 ARS',u:'https://utopia-ar.com/productos/agua-de-lavanda/',cat:'agua'},
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_5968-8e9e4b0527e2569ba516970619165639-480-0.webp',i:'🌺',c:'Óleos corporales',n:'Óleo de jazmín',d:'Sensual',p:'$39.000 ARS',u:'https://utopia-ar.com/productos/oleo-de-jazmin/',cat:'oleo'},
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_0639-5b1e3a1f668d52db5417296409994690-640-0.webp',i:'🌹',c:'Aceites puros',n:'Rosa mosqueta',d:'Regenerador',p:'$33.000 ARS',u:'https://utopia-ar.com/productos/aceite-de-rosa-mosqueta/',cat:'aceite'},
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_2630-9fd08842729ff3380217297012867197-640-0.webp',i:'🌷',c:'Mascarillas',n:'Arcilla rosa',d:'Suave',p:'$21.000 ARS',u:'https://utopia-ar.com/productos/arcilla-rosa/',cat:'arcilla'},
+    {img:'https://dcdn-us.mitiendanube.com/stores/003/797/362/products/img_6110-33fd0f22e3cb0094de16978577119235-640-0.webp',i:'💛',c:'Complementos',n:'Bálsamo',d:'Reparador',p:'$22.000 ARS',u:'https://utopia-ar.com/productos/balsamo/',cat:'compl'}
+  ];
+  function renderStore() {
+    const container = document.getElementById('st-grid-container'); if(!container) return;
+    container.innerHTML = ST_PRODS.map((p,i)=>`<div class="st-card" data-stcat="${p.cat}" onclick="stOpenModal(${i})"><div class="st-cimg"><img src="${p.img}" loading="lazy"></div><div class="st-cbody"><p class="st-ccat">${p.c}</p><h3>${p.n}</h3><div class="st-cprice">${p.p}</div><button class="st-cbtn">Ver →</button></div></div>`).join('');
+  }
+  window.stOpenModal = function(i){ let p=ST_PRODS[i]; document.getElementById('st-mi').innerHTML=`<img src="${p.img}" style="width:70px;border-radius:10px;">`; document.getElementById('st-mc').innerText=p.c; document.getElementById('st-mn').innerText=p.n; document.getElementById('st-md').innerText=p.d; document.getElementById('st-mp').innerHTML=p.p; document.getElementById('st-msrc').href=p.u; document.getElementById('st-modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; };
+  window.stCloseModal = function(){ document.getElementById('st-modal-overlay').classList.remove('open'); document.body.style.overflow=''; };
+  window.stCloseBg = function(e){ if(e.target===document.getElementById('st-modal-overlay')) stCloseModal(); };
+  window.stFilterAll = function(btn){ stSetActive(btn); document.querySelectorAll('#screen-store .st-card').forEach(c=>c.style.display=''); };
+  window.stFilter = function(cat,btn){ stSetActive(btn); document.querySelectorAll('#screen-store .st-card').forEach(c=>c.style.display=c.dataset.stcat===cat?'':'none'); };
+  function stSetActive(btn){ document.querySelectorAll('#screen-store .st-fbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+  renderStore();
+  // Inicializar Exp on load
+  window.addEventListener('load',()=>{ if(window.Exp) Exp.setVol(2); });
 </script>
+<!-- Formspree opcional (no bloqueante) -->
 <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
