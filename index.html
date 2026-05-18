@@ -913,22 +913,31 @@
             <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
 
             <div class="welcome-socials">
-                <a href="https://instagram.com/kalmaumbra" target="_blank" class="soc-link" title="Instagram">
+                <!-- Instagram → perfil público de la marca -->
+                <a href="https://www.instagram.com/kalmaumbra/" target="_blank" rel="noopener noreferrer" class="soc-link" title="Instagram">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                     <span>Instagram</span>
                 </a>
                 <span class="soc-sep">·</span>
-                <a href="https://www.linkedin.com/in/kalmaumbra-life-style-809bba409/" target="_blank" class="soc-link" title="LinkedIn">
+                <!-- Facebook → página Kalma Umbra -->
+                <a href="https://www.facebook.com/kalmaumbra" target="_blank" rel="noopener noreferrer" class="soc-link" title="Facebook">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    <span>Facebook</span>
+                </a>
+                <span class="soc-sep">·</span>
+                <!-- LinkedIn → cuenta personal (no se pudo recuperar la de marca) -->
+                <a href="https://www.linkedin.com/in/kalmaumbra-life-style-809bba409/" target="_blank" rel="noopener noreferrer" class="soc-link" title="LinkedIn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="11" x2="8" y2="17"/><line x1="8" y1="7" x2="8" y2="8"/><path d="M12 17v-6m4 6v-3.5a2.5 2.5 0 0 0-5 0"/></svg>
                     <span>LinkedIn</span>
                 </a>
                 <span class="soc-sep">·</span>
-                <a href="mailto:kalmaumbra@gmail.com" class="soc-link" title="Email">
+                <!-- Contacto → abre formulario modal (Formspree) -->
+                <button onclick="abrirContacto()" class="soc-link" title="Contacto" style="background:none;border:none;cursor:pointer;font-family:inherit;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
                     <span>Contacto</span>
-                </a>
+                </button>
                 <span class="soc-sep">·</span>
-                <a href="https://open.spotify.com/playlist/5FPHEOzrtckwCiavlyBepm" target="_blank" class="soc-link" title="Spotify">
+                <a href="https://open.spotify.com/playlist/5FPHEOzrtckwCiavlyBepm" target="_blank" rel="noopener noreferrer" class="soc-link" title="Spotify">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.371-.721.49-1.101.24-3.021-1.858-6.832-2.278-11.322-1.237-.421.1-.851-.16-.96-.58-.1-.421.16-.851.58-.96 4.91-1.121 9.122-.64 12.522 1.431.38.241.49.721.241 1.101l.04.005zm1.44-3.3c-.301.42-.841.561-1.262.261-3.45-2.122-8.7-2.739-12.781-1.5-.5.16-1.022-.12-1.182-.62-.16-.5.12-1.022.62-1.182 4.66-1.42 10.46-.731 14.441 1.71.42.301.571.841.27 1.262l-.106.069zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.23-.181-1.419-.779-.18-.6.18-1.23.78-1.42 4.28-1.28 11.369-1.02 15.88 1.62.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3l.04-.002z"/></svg>
                     <span style="color:#1DB954">Spotify</span>
                 </a>
@@ -973,26 +982,15 @@
                 <p class="sb">Tonos terapéuticos generados en tiempo real</p>
             </header>
 
-            <!-- Freq Display — centrado arriba del timer -->
-            <div class="fd" style="text-align:center;">
-                <div class="fh" id="exp-fh" style="font-size:clamp(1.8rem,6vw,2.6rem);">432 Hz</div>
-                <div class="fn" id="exp-fn">Frecuencia del Corazón</div>
-            </div>
-
-            <!-- Timer + Play — integrados en la misma fila -->
-            <div style="width:100%;max-width:650px;display:flex;flex-direction:column;align-items:center;gap:.6rem;">
-                <!-- Fila: timer display + botones -->
-                <div class="tr" style="width:100%;justify-content:center;">
-                    <div class="td" id="exp-td">00:00</div>
-                    <div class="tc">
-                        <button class="tb" onclick="Exp.setTimer(5,this)">5 min</button>
-                        <button class="tb" onclick="Exp.setTimer(10,this)">10 min</button>
-                        <button class="tb" onclick="Exp.setTimer(20,this)">20 min</button>
-                        <button class="tb on" onclick="Exp.setTimer(0,this)">∞</button>
-                    </div>
+            <!-- 432hz + Orb: fila horizontal — freq a la izquierda, iniciar a la derecha -->
+            <div style="width:100%;max-width:650px;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+                <!-- Izquierda: frecuencia activa -->
+                <div class="fd" style="text-align:left;flex:1;">
+                    <div class="fh" id="exp-fh" style="font-size:clamp(1.8rem,6vw,2.6rem);">432 Hz</div>
+                    <div class="fn" id="exp-fn">Frecuencia del Corazón</div>
                 </div>
-                <!-- Orb play — debajo del timer, centrado -->
-                <div class="vw" style="width:80px;height:80px;min-width:80px;">
+                <!-- Derecha: botón Iniciar -->
+                <div class="vw" style="width:80px;height:80px;min-width:80px;flex-shrink:0;">
                     <div class="rng" id="exp-r1" style="width:44px;height:44px;"></div>
                     <div class="rng" id="exp-r2" style="width:58px;height:58px;"></div>
                     <div class="rng" id="exp-r3" style="width:72px;height:72px;"></div>
@@ -1000,6 +998,19 @@
                     <div class="orb" onclick="Exp.togglePlay()" style="width:46px;height:46px;gap:2px;">
                         <span class="pi" id="exp-pi" style="font-size:1rem;">▶</span>
                         <span class="ol" id="exp-ol" style="font-size:.48rem;letter-spacing:.12em;">Iniciar</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer — debajo de la fila hz/iniciar -->
+            <div style="width:100%;max-width:650px;display:flex;justify-content:flex-start;">
+                <div class="tr">
+                    <div class="td" id="exp-td">00:00</div>
+                    <div class="tc">
+                        <button class="tb" onclick="Exp.setTimer(5,this)">5 min</button>
+                        <button class="tb" onclick="Exp.setTimer(10,this)">10 min</button>
+                        <button class="tb" onclick="Exp.setTimer(20,this)">20 min</button>
+                        <button class="tb on" onclick="Exp.setTimer(0,this)">∞</button>
                     </div>
                 </div>
             </div>
@@ -1108,6 +1119,43 @@
                         oninput="Exp.setMixVol(+this.value);this.style.setProperty('--mv',this.value+'%')">
                     <span class="mix-val" id="exp-mixVal">50%</span>
                 </div>
+            </div>
+
+            <!-- LIVE NEURAL SOUNDS — inmediatamente debajo de los volúmenes -->
+            <div id="ku-live-block" style="width:100%;max-width:650px;background:rgba(5,12,10,0.9);border:1px solid rgba(16,185,129,0.18);border-radius:18px;overflow:hidden;">
+                <!-- Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid rgba(16,185,129,0.1);">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div id="ku-live-bars" style="display:flex;align-items:flex-end;gap:2px;height:14px;">
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:4px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:10px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:7px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:13px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:5px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:9px;"></span>
+                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:6px;"></span>
+                        </div>
+                        <div>
+                            <div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,185,129,0.45);margin-bottom:2px;">KalmaUmbra · Stream</div>
+                            <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:rgba(110,231,183,0.85);">Live · Neural Sounds</div>
+                            <div style="font-size:.55rem;color:var(--mut);margin-top:1px;letter-spacing:.06em;">Frecuencias en vivo · AWS IVS</div>
+                        </div>
+                    </div>
+                    <button onclick="kuLiveToggle()" id="ku-live-btn" style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:50px;padding:.3rem .85rem;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(110,231,183,0.45);transition:all .3s;">
+                        <span id="ku-live-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(16,185,129,0.25);display:inline-block;transition:all .3s;"></span>
+                        <span id="ku-live-label">OFF</span>
+                    </button>
+                </div>
+                <!-- Ecualizador -->
+                <div style="padding:.7rem 1.1rem .5rem;">
+                    <canvas id="ku-eq-canvas" height="52" style="width:100%;display:block;border-radius:8px;background:rgba(0,0,0,0.25);"></canvas>
+                </div>
+                <!-- Status -->
+                <div style="padding:.35rem 1.1rem .75rem;">
+                    <span id="ku-live-status" style="font-size:.54rem;letter-spacing:.1em;color:rgba(16,185,129,0.3);text-transform:uppercase;">Sin señal · Activá OBS para transmitir</span>
+                </div>
+                <!-- Video oculto para audio -->
+                <video id="ku-live-video" playsinline style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;"></video>
             </div>
 
             <!-- Freq Tabs -->
@@ -1226,45 +1274,7 @@
                 </div>
             </div>
 
-            <!-- Sección Spotify — debajo de los relatos -->
-            <!-- LIVE NEURAL SOUNDS -->
-            <div id="ku-live-block" style="width:100%;max-width:650px;background:rgba(5,12,10,0.9);border:1px solid rgba(16,185,129,0.18);border-radius:18px;overflow:hidden;">
-                <!-- Header -->
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid rgba(16,185,129,0.1);">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <div id="ku-live-bars" style="display:flex;align-items:flex-end;gap:2px;height:14px;">
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:4px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:10px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:7px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:13px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:5px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:9px;"></span>
-                            <span style="display:block;width:2px;border-radius:2px;background:#e05555;height:6px;"></span>
-                        </div>
-                        <div>
-                            <div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,185,129,0.45);margin-bottom:2px;">KalmaUmbra · Stream</div>
-                            <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:rgba(110,231,183,0.85);">Live · Neural Sounds</div>
-                            <div style="font-size:.55rem;color:var(--mut);margin-top:1px;letter-spacing:.06em;">Frecuencias en vivo · AWS IVS</div>
-                        </div>
-                    </div>
-                    <button onclick="kuLiveToggle()" id="ku-live-btn" style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:50px;padding:.3rem .85rem;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(110,231,183,0.45);transition:all .3s;">
-                        <span id="ku-live-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(16,185,129,0.25);display:inline-block;transition:all .3s;"></span>
-                        <span id="ku-live-label">OFF</span>
-                    </button>
-                </div>
-                <!-- Ecualizador -->
-                <div style="padding:.7rem 1.1rem .5rem;">
-                    <canvas id="ku-eq-canvas" height="52" style="width:100%;display:block;border-radius:8px;background:rgba(0,0,0,0.25);"></canvas>
-                </div>
-                <!-- Status -->
-                <div style="padding:.35rem 1.1rem .75rem;">
-                    <span id="ku-live-status" style="font-size:.54rem;letter-spacing:.1em;color:rgba(16,185,129,0.3);text-transform:uppercase;">Sin señal · Activá OBS para transmitir</span>
-                </div>
-                <!-- Video oculto para audio -->
-                <video id="ku-live-video" playsinline style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;"></video>
-            </div>
-
-            <!-- Botón Sintetizador -->
+            <!-- Botón Sintetizador — debajo de todo DreamWeaver -->
             <div class="synth-cta" onclick="toScreen('synth')">
                 <div class="synth-cta-left">
                     <span class="synth-cta-icon">🎛️</span>
@@ -1312,14 +1322,18 @@
 
                 <!-- Redes -->
                 <div class="fb-social">
-                    <a href="https://instagram.com/kalmaumbra" target="_blank" class="fb-soc-btn">
+                    <a href="https://www.instagram.com/kalmaumbra/" target="_blank" rel="noopener noreferrer" class="fb-soc-btn">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                        @kalmaumbra
+                        Instagram
                     </a>
-                    <a href="mailto:kalmaumbra@gmail.com" class="fb-soc-btn">
+                    <a href="https://www.facebook.com/kalmaumbra" target="_blank" rel="noopener noreferrer" class="fb-soc-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        Facebook
+                    </a>
+                    <button onclick="abrirContacto()" class="fb-soc-btn" style="background:none;border:1px solid rgba(16,185,129,0.2);cursor:pointer;font-family:inherit;color:rgba(110,231,183,0.6);">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
                         Escribinos
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -2582,6 +2596,211 @@
 
         })();
     </script>
+
+    <!-- ══ MODAL CONTACTO (Formspree) ══ -->
+    <style>
+        /* Overlay */
+        #modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(5,8,12,.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity .4s ease;
+            padding: 1rem;
+        }
+        #modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        /* Card */
+        .modal-card {
+            width: 100%; max-width: 440px;
+            background: rgba(10,18,14,.95);
+            border: 1px solid rgba(16,185,129,.2);
+            border-radius: 20px;
+            padding: 2.4rem 2rem 2rem;
+            position: relative;
+            transform: translateY(18px); opacity: 0;
+            transition: all .45s cubic-bezier(.19,1,.22,1);
+        }
+        #modal-overlay.open .modal-card { transform: translateY(0); opacity: 1; }
+
+        .modal-close {
+            position: absolute; top: 1rem; right: 1.1rem;
+            background: none; border: none; cursor: pointer;
+            color: rgba(110,231,183,.4); font-size: 1.3rem;
+            transition: color .2s; line-height: 1;
+        }
+        .modal-close:hover { color: rgba(110,231,183,.85); }
+
+        .modal-eyebrow {
+            font-size: .6rem; letter-spacing: .35em; text-transform: uppercase;
+            color: var(--em); margin-bottom: .35rem;
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem; font-weight: 300; letter-spacing: .04em;
+            background: linear-gradient(130deg, var(--em3), var(--em));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: .25rem;
+        }
+        .modal-sub {
+            font-size: .68rem; color: var(--mut); margin-bottom: 1.8rem; line-height: 1.5;
+        }
+
+        .modal-field { margin-bottom: 1.1rem; }
+        .modal-field label {
+            display: block; font-size: .63rem; letter-spacing: .15em;
+            text-transform: uppercase; color: var(--em2); margin-bottom: .4rem;
+        }
+        .modal-field input,
+        .modal-field textarea,
+        .modal-field select {
+            width: 100%;
+            background: rgba(16,185,129,.05);
+            border: 1px solid rgba(16,185,129,.18);
+            border-radius: 10px;
+            color: var(--txt);
+            font-family: 'Outfit', sans-serif;
+            font-size: .8rem;
+            padding: .7rem 1rem;
+            outline: none;
+            transition: border-color .25s;
+            resize: none;
+        }
+        .modal-field input:focus,
+        .modal-field textarea:focus,
+        .modal-field select:focus { border-color: rgba(16,185,129,.5); }
+        .modal-field select option { background: #07090e; }
+
+        .modal-btn-send {
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid var(--em2);
+            color: var(--txt);
+            font-family: 'Outfit', sans-serif;
+            font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+            padding: .9rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all .35s ease;
+            margin-top: .4rem;
+        }
+        .modal-btn-send:hover {
+            background: rgba(16,185,129,.12);
+            border-color: var(--em3);
+            box-shadow: 0 0 28px rgba(110,231,183,.25);
+        }
+        .modal-btn-send:disabled { opacity: .5; cursor: default; }
+
+        /* Estado de éxito */
+        #modal-success {
+            display: none; text-align: center; padding: 1.5rem 0 .5rem;
+        }
+        .success-symbol {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem; color: var(--em2);
+            margin-bottom: .8rem;
+        }
+        #modal-success h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 300;
+            color: var(--em3); margin-bottom: .5rem;
+        }
+        #modal-success p {
+            font-size: .75rem; color: var(--mut); line-height: 1.7;
+        }
+    </style>
+
+    <!-- Modal HTML -->
+    <div id="modal-overlay" onclick="cerrarSiFuera(event)" role="dialog" aria-modal="true" aria-label="Formulario de contacto">
+        <div class="modal-card">
+            <button class="modal-close" onclick="cerrarContacto()" aria-label="Cerrar">✕</button>
+
+            <div class="modal-eyebrow">KalmaUmbra · Ritual Personal</div>
+            <h2 class="modal-title">Escribinos</h2>
+            <p class="modal-sub">Contanos qué buscás. Te respondemos con calma.</p>
+
+            <!-- Mensaje de éxito global (data-fs-success) -->
+            <div data-fs-success style="display:none;">
+                <div class="success-symbol">✦</div>
+                <h3>Mensaje recibido</h3>
+                <p>Gracias por escribirnos.<br>Te respondemos pronto en tu ritual personal.</p>
+            </div>
+
+            <!-- Error global del formulario -->
+            <div data-fs-error style="font-size:.68rem;color:#fb923c;margin-bottom:.8rem;display:none;"></div>
+
+            <!-- Formulario Formspree via @formspree/ajax CDN -->
+            <form id="contact-form">
+                <div class="modal-field">
+                    <label for="cf-nombre">Tu nombre</label>
+                    <input type="text" id="cf-nombre" name="nombre" placeholder="¿Cómo te llamás?" required autocomplete="name" data-fs-field>
+                    <span data-fs-error="nombre" style="font-size:.62rem;color:#fb923c;margin-top:.2rem;display:block;"></span>
+                </div>
+                <div class="modal-field">
+                    <label for="cf-email">Email</label>
+                    <input type="email" id="cf-email" name="email" placeholder="tu@email.com" required autocomplete="email" data-fs-field>
+                    <span data-fs-error="email" style="font-size:.62rem;color:#fb923c;margin-top:.2rem;display:block;"></span>
+                </div>
+                <div class="modal-field">
+                    <label for="cf-motivo">¿Qué buscás?</label>
+                    <select id="cf-motivo" name="motivo" data-fs-field>
+                        <option value="">Seleccioná…</option>
+                        <option>🌙 Relajación y sueño</option>
+                        <option>🔥 Experiencia íntima</option>
+                        <option>🧘 Meditación y bienestar</option>
+                        <option>⚡ Energía y foco</option>
+                        <option>✨ Experiencia personalizada</option>
+                        <option>💬 Consulta general</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="cf-mensaje">Mensaje</label>
+                    <textarea id="cf-mensaje" name="mensaje" rows="3" placeholder="Contanos lo que quieras…" data-fs-field></textarea>
+                    <span data-fs-error="mensaje" style="font-size:.62rem;color:#fb923c;margin-top:.2rem;display:block;"></span>
+                </div>
+                <button type="submit" class="modal-btn-send" data-fs-submit-btn>Enviar mensaje →</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ── Modal Contacto ──
+        function abrirContacto() {
+            document.getElementById('modal-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function cerrarContacto() {
+            document.getElementById('modal-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function cerrarSiFuera(e) {
+            if (e.target === document.getElementById('modal-overlay')) cerrarContacto();
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') cerrarContacto();
+        });
+
+        // Inicializar Formspree AJAX
+        window.formspree = window.formspree || function() { (formspree.q = formspree.q || []).push(arguments); };
+        formspree('initForm', { formElement: '#contact-form', formId: 'mykvyawp' });
+
+        // Auto-cerrar el modal tras envío exitoso
+        document.addEventListener('DOMContentLoaded', function() {
+            var observer = new MutationObserver(function() {
+                var success = document.querySelector('[data-fs-success]');
+                if (success && success.style.display !== 'none') {
+                    setTimeout(function() { cerrarContacto(); }, 4000);
+                }
+            });
+            var target = document.querySelector('[data-fs-success]');
+            if (target) observer.observe(target, { attributes: true, attributeFilter: ['style'] });
+        });
+    </script>
+    <!-- Formspree AJAX SDK -->
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
     <!-- LIVE NEURAL SOUNDS SCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
