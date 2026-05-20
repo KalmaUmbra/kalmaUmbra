@@ -253,12 +253,34 @@
         #screen-experience .exp-w{
             position:relative; z-index:2;
             display:flex; flex-direction:column; align-items:center;
-            padding:1.8rem 1rem 5rem;   /* 5rem abajo asegura que el scroll llegue al footer */
-            gap:1.5rem;
+            padding:1.8rem 1.5rem 5rem;
+            gap:1.2rem;
+            max-width:1120px;
+            margin:0 auto;
+            width:100%;
+        }
+        /* Layout dos columnas desktop */
+        #screen-experience .exp-main{
+            display:grid;
+            grid-template-columns:1fr 1.15fr;
+            gap:1.4rem;
+            width:100%;
+            align-items:start;
+        }
+        #screen-experience .exp-left{
+            display:flex;flex-direction:column;gap:1rem;
+        }
+        #screen-experience .exp-right{
+            display:flex;flex-direction:column;gap:.8rem;
+        }
+        @media(max-width:820px){
+            #screen-experience .exp-main{
+                grid-template-columns:1fr;
+            }
         }
 
         /* Header */
-        #screen-experience header{text-align:left;width:100%;max-width:650px}
+        #screen-experience header{text-align:left;width:100%}
         #screen-experience .br{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:.35rem}
         #screen-experience h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.9rem,5.5vw,2.9rem);letter-spacing:.03em;
            background:linear-gradient(130deg,var(--em3) 0%,var(--em2) 50%,var(--em) 100%);
@@ -318,7 +340,7 @@
         #screen-experience .tab.on{background:rgba(16,185,129,.12);border-color:var(--em);color:var(--em2)}
 
         /* Freq Grid */
-        #screen-experience .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.58rem;width:100%;max-width:650px}
+        #screen-experience .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.58rem;width:100%}
         #screen-experience .fc{background:rgba(14,30,22,0.88);border:1px solid var(--bdr);border-radius:14px;padding:.9rem .85rem;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;backdrop-filter:blur(8px)}
         #screen-experience .fc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,.07),transparent);opacity:0;transition:opacity .3s}
         #screen-experience .fc:hover{border-color:rgba(16,185,129,.35);transform:translateY(-2px)}
@@ -353,7 +375,7 @@
         #screen-experience .guide-toggle.open .arrow{transform:rotate(180deg);}
 
         #screen-experience .guide-panel{
-            width:100%;max-width:650px;
+            width:100%;
             background:rgba(14,30,22,0.90);
             border:1px solid rgba(16,185,129,.16);
             border-radius:18px;
@@ -420,7 +442,7 @@
 
         /* Productos */
         #screen-experience .section-divider{
-            width:100%;max-width:650px;
+            width:100%;
             display:flex;align-items:center;gap:1rem;
             margin-top:1rem;
         }
@@ -435,7 +457,7 @@
         }
 
         #screen-experience .products-section{
-            width:100%;max-width:650px;
+            width:100%;
             display:flex;flex-direction:column;
             gap:1rem;
         }
@@ -514,7 +536,7 @@
 
         /* Combos */
         #screen-experience .combos-grid{
-            width:100%;max-width:650px;
+            width:100%;
             display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem;
         }
         #screen-experience .combo-card{
@@ -550,7 +572,7 @@
 
         /* Botón CTA Sintetizador */
         #screen-experience .synth-cta{
-            width:100%;max-width:650px;
+            width:100%;
             background:rgba(12,20,16,0.92);
             border:1px solid rgba(16,185,129,.2);
             border-radius:14px;padding:1rem 1.2rem;
@@ -591,7 +613,7 @@
 
         /* Feedback */
         #screen-experience .feedback-section{
-            width:100%;max-width:650px;
+            width:100%;
             display:flex;flex-direction:column;
             gap:.6rem;
         }
@@ -655,7 +677,7 @@
 
         /* Ambient Bar */
         #screen-experience .ambient-bar{
-            width:100%;max-width:650px;
+            width:100%;
             background:rgba(10,22,16,0.94);
             border:1px solid rgba(16,185,129,.15);
             border-radius:16px;
@@ -726,8 +748,11 @@
 
         /* ── 6 Tarjetas del Día ── */
         #screen-experience .day-grid{
-            display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
-            gap:.65rem;width:100%;max-width:650px;
+            display:grid;grid-template-columns:repeat(3,1fr);
+            gap:.65rem;width:100%;
+        }
+        @media(max-width:540px){
+            #screen-experience .day-grid{grid-template-columns:repeat(2,1fr);}
         }
         #screen-experience .day-card{
             background:rgba(10,22,16,0.90);
@@ -805,7 +830,7 @@
 
         /* ── Spotify Section ── */
         #screen-experience .spotify-section{
-            width:100%;max-width:650px;
+            width:100%;
             background:rgba(10,22,16,0.88);
             border:1px solid rgba(16,185,129,.15);
             border-radius:18px;
@@ -916,8 +941,10 @@
             <h1 class="welcome-title">Kalma<em>Umbra</em></h1>
             <p class="welcome-subtitle">Ritual Sonoro · Antigravity</p>
             <p class="welcome-text">Estás a un susurro de la ingravidez total.<br>Cada frecuencia es un umbral. Cada sonido, una puerta.</p>
-            <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
-            <button class="btn-primary" onclick="toScreen('store')" style="margin-top:.8rem;border-color:var(--gold);color:var(--gold);" onmouseover="this.style.boxShadow='0 0 40px rgba(198,154,58,0.3)'" onmouseout="this.style.boxShadow='none'">Tienda · Cuidado Ritual</button>
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;align-items:center;">
+                <button class="btn-primary" onclick="toScreen('experience')">Activar Ritual</button>
+                <button class="btn-primary" onclick="toScreen('store')" style="border-color:var(--gold);color:var(--gold);" onmouseover="this.style.boxShadow='0 0 40px rgba(198,154,58,0.3)'" onmouseout="this.style.boxShadow='none'">Tienda · Cuidado Ritual</button>
+            </div>
 
             <div class="welcome-socials">
                 <!-- Instagram → perfil público de la marca -->
@@ -977,8 +1004,13 @@
                 <p class="sb">Tonos terapéuticos generados en tiempo real</p>
             </header>
 
+            <!-- Layout dos columnas -->
+            <div class="exp-main">
+            <!-- COLUMNA IZQUIERDA: controles -->
+            <div class="exp-left">
+
             <!-- 432hz + Orb: fila horizontal — freq a la izquierda, iniciar a la derecha -->
-            <div style="width:100%;max-width:650px;display:flex;align-items:center;justify-content:flex-start;gap:.5rem;">
+            <div style="width:100%;display:flex;align-items:center;justify-content:flex-start;gap:.5rem;">
                 <!-- Izquierda: frecuencia activa -->
                 <div class="fd" style="text-align:left;">
                     <div class="fh" id="exp-fh" style="font-size:clamp(1.8rem,6vw,2.6rem);">432 Hz</div>
@@ -1009,7 +1041,7 @@
             </div>
 
             <!-- Timer — debajo de la fila hz/iniciar -->
-            <div style="width:100%;max-width:650px;display:flex;justify-content:flex-start;">
+            <div style="width:100%;display:flex;justify-content:flex-start;">
                 <div class="tr">
                     <div class="td" id="exp-td">00:00</div>
                     <div class="tc">
@@ -1112,7 +1144,7 @@
             </div>
 
             <!-- Controles de volumen — debajo del ambient bar -->
-            <div style="width:100%;max-width:650px;display:flex;flex-direction:column;gap:.4rem;">
+            <div style="width:100%;display:flex;flex-direction:column;gap:.4rem;">
                 <div class="vr" style="max-width:100%">
                     <label style="min-width:80px;font-size:.62rem">🎵 Frecuencia</label>
                     <input type="range" id="exp-vs" min="0" max="4" step="0.1" value="2" style="--v:50%"
@@ -1128,7 +1160,7 @@
             </div>
 
             <!-- LIVE NEURAL SOUNDS — inmediatamente debajo de los volúmenes -->
-            <div id="ku-live-block" style="width:100%;max-width:650px;background:rgba(5,12,10,0.9);border:1px solid rgba(16,185,129,0.18);border-radius:18px;overflow:hidden;">
+            <div id="ku-live-block" style="width:100%;background:rgba(5,12,10,0.9);border:1px solid rgba(16,185,129,0.18);border-radius:18px;overflow:hidden;">
                 <!-- Header -->
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid rgba(16,185,129,0.1);">
                     <div style="display:flex;align-items:center;gap:10px;">
@@ -1163,6 +1195,11 @@
                 <!-- Video oculto para audio -->
                 <video id="ku-live-video" playsinline style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;"></video>
             </div>
+
+            </div><!-- /exp-left -->
+
+            <!-- COLUMNA DERECHA: tarjetas del día -->
+            <div class="exp-right">
 
             <!-- Freq Tabs -->
             <!-- 6 Tarjetas del Día -->
@@ -1254,33 +1291,10 @@
 
             </div><!-- /day-grid -->
 
-            <!-- Grid de relatos DreamWeaver + tarjeta on-demand -->
-            <div class="section-divider"><span>DreamWeaver · Relatos de Maya</span></div>
-            <div class="grid" id="exp-grid">
-                <!-- Tarjeta On-Demand — estática, se agrega junto a los relatos de JS -->
-                <div class="fc relato" id="card-ondemand" style="border-color:rgba(198,154,58,.28);cursor:default;">
-                    <div class="dot" style="background:var(--gold);opacity:1;box-shadow:0 0 6px var(--gold);"></div>
-                    <div class="relato-badge">KalmaUmbra · On Demand</div>
-                    <div class="relato-title" style="font-size:.98rem;">Tu Experiencia Personal</div>
-                    <div class="relato-desc" style="font-size:.62rem;line-height:1.5;">
-                        Diseñamos para vos una experiencia sonora única — tu voz, tus memorias, tu momento.
-                        <br><br>
-                        <span style="color:rgba(198,154,58,.7);">Audio · Aroma · Ritual</span>
-                    </div>
-                    <div class="relato-player" style="margin-top:auto;">
-                        <a href="mailto:kalmaumbra@gmail.com?subject=Quiero%20mi%20experiencia%20KU&body=Hola%20KalmaUmbra!%20Quiero%20crear%20mi%20experiencia%20sonora%20personalizada.%0A%0AMi%20momento%3A%20%0AMi%20estado%3A%20%0ALo%20que%20busco%3A%20"
-                           class="relato-btn"
-                           style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:.4rem;">
-                            ✉️ Escribinos
-                        </a>
-                        <div style="font-size:.52rem;color:rgba(198,154,58,.4);text-align:center;margin-top:.3rem;letter-spacing:.06em;">
-                            kalmaumbra@gmail.com
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div><!-- /exp-right -->
+            </div><!-- /exp-main -->
 
-            <!-- Botón Sintetizador — debajo de todo DreamWeaver -->
+            <!-- Botón Sintetizador -->
             <div class="synth-cta" onclick="toScreen('synth')">
                 <div class="synth-cta-left">
                     <span class="synth-cta-icon">🎛️</span>
@@ -1366,11 +1380,11 @@
             background:linear-gradient(130deg,var(--em3),var(--em2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         #screen-synth .sy-sub{font-size:.7rem;color:var(--mut);letter-spacing:.12em;margin-top:.3rem}
         /* Vis */
-        #screen-synth .sy-vis{width:100%;max-width:650px;height:72px;background:rgba(14,22,18,0.7);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+        #screen-synth .sy-vis{width:100%;height:72px;background:rgba(14,22,18,0.7);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
         #screen-synth canvas{width:100%;height:100%}
         /* Status */
         #screen-synth .sy-status{
-            width:100%;max-width:650px;
+            width:100%;
             display:flex;align-items:center;justify-content:space-between;
             background:rgba(14,22,18,0.95);border:1px solid var(--bdr);border-radius:12px;
             padding:.7rem 1.1rem;backdrop-filter:blur(10px);
@@ -1382,17 +1396,17 @@
         #screen-synth .sy-bpm{font-size:.62rem;color:var(--mut);letter-spacing:.1em}
         #screen-synth .sy-time{font-size:.72rem;color:var(--mut)}
         /* Prog */
-        #screen-synth .sy-prog{width:100%;max-width:650px;height:2px;background:rgba(16,185,129,.1);border-radius:2px}
+        #screen-synth .sy-prog{width:100%;height:2px;background:rgba(16,185,129,.1);border-radius:2px}
         #screen-synth .sy-bar{height:100%;width:0;background:linear-gradient(90deg,var(--em),var(--em3));border-radius:2px;transition:width .8s linear}
         /* Steps */
-        #screen-synth .sy-steps{width:100%;max-width:650px;display:flex;gap:3px}
+        #screen-synth .sy-steps{width:100%;display:flex;gap:3px}
         #screen-synth .sy-sd{flex:1;height:4px;border-radius:2px;background:rgba(16,185,129,.12);transition:background .08s}
         #screen-synth .sy-sd.k{background:var(--em)}
         #screen-synth .sy-sd.s{background:#fb923c}
         #screen-synth .sy-sd.h{background:rgba(110,231,183,.45)}
         #screen-synth .sy-sd.cur{background:var(--em3);box-shadow:0 0 6px var(--em3)}
         /* Moods */
-        #screen-synth .sy-moods{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;width:100%;max-width:650px}
+        #screen-synth .sy-moods{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;width:100%}
         #screen-synth .sy-mc{
             background:rgba(12,20,16,0.92);border:1px solid var(--bdr);border-radius:14px;
             padding:1rem .95rem;cursor:pointer;transition:all .25s;
@@ -1416,7 +1430,7 @@
         #screen-synth .sy-mc-desc{font-size:.62rem;color:var(--mut);line-height:1.5;margin-top:.1rem}
         /* Layers */
         #screen-synth .sy-layers{
-            width:100%;max-width:650px;
+            width:100%;
             background:rgba(12,20,16,0.9);border:1px solid var(--bdr);border-radius:14px;
             padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.7rem;backdrop-filter:blur(8px);
         }
@@ -1429,7 +1443,7 @@
         }
         #screen-synth .sy-mute.off{border-color:rgba(251,146,60,.4);color:rgba(251,146,60,.6)}
         /* Dur */
-        #screen-synth .sy-dur-row{display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;max-width:650px}
+        #screen-synth .sy-dur-row{display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%}
         #screen-synth .sy-dur-btn{
             background:transparent;border:1px solid var(--bdr);border-radius:50px;
             padding:.28rem .8rem;font-size:.63rem;color:var(--mut);cursor:pointer;letter-spacing:.08em;
@@ -2423,97 +2437,6 @@
                 });
             }
 
-            /* ─── BUILD GRID — solo Relatos DreamWeaver ─── */
-            function buildGrid() {
-                const grid = document.getElementById('exp-grid');
-                if (!grid) return;
-                // Las tarjetas de frecuencia ahora son las 6 tarjetas del día
-                // Este grid solo muestra los relatos de Maya
-
-                /* ── Relatos DreamWeaver ── */
-                const RELATOS = [
-                    { id:'r1', src:'audio/maya_audio_1_densidad_slow.mp3',  title:'Densidad',    desc:'La voz de Maya te lleva a un estado de peso y presencia absoluta.' },
-                    { id:'r2', src:'audio/maya_audio_2_metal_sal_slow.mp3', title:'Metal & Sal',  desc:'Texturas sonoras íntimas. Fricción, calor y disolución.' },
-                    { id:'r3', src:'audio/maya_audio_3_geometria_slow.mp3', title:'Geometría',    desc:'Formas invisibles que se trazan sobre la piel. Un relato de contornos.' },
-                ];
-                const relatoAudios = {};
-
-                function fmtTime(s) {
-                    const m = Math.floor(s / 60);
-                    return `${m}:${String(Math.floor(s % 60)).padStart(2,'0')}`;
-                }
-
-                RELATOS.forEach(r => {
-                    const base = window.location.href.endsWith('/') ? window.location.href : window.location.href.replace(/\/[^\/]*$/, '/');
-                    const audio = new Audio(base + r.src);
-                    audio.preload = 'auto';
-                    relatoAudios[r.id] = audio;
-
-                    const card = document.createElement('div');
-                    card.className = 'fc relato';
-                    card.id = 'relato-card-' + r.id;
-                    card.innerHTML = `
-                        <div class="dot"></div>
-                        <div class="relato-badge">DreamWeaver · Maya</div>
-                        <div class="relato-title">${r.title}</div>
-                        <div class="relato-desc">${r.desc}</div>
-                        <div class="relato-player">
-                            <div class="relato-progress-wrap">
-                                <div class="relato-progress-bar" id="rpb-${r.id}"></div>
-                            </div>
-                            <div style="display:flex;align-items:center;justify-content:space-between">
-                                <button class="relato-btn" id="rbtn-${r.id}">▶ Escuchar</button>
-                                <span class="relato-time" id="rtm-${r.id}">0:00</span>
-                            </div>
-                        </div>`;
-                    grid.appendChild(card);
-
-                    const btn  = card.querySelector('#rbtn-' + r.id);
-                    const bar  = card.querySelector('#rpb-'  + r.id);
-                    const time = card.querySelector('#rtm-'  + r.id);
-
-                    audio.addEventListener('loadedmetadata', () => {
-                        time.textContent = '0:00 / ' + fmtTime(audio.duration);
-                    });
-                    audio.addEventListener('timeupdate', () => {
-                        if (!audio.duration) return;
-                        const pct = (audio.currentTime / audio.duration * 100).toFixed(1);
-                        bar.style.width = pct + '%';
-                        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
-                    });
-                    audio.addEventListener('ended', () => {
-                        btn.textContent = '▶ Escuchar';
-                        btn.classList.remove('playing');
-                        bar.style.width = '0%';
-                    });
-
-                    btn.addEventListener('click', e => {
-                        e.stopPropagation();
-                        // Pausar otros relatos
-                        RELATOS.forEach(other => {
-                            if (other.id !== r.id) {
-                                relatoAudios[other.id].pause();
-                                document.getElementById('rbtn-' + other.id).textContent = '▶ Escuchar';
-                                document.getElementById('rbtn-' + other.id).classList.remove('playing');
-                            }
-                        });
-                        if (audio.paused) {
-                            audio.play().then(() => {
-                                btn.textContent = '⏸ Pausar';
-                                btn.classList.add('playing');
-                            }).catch(err => {
-                                btn.textContent = '▶ Escuchar';
-                                btn.classList.remove('playing');
-                                console.warn('Audio error:', err, audio.src);
-                            });
-                        } else {
-                            audio.pause();
-                            btn.textContent = '▶ Escuchar';
-                            btn.classList.remove('playing');
-                        }
-                    });
-                });
-            }
 
             /* ─── ACTIVACIÓN / DESACTIVACIÓN ─── */
             function onActivate() {
@@ -2664,7 +2587,7 @@
             };
 
             // Inicialización
-            buildGrid();
+            // buildGrid eliminado — DreamWeaver removido
             initOrbCanvas();
             startIdleLoop();
 
